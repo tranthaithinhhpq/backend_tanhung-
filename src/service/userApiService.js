@@ -7,6 +7,7 @@ const getAllUser = async () => {
             attributes: ["id", "username", "email", "phone", "sex"],
             include: { model: db.Group, attributes: ["name", "description"] },
         });
+
         if (user) {
             return {
                 EM: 'get data success',
@@ -36,7 +37,7 @@ const getUserWithPagination = async (page, limit) => {
         const { count, rows } = await db.User.findAndCountAll({
             offset: offset,
             limit: limit,
-            attributes: ["id", "username", "email", "phone", "sex", "address"],
+            attributes: ["id", "image", "username", "email", "phone", "sex", "address"],
             include: { model: db.Group, attributes: ["name", "description", "id"] },
             order: [['id', 'DESC']]
 
@@ -66,37 +67,6 @@ const getUserWithPagination = async (page, limit) => {
     }
 
 }
-
-// const createNewUser = async (data) => {
-//     try {
-//         let isEmailExist = await checkEmailExist(data.email);
-//         if (isEmailExist === true) {
-//             return {
-//                 EM: 'The email is already exist',
-//                 EC: 1,
-//                 DT: 'email'
-//             }
-
-//         }
-//         let isPhoneExist = await checkPhoneExist(data.phone);
-//         if (isPhoneExist === true) {
-//             return {
-//                 EM: 'The phone number is already exist',
-//                 EC: 1,
-//                 DT: 'phone'
-//             }
-//         }
-//         //hash user password
-//         let hashPassword = hashUserPassword(data.password);
-//         await db.User.create({ ...data, password: hashPassword })
-
-
-
-//     } catch (e) {
-//         console.log(e);
-
-//     }
-// }
 
 
 
@@ -161,6 +131,7 @@ const updateUser = async (data) => {
             //update
             await user.update({
                 username: data.username,
+                image: data.image,
                 address: data.address,
                 sex: data.sex,
                 groupId: data.groupId

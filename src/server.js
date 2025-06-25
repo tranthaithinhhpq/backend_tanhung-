@@ -1,7 +1,6 @@
 require("dotenv").config();
 import express from "express";
 import configViewEngine from "./config/viewEngine";
-import initWebRoutes from "./routes/web";
 import initApiRoutes from "./routes/api";
 import configCors from "./config/cors";
 import bodyParser from "body-parser";
@@ -27,7 +26,6 @@ app.use(cookieParser());
 
 
 //init web routes
-initWebRoutes(app);
 initApiRoutes(app);
 
 app.use((req, res) => {

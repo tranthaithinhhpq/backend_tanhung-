@@ -115,15 +115,7 @@ const updateUserInformation = async (email, username, id) => {
         },
     );
 
-    // // 'DELETE FROM user WHERE id=?';
-    // const connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'jwt', Promise: bluebird });
-    // // simple query
-    // try {
-    //     const [rows, fields] = await connection.execute('UPDATE user SET email = ?, username = ? WHERE id = ?', [email, username, id]);
-    //     return rows;
-    // } catch (error) {
-    //     console.log("check error update user: ", error);
-    // }
+
 
 }
 

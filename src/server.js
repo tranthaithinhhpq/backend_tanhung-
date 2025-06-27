@@ -23,6 +23,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 
+// Serve static files for uploaded images
+app.use('/images', express.static('./src/public/images')); // 👉 thêm dòng này ở đây
 
 
 //init web routes

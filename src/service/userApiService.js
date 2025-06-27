@@ -141,36 +141,27 @@ const updateUser = async (data) => {
 };
 
 
+// service/userApiService.js
 const deleteUser = async (id) => {
     try {
-        let user = await db.User.findOne({
-            where: { id: id }
-        })
-        if (user) {
-            await user.destroy();
-            return {
-                EM: 'Delete user success',
-                EC: 0,
-                DT: []
-            }
-        } else {
-            return {
-                EM: 'User not exist',
-                EC: 2,
-                DT: []
-            }
+        const user = await db.User.findByPk(id);
+        if (!user) return { EC: 2, EM: 'User not exist', DT: [] };
+
+        // Nếu muốn xóa file ảnh trên đĩa:
+        if (user.image) {
+            const fs = require('fs');
+            const filePath = `./src/public${user.image}`; //  /images/filename.jpg
+            fs.existsSync(filePath) && fs.unlinkSync(filePath);
         }
 
+        await user.destroy();
+        return { EC: 0, EM: 'Delete user success', DT: [] };
     } catch (e) {
-        console.log(e)
-        return {
-            EM: 'error from service',
-            EC: 1,
-            DT: []
-        }
-
+        console.log(e);
+        return { EC: 1, EM: 'error from service', DT: [] };
     }
-}
+};
+
 
 module.exports = {
     getAllUser, createNewUser, updateUser, deleteUser, getUserWithPagination

@@ -41,25 +41,19 @@ const create = async (req, res) => {
     }
 };
 
+// controller/userController.js
 const update = async (req, res) => {
     try {
-        let data = await userApiService.updateUser(req.body);
-        return res.status(200).json({
-            EM: 'update user success', // error message
-            EC: data.EC, //error code
-            DT: data.DT, //data
-        })
+        // Nếu có file mới ⇒ lấy đường dẫn; nếu không, giữ nguyên đường dẫn cũ
+        let imagePath = req.file ? `/images/${req.file.filename}` : req.body.image || '';
 
+        let data = await userApiService.updateUser({ ...req.body, image: imagePath });
+        return res.status(200).json(data);
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            EM: 'error from server', // error message
-            EC: '-1', //error code
-            DT: '', //data
-        })
+        return res.status(500).json({ EM: 'error from server', EC: -1, DT: '' });
     }
-
-}
+};
 
 const remove = async (req, res) => {
     try {

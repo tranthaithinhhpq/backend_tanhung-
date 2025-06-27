@@ -25,7 +25,12 @@ const initApiRoutes = (app) => {
     //user routes
     router.get('/user/read', userController.read);
     router.post("/user/create", upload.single('image'), userController.create);
-    router.put("/user/update", userController.update);
+    // routes/api.js
+    router.put(
+        '/user/update',
+        upload.single('image'),   // 🔹 nhận file (nếu có)
+        userController.update
+    );
     router.delete("/user/delete", userController.remove);
 
 

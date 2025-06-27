@@ -115,52 +115,31 @@ const createNewUser = async (data) => {
 }
 
 
+// service/userApiService.js
 const updateUser = async (data) => {
     try {
         if (!data.groupId) {
-            return {
-                EM: 'Error with empty GroupId',
-                EC: 1,
-                DT: 'group'
-            }
-        }
-        let user = await db.User.findOne({
-            where: { id: data.id }
-        })
-        if (user) {
-            //update
-            await user.update({
-                username: data.username,
-                image: data.image,
-                address: data.address,
-                sex: data.sex,
-                groupId: data.groupId
-            })
-
-            return {
-                EM: 'Update user succeeds',
-                EC: 0,
-                DT: ''
-
-            }
-        } else {
-            return {
-                EM: 'User not found',
-                EC: 2,
-                DT: ''
-            }
+            return { EM: 'Error with empty GroupId', EC: 1, DT: 'group' };
         }
 
+        let user = await db.User.findByPk(data.id);
+        if (!user) return { EM: 'User not found', EC: 2, DT: '' };
+
+        await user.update({
+            username: data.username,
+            image: data.image,          // 🔹 cập nhật đường dẫn ảnh
+            address: data.address,
+            sex: data.sex,
+            groupId: data.groupId
+        });
+
+        return { EM: 'Update user succeeds', EC: 0, DT: '' };
     } catch (e) {
         console.log(e);
-        return {
-            EM: 'something wrongs with services',
-            EC: 1,
-            DT: []
-        }
-
+        return { EM: 'something wrongs with services', EC: 1, DT: [] };
     }
-}
+};
+
 
 const deleteUser = async (id) => {
     try {

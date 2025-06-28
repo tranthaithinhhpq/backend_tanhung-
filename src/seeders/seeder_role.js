@@ -16,6 +16,10 @@ module.exports = {
                 description: 'Edit user'
             },
             {
+                url: '/user/delete',
+                description: 'Delete user'
+            },
+            {
                 url: '/role/read',
                 description: 'View permission'
             },
@@ -32,12 +36,16 @@ module.exports = {
                 description: 'Delete permission'
             },
             {
+                url: '/group/read',
+                description: 'Show all group'
+            },
+            {
                 url: '/role/by-group',
-                description: null
+                description: 'View permission of user'
             },
             {
                 url: '/role/assign-to-group',
-                description: null
+                description: 'assign permission for user'
             }
         ], {});
     },

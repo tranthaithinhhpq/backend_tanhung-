@@ -15,9 +15,9 @@ module.exports = {
       },
       {
         image: 'https://example.com/image2.jpg',
-        email: 'user2@example.com',
+        email: 'levanthanh@example.com',
         password: '123456',
-        username: 'user2',
+        username: 'Lê Văn Thanh',
         address: '456 Side St',
         sex: 'female',
         phone: '0987654321',
@@ -25,13 +25,13 @@ module.exports = {
       },
       {
         image: 'https://example.com/image3.jpg',
-        email: 'user3@example.com',
+        email: 'tranquangthai@example.com',
         password: '123456',
-        username: 'user3',
+        username: 'Trần Quang Thái',
         address: '789 Market St',
         sex: 'other',
         phone: '0111222333',
-        groupId: 1
+        groupId: 2
       }
     ], {});
   },

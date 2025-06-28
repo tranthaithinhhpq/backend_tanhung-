@@ -2,17 +2,17 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Position extends Model {
+  class Degree extends Model {
     static associate(models) {
-      Position.hasMany(models.DoctorInfo, { foreignKey: 'positionId' });
+      Degree.hasMany(models.DoctorInfo, { foreignKey: 'degreeId' });
     }
   }
-  Position.init(
+  Degree.init(
     {
       name: DataTypes.STRING,
       description: DataTypes.STRING,
     },
-    { sequelize, modelName: 'Position' }
+    { sequelize, modelName: 'Degree' }
   );
-  return Position;
+  return Degree;
 };

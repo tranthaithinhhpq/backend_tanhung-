@@ -9,18 +9,24 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      name: {                          // Tên chức vụ (Ví dụ: Trưởng khoa)
+      name: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
       },
-      description: {                   // Mô tả ngắn
+      description: {
         type: Sequelize.STRING,
       },
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
     });
   },
+
   down: async (queryInterface) => {
     await queryInterface.dropTable('Position');
   },

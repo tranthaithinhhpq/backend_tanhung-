@@ -7,12 +7,17 @@ module.exports = (sequelize, DataTypes) => {
       Degree.hasMany(models.DoctorInfo, { foreignKey: 'degreeId' });
     }
   }
+
   Degree.init(
     {
       name: DataTypes.STRING,
       description: DataTypes.STRING,
     },
-    { sequelize, modelName: 'Degree' }
+    {
+      sequelize,
+      modelName: 'Degree',
+    }
   );
+
   return Degree;
 };

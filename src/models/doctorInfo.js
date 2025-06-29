@@ -4,13 +4,11 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class DoctorInfo extends Model {
     static associate(models) {
-      //khoá chính ↓
+      // 1 bác sĩ (user) có đúng 1 DoctorInfo
       DoctorInfo.belongsTo(models.User, { foreignKey: 'userId' });
-      //liên kết đã có ↓
+      // Liên kết tham chiếu danh mục
       DoctorInfo.belongsTo(models.Position, { foreignKey: 'positionId' });
       DoctorInfo.belongsTo(models.Degree, { foreignKey: 'degreeId' });
-      // liên kết mới ↓
-      DoctorInfo.belongsTo(models.Clinic, { foreignKey: 'clinicId' });
       DoctorInfo.belongsTo(models.Specialty, { foreignKey: 'specialtyId' });
     }
   }
@@ -20,12 +18,13 @@ module.exports = (sequelize, DataTypes) => {
       userId: DataTypes.INTEGER,
       positionId: DataTypes.INTEGER,
       degreeId: DataTypes.INTEGER,
-      clinicId: DataTypes.INTEGER,   // mới
-      specialtyId: DataTypes.INTEGER,   // mới
-      biography: DataTypes.TEXT,
-      price: DataTypes.INTEGER,
+      specialtyId: DataTypes.INTEGER,
+      markdownContent: DataTypes.TEXT,
     },
-    { sequelize, modelName: 'DoctorInfo' }
+    {
+      sequelize,
+      modelName: 'DoctorInfo',
+    }
   );
 
   return DoctorInfo;

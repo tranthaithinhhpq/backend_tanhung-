@@ -4,10 +4,6 @@ import bluebird from 'bluebird';
 import db from '../models/index';
 import { where } from 'sequelize/lib/sequelize';
 
-// get the promise implementation, we will use bluebird
-
-// create the connection, specify bluebird as Promise
-
 
 
 
@@ -48,21 +44,13 @@ const getUserList = async () => {
         raw: true,
         nest: true
     })
-    // console.log("check new user ", newUser);
-    // console.log("check new role ", roles);
+
 
 
     let users = [];
     users = await db.User.findAll();
     return users;
-    //const connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'jwt', Promise: bluebird });
 
-    // try {
-    //     const [rows, fields] = await connection.execute('Select * from user ');
-    //     return rows;
-    // } catch (error) {
-    //     console.log(">>> check error: ", error);
-    // }
 
 }
 
@@ -71,15 +59,6 @@ const deleteUser = async (userId) => {
         where: { id: userId }
     })
 
-    // // 'DELETE FROM user WHERE id=?';
-    // const connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'jwt', Promise: bluebird });
-    // // simple query
-
-    // try {
-    //     const [rows, fields] = await connection.execute('DELETE FROM user WHERE id=?', [id]);
-    // } catch (error) {
-    //     console.log("check error delete user: ", error);
-    // }
 
 }
 

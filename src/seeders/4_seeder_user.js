@@ -15,9 +15,9 @@ module.exports = {
       },
       {
         image: 'https://example.com/image2.jpg',
-        email: 'levanthanh@example.com',
+        email: 'phanvanthao@example.com',
         password: '123456',
-        username: 'Lê Văn Thanh',
+        username: 'Phan Văn Thảo',
         address: '456 Side St',
         sex: 'female',
         phone: '0987654321',
@@ -25,9 +25,9 @@ module.exports = {
       },
       {
         image: 'https://example.com/image3.jpg',
-        email: 'tranquangthai@example.com',
+        email: 'nguyenvanminh@example.com',
         password: '123456',
-        username: 'Trần Quang Thái',
+        username: 'Nguyễn Văn Minh',
         address: '789 Market St',
         sex: 'other',
         phone: '0111222333',

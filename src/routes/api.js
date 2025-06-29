@@ -25,15 +25,11 @@ const initApiRoutes = (app) => {
 
     //user routes
     router.get('/user/read', userController.read);
-
     router.post("/user/create", upload.single('image'), userController.create);
     // routes/api.js
-    router.put(
-        '/user/update',
-        upload.single('image'),   // 🔹 nhận file (nếu có)
-        userController.update
-    );
+    router.put('/user/update', upload.single('image'), userController.update);
     router.delete("/user/delete", userController.remove);
+    router.get("/user/read-doctor", userController.readDoctor);
 
 
     // role routes
@@ -46,7 +42,12 @@ const initApiRoutes = (app) => {
 
     // group routes
     router.get("/group/read", groupController.read);
-    router.get("/user/read-doctor", userController.readDoctor);
+
+    // doctor routes
+
+    router.post('/doctor-info', upload.single('image'), doctorController.createDoctorInfo);
+    router.put('/doctor-info/:userId', upload.single('image'), doctorController.updateDoctorInfo);
+
 
 
     return app.use("/api/v1", router);

@@ -3,37 +3,37 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('DoctorInfo', {
-      id: { allowNull: false, autoIncrement: true, primaryKey: true, type: Sequelize.INTEGER },
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+      },
 
-      userId: {                       // FK -> User
+      userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'User', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      positionId: {                   // FK -> Position
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'Position', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-      degreeId: {                     // FK -> Degree
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'Degree', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
 
-      clinicId: {
+      positionId: {
         type: Sequelize.INTEGER,
         allowNull: true,
-        references: { model: 'Clinic', key: 'id' },
+        references: { model: 'Position', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
       },
+
+      degreeId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: { model: 'Degree', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+      },
+
       specialtyId: {
         type: Sequelize.INTEGER,
         allowNull: true,
@@ -42,14 +42,24 @@ module.exports = {
         onDelete: 'SET NULL',
       },
 
-      biography: { type: Sequelize.TEXT },   // Giới thiệu, kinh nghiệm, v.v.
-      price: { type: Sequelize.INTEGER },    // Phí khám mặc định (nếu cần)
+      markdownContent: {
+        type: Sequelize.TEXT,
+        allowNull: true,
+      },
 
-      createdAt: { allowNull: false, type: Sequelize.DATE },
-      updatedAt: { allowNull: false, type: Sequelize.DATE },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
     });
   },
-  down: async (queryInterface) => {
+
+  down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('DoctorInfo');
   },
 };

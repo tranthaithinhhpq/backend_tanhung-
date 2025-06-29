@@ -162,7 +162,34 @@ const deleteUser = async (id) => {
     }
 };
 
+const getAllDoctor = async () => {
+    try {
+        let doctors = await db.User.findAll({
+            attributes: ["id", "username", "email", "phone", "sex"],
+            include: {
+                model: db.Group,
+                attributes: ["name", "description"],
+                where: { name: "Doctor" }  // chỉ lấy user thuộc Group Doctor
+            }
+        });
+
+        return {
+            EM: 'get doctor data success',
+            EC: 0,
+            DT: doctors
+        };
+
+    } catch (e) {
+        console.log(e);
+        return {
+            EM: 'something went wrong with getAllDoctor',
+            EC: 1,
+            DT: []
+        };
+    }
+};
+
 
 module.exports = {
-    getAllUser, createNewUser, updateUser, deleteUser, getUserWithPagination
+    getAllUser, createNewUser, updateUser, deleteUser, getUserWithPagination, getAllDoctor
 }

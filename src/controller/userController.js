@@ -31,6 +31,24 @@ const read = async (req, res) => {
 
 }
 
+const readDoctor = async (req, res) => {
+    try {
+        const data = await userApiService.getAllDoctor();
+        return res.status(200).json({
+            EM: data.EM, // error message
+            EC: data.EC, // error code
+            DT: data.DT, // data
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EM: 'error from server',
+            EC: '-1',
+            DT: '',
+        });
+    }
+};
+
 const create = async (req, res) => {
     try {
         let imagePath = req.file ? `/images/${req.file.filename}` : '';
@@ -89,4 +107,4 @@ const getUserAccount = async (req, res) => {
     });
 };
 
-module.exports = { read, create, update, remove, getUserAccount }
+module.exports = { read, create, update, remove, getUserAccount, readDoctor }

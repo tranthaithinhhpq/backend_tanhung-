@@ -16,14 +16,16 @@ const router = express.Router();
 
 const initApiRoutes = (app) => {
 
-    router.all('*', checkUserJWT, checkUserPermission);
+
     router.post("/register", apiController.handleRegister);
     router.post("/login", apiController.handleLogin);
+    router.all('*', checkUserJWT, checkUserPermission);
     router.post("/logout", apiController.handleLogout);
     router.get("/account", userController.getUserAccount);
 
     //user routes
     router.get('/user/read', userController.read);
+
     router.post("/user/create", upload.single('image'), userController.create);
     // routes/api.js
     router.put(
@@ -44,6 +46,8 @@ const initApiRoutes = (app) => {
 
     // group routes
     router.get("/group/read", groupController.read);
+    router.get("/user/read-doctor", userController.readDoctor);
+
 
     return app.use("/api/v1", router);
 }

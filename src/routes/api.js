@@ -44,9 +44,14 @@ const initApiRoutes = (app) => {
     router.get("/group/read", groupController.read);
 
     // doctor routes
+    // router.post('/doctor-info', upload.single('image'), doctorController.createDoctorInfo);
+    // router.put('/doctor-info/:userId', upload.single('image'), doctorController.updateDoctorInfo);
+    // router.get('/doctor-info/:userId', userController.getDoctorInfoByUserId);
+    router.get('/doctor-info/:userId', userController.getDoctorInfoWithAllSpecialty);
 
-    router.post('/doctor-info', upload.single('image'), doctorController.createDoctorInfo);
-    router.put('/doctor-info/:userId', upload.single('image'), doctorController.updateDoctorInfo);
+
+    // specialty rotes
+
 
 
 

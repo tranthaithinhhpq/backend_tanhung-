@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       DoctorInfo.belongsTo(models.Position, { foreignKey: 'positionId' });
       DoctorInfo.belongsTo(models.Degree, { foreignKey: 'degreeId' });
       DoctorInfo.belongsTo(models.Specialty, { foreignKey: 'specialtyId' });
+
     }
   }
 

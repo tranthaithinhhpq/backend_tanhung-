@@ -1,4 +1,6 @@
 import userApiService from '../service/userApiService';
+const db = require('../models');
+
 const read = async (req, res) => {
     try {
         if (req.query.page && req.query.limit) {
@@ -107,4 +109,72 @@ const getUserAccount = async (req, res) => {
     });
 };
 
-module.exports = { read, create, update, remove, getUserAccount, readDoctor }
+const getDoctorInfoByUserId = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const doctorInfo = await db.DoctorInfo.findOne({
+            where: { userId: userId },
+            include: {
+                model: db.Specialty,
+                attributes: ['id', 'name']
+            }
+        });
+
+        if (!doctorInfo) {
+            return res.status(200).json({
+                EM: 'Doctor info not found',
+                EC: 1,
+                DT: null
+            });
+        }
+
+        return res.status(200).json({
+            EM: 'Doctor info fetched',
+            EC: 0,
+            DT: doctorInfo
+        });
+    } catch (e) {
+        console.log("getDoctorInfoByUserId errror", e);
+        return res.status(500).json({
+            EM: 'Server error',
+            EC: -1,
+            DT: null
+        });
+    }
+};
+
+const getDoctorInfoWithAllSpecialty = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        const doctorInfo = await db.DoctorInfo.findOne({
+            where: { userId },
+            include: {
+                model: db.Specialty,
+                attributes: ['id', 'name']
+            }
+        });
+
+        const specialties = await db.Specialty.findAll({
+            attributes: ['id', 'name']
+        });
+
+        return res.status(200).json({
+            EM: 'Fetched doctor info + all specialties',
+            EC: 0,
+            DT: {
+                doctorInfo,
+                specialties
+            }
+        });
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EM: 'Server error',
+            EC: -1,
+            DT: null
+        });
+    }
+};
+
+module.exports = { read, create, update, remove, getUserAccount, readDoctor, getDoctorInfoByUserId, getDoctorInfoWithAllSpecialty }

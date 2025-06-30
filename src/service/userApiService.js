@@ -165,13 +165,14 @@ const deleteUser = async (id) => {
 const getAllDoctor = async () => {
     try {
         let doctors = await db.User.findAll({
-            attributes: ["id", "username", "email", "phone", "sex"],
+            attributes: ["id", "image", "username", "email", "phone", "sex"],
             include: {
                 model: db.Group,
                 attributes: ["name", "description"],
                 where: { name: "Doctor" }  // chỉ lấy user thuộc Group Doctor
             }
         });
+        console.log("get doctor: ", doctors);
 
         return {
             EM: 'get doctor data success',
@@ -190,6 +191,8 @@ const getAllDoctor = async () => {
 };
 
 
+
+
 module.exports = {
-    getAllUser, createNewUser, updateUser, deleteUser, getUserWithPagination, getAllDoctor
+    getAllUser, createNewUser, updateUser, deleteUser, getUserWithPagination, getAllDoctor,
 }

@@ -2,9 +2,13 @@ import express from "express";
 import apiController from '../controller/apiController'
 import userController from "../controller/userController"
 import groupController from '../controller/groupController';
+import degreeController from '../controller/degreeController';
+import positionController from '../controller/positionController';
+import doctorController from '../controller/doctorController';
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction'
 import roleController from '../controller/roleController';
 import upload from '../middleware/uploadMiddleware';
+
 
 const router = express.Router();
 /**
@@ -44,13 +48,15 @@ const initApiRoutes = (app) => {
     router.get("/group/read", groupController.read);
 
     // doctor routes
-    // router.post('/doctor-info', upload.single('image'), doctorController.createDoctorInfo);
-    // router.put('/doctor-info/:userId', upload.single('image'), doctorController.updateDoctorInfo);
-    // router.get('/doctor-info/:userId', userController.getDoctorInfoByUserId);
-    router.get('/doctor-info/:userId', userController.getDoctorInfoWithAllSpecialty);
+    router.get('/doctor-info/:userId', userController.getDoctorInfoWithAllData);
+    router.post('/doctor-info/create', doctorController.createDoctorInfo);
+    router.put('/doctor-info/update/:userId', doctorController.updateDoctorInfo);
 
 
-    // specialty rotes
+    // position rotes
+    router.get('/position/read', positionController.read);
+    // degree rotes
+    router.get('/degree/read', degreeController.read);
 
 
 

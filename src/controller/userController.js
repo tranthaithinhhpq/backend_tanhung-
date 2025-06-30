@@ -143,28 +143,31 @@ const getDoctorInfoByUserId = async (req, res) => {
     }
 };
 
-const getDoctorInfoWithAllSpecialty = async (req, res) => {
+const getDoctorInfoWithAllData = async (req, res) => {
     try {
         const userId = req.params.userId;
 
         const doctorInfo = await db.DoctorInfo.findOne({
             where: { userId },
-            include: {
-                model: db.Specialty,
-                attributes: ['id', 'name']
-            }
+            include: [
+                { model: db.Specialty, attributes: ['id', 'name'] },
+                { model: db.Degree, attributes: ['id', 'name'] },
+                { model: db.Position, attributes: ['id', 'name'] }
+            ]
         });
 
-        const specialties = await db.Specialty.findAll({
-            attributes: ['id', 'name']
-        });
+        const specialties = await db.Specialty.findAll({ attributes: ['id', 'name'] });
+        const degrees = await db.Degree.findAll({ attributes: ['id', 'name'] });
+        const positions = await db.Position.findAll({ attributes: ['id', 'name'] });
 
         return res.status(200).json({
-            EM: 'Fetched doctor info + all specialties',
+            EM: 'Fetched doctor info + all data',
             EC: 0,
             DT: {
                 doctorInfo,
-                specialties
+                specialties,
+                degrees,
+                positions
             }
         });
     } catch (e) {
@@ -177,4 +180,5 @@ const getDoctorInfoWithAllSpecialty = async (req, res) => {
     }
 };
 
-module.exports = { read, create, update, remove, getUserAccount, readDoctor, getDoctorInfoByUserId, getDoctorInfoWithAllSpecialty }
+
+module.exports = { read, create, update, remove, getUserAccount, readDoctor, getDoctorInfoByUserId, getDoctorInfoWithAllData }

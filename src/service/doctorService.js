@@ -100,7 +100,40 @@ const getDoctorDetailById = async (userId) => {
     }
 };
 
+const getOtherDoctors = async (currentUserId) => {
+    try {
+        let doctors = await db.User.findAll({
+            where: {
+                groupId: 2,
+                id: { [db.Sequelize.Op.ne]: currentUserId }
+            },
+            include: [
+                {
+                    model: db.DoctorInfo,
+                    include: [
+                        { model: db.Position },
+                        { model: db.Specialty }
+                    ]
+                }
+            ]
+        });
+
+        return {
+            EC: 0,
+            EM: 'OK',
+            DT: doctors
+        };
+    } catch (e) {
+        console.log("Error in getOtherDoctors service", e);
+        return {
+            EC: 1,
+            EM: 'Lỗi server',
+            DT: []
+        };
+    }
+};
 
 
 
-export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery, getDoctorDetailById };
+
+export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery, getDoctorDetailById, getOtherDoctors };

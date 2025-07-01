@@ -43,8 +43,15 @@ const getDoctorDetailById = async (req, res) => {
     return res.status(data.EC === 0 ? 200 : 400).json(data);
 };
 
+const getOtherDoctors = async (req, res) => {
+    let userId = req.params.userId;
+    let data = await doctorService.getOtherDoctors(userId);
+    return res.status(200).json(data);
+};
 
 
 
 
-export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery, getDoctorDetailById };
+
+
+export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery, getDoctorDetailById, getOtherDoctors };

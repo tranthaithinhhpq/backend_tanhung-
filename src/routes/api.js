@@ -17,9 +17,11 @@ const initApiRoutes = (app) => {
     router.post("/login", apiController.handleLogin);
     router.get('/doctor-gallery', doctorController.readDoctorGallery);
     router.get('/doctor/detail/:userId', doctorController.getDoctorDetailById);
+    router.get('/doctor/others/:userId', doctorController.getOtherDoctors);
+
 
     // Check JWT + permission cho route /admin/**
-    router.all('/admin/*', checkUserJWT, checkUserPermission);
+    router.all('*', checkUserJWT, checkUserPermission);
 
     // Private routes (nhưng không cần check quyền nếu không bắt đầu bằng /admin)
     router.post("/logout", apiController.handleLogout);

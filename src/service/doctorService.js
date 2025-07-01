@@ -53,7 +53,8 @@ const readDoctorGallery = async () => {
         });
 
         // Log dữ liệu ra console
-        console.log("Doctor Gallery Data:", JSON.stringify(doctors, null, 2));
+        //console.log("check doctor ", doctors);
+
 
         return {
             EC: 0,
@@ -70,4 +71,36 @@ const readDoctorGallery = async () => {
     }
 };
 
-export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery };
+const getDoctorDetailById = async (userId) => {
+    try {
+        const doctor = await db.User.findOne({
+            where: { id: userId, groupId: 2 },  // Chỉ lấy user là bác sĩ
+            attributes: ['id', 'username', 'image'],
+            include: [
+                {
+                    model: db.DoctorInfo,
+                    attributes: ['markdownContent'],
+                    include: [
+                        { model: db.Specialty, attributes: ['id', 'name'] },
+                        { model: db.Position, attributes: ['id', 'name'] },
+                        { model: db.Degree, attributes: ['id', 'name'] },
+                    ]
+                }
+            ]
+        });
+
+        if (!doctor) {
+            return { EC: 1, EM: 'Bác sĩ không tồn tại hoặc không hợp lệ', DT: null };
+        }
+
+        return { EC: 0, EM: 'Lấy thông tin bác sĩ thành công', DT: doctor };
+    } catch (err) {
+        console.error("Error getDoctorDetailById:", err);
+        return { EC: -1, EM: 'Lỗi server khi lấy thông tin bác sĩ', DT: null };
+    }
+};
+
+
+
+
+export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery, getDoctorDetailById };

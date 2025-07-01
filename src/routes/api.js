@@ -23,6 +23,7 @@ const initApiRoutes = (app) => {
 
     router.post("/register", apiController.handleRegister);
     router.post("/login", apiController.handleLogin);
+    router.get('/doctor-gallery', doctorController.readDoctorGallery);
     router.all('*', checkUserJWT, checkUserPermission);
     router.post("/logout", apiController.handleLogout);
     router.get("/account", userController.getUserAccount);
@@ -53,6 +54,8 @@ const initApiRoutes = (app) => {
     router.put('/doctor-info/update/:userId', doctorController.updateDoctorInfo);
 
 
+
+
     // position rotes
     router.get('/position/read', positionController.read);
     // degree rotes
@@ -64,3 +67,6 @@ const initApiRoutes = (app) => {
     return app.use("/api/v1", router);
 }
 export default initApiRoutes;
+
+
+

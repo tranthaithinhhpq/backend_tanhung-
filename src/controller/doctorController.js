@@ -21,4 +21,19 @@ const updateDoctorInfo = async (req, res) => {
     }
 };
 
-export default { createDoctorInfo, updateDoctorInfo };
+const readDoctorGallery = async (req, res) => {
+    try {
+        const data = await doctorService.readDoctorGallery();
+        return res.status(data.EC === 0 ? 200 : 500).json(data);
+    } catch (e) {
+        console.error(e);
+        return res.status(500).json({
+            EC: -1,
+            EM: 'Server error',
+            DT: null
+        });
+    }
+};
+
+
+export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery };

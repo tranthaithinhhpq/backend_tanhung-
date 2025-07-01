@@ -35,4 +35,39 @@ const updateDoctorInfo = async (userId, body) => {
     }
 };
 
-export default { createDoctorInfo, updateDoctorInfo };
+const readDoctorGallery = async () => {
+    try {
+        const doctors = await db.User.findAll({
+            where: { groupId: 2 },  // Bác sĩ
+            attributes: ['id', 'username', 'image'],
+            include: [
+                {
+                    model: db.DoctorInfo,
+                    include: [
+                        { model: db.Position, attributes: ['id', 'name'] },
+                        { model: db.Degree, attributes: ['id', 'name'] },
+                        { model: db.Specialty, attributes: ['id', 'name'] }
+                    ]
+                }
+            ]
+        });
+
+        // Log dữ liệu ra console
+        console.log("Doctor Gallery Data:", JSON.stringify(doctors, null, 2));
+
+        return {
+            EC: 0,
+            EM: 'Fetched doctor gallery successfully',
+            DT: doctors
+        };
+    } catch (err) {
+        console.error("readDoctorGallery error:", err);
+        return {
+            EC: -1,
+            EM: 'Server error fetching doctor gallery',
+            DT: null
+        };
+    }
+};
+
+export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery };

@@ -5,6 +5,7 @@ import groupController from '../controller/groupController';
 import degreeController from '../controller/degreeController';
 import positionController from '../controller/positionController';
 import doctorController from '../controller/doctorController';
+import bookingController from '../controller/bookingController';
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 import roleController from '../controller/roleController';
 import upload from '../middleware/uploadMiddleware';
@@ -18,6 +19,10 @@ const initApiRoutes = (app) => {
     router.get('/doctor-gallery', doctorController.readDoctorGallery);
     router.get('/doctor/detail/:userId', doctorController.getDoctorDetailById);
     router.get('/doctor/others/:userId', doctorController.getOtherDoctors);
+    router.get('/doctor/by-specialty/:specialtyId', doctorController.getDoctorBySpecialty);
+    router.post('/booking/create', bookingController.createBooking);
+
+
 
 
     // Check JWT + permission cho route /admin/**

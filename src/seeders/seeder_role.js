@@ -5,47 +5,108 @@ module.exports = {
         await queryInterface.bulkInsert('Role', [
             {
                 url: '/user/read',
-                description: 'View all user'
+                description: 'Xem user',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
                 url: '/user/create',
-                description: 'Create new user'
+                description: 'Tạo user',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
                 url: '/user/update',
-                description: 'Edit user'
+                description: 'Sửa user',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
                 url: '/user/delete',
-                description: 'Delete user'
+                description: 'Xóa user',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
                 url: '/role/read',
-                description: 'View permission'
+                description: 'Xem quyền',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
                 url: '/role/create',
-                description: 'Create new permission'
+                description: 'Tạo quyền',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
                 url: '/role/update',
-                description: 'update permission'
+                description: 'Sửa quyền',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
                 url: '/role/delete',
-                description: 'Delete permission'
+                description: 'Xóa quyền',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
                 url: '/group/read',
-                description: 'Show all group'
+                description: 'Xem nhóm',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
                 url: '/role/by-group',
-                description: 'View permission of user'
+                description: 'Xem quyền nhóm',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
             },
             {
                 url: '/role/assign-to-group',
-                description: 'assign permission for user'
+                description: 'Phân quyền',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                url: '/doctor-info',
+                description: 'Xem bác sĩ',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                url: '/position/read',
+                description: 'Xem chức vụ',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                url: '/degree/read',
+                description: 'Xem học vị',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                url: '/doctor-info/read-all',
+                description: 'Xem toàn bộ bác sĩ',
+                groupId: null,
+                createdAt: new Date(),
+                updatedAt: new Date()
             }
         ], {});
     },

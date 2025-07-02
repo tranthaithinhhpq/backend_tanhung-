@@ -50,8 +50,22 @@ const getOtherDoctors = async (req, res) => {
 };
 
 
+const getDoctorBySpecialty = async (req, res) => {
+    const { specialtyId } = req.params;
+    try {
+        const doctors = await db.User.findAll({
+            where: { groupId: 2 },
+            include: [{
+                model: db.DoctorInfo,
+                where: { specialtyId }
+            }]
+        });
+        return res.json({ EC: 0, DT: doctors });
+    } catch (err) {
+        console.error(err);
+        return res.json({ EC: 1, EM: "Lỗi server", DT: [] });
+    }
+};
 
 
-
-
-export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery, getDoctorDetailById, getOtherDoctors };
+export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery, getDoctorDetailById, getOtherDoctors, getDoctorBySpecialty };

@@ -1,25 +1,37 @@
 'use strict';
+
 module.exports = {
-  // key: DataTypes.STRING,
-  //       type: DataTypes.STRING,
-  //       value_en: DataTypes.STRING,
-  //       value_vi: DataTypes.STRING,
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Allcode', {
+    await queryInterface.createTable('DrugPrices', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      key: {
+      code: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      activeIngredient: {
         type: Sequelize.STRING
       },
-      type: {
+      concentration: {
         type: Sequelize.STRING
       },
-      value: {
+      unit: {
         type: Sequelize.STRING
+      },
+      price: {
+        type: Sequelize.FLOAT,
+        allowNull: false
+      },
+      insurancePrice: {
+        type: Sequelize.FLOAT
       },
       createdAt: {
         allowNull: false,
@@ -31,7 +43,8 @@ module.exports = {
       }
     });
   },
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Allcode');
+
+  down: async (queryInterface) => {
+    await queryInterface.dropTable('DrugPrices');
   }
 };

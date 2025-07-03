@@ -2,7 +2,7 @@
 
 module.exports = {
     up: async (queryInterface) => {
-        await queryInterface.bulkInsert('ServicePrices', [
+        await queryInterface.bulkInsert('ServicePrice', [
             {
                 name: 'Khám tổng quát',
                 group: 'Khám',
@@ -27,6 +27,6 @@ module.exports = {
     },
 
     down: async (queryInterface) => {
-        await queryInterface.bulkDelete('ServicePrices', null, {});
+        await queryInterface.bulkDelete('ServicePrice', null, {});
     }
 };

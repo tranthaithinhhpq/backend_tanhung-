@@ -133,7 +133,31 @@ const getOtherDoctors = async (currentUserId) => {
     }
 };
 
+const getDoctorBySpecialty = async (specialtyId) => {
+    try {
+        const doctors = await db.User.findAll({
+            where: { groupId: 2 }, // groupId = 2 là bác sĩ
+            include: [
+                {
+                    model: db.DoctorInfo,
+                    where: { specialtyId }
+                }
+            ]
+        });
 
+        return {
+            EC: 0,
+            EM: 'Lấy danh sách bác sĩ thành công',
+            DT: doctors
+        };
+    } catch (err) {
+        console.error("getDoctorBySpecialty error: ", err);
+        return {
+            EC: 1,
+            EM: "Lỗi server khi lấy bác sĩ theo chuyên khoa",
+            DT: []
+        };
+    }
+};
 
-
-export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery, getDoctorDetailById, getOtherDoctors };
+export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery, getDoctorDetailById, getOtherDoctors, getDoctorBySpecialty };

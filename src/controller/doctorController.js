@@ -1,4 +1,5 @@
 import doctorService from '../service/doctorService';
+import specialtyService from '../service/specialtyService';
 
 const createDoctorInfo = async (req, res) => {
     try {
@@ -49,22 +50,28 @@ const getOtherDoctors = async (req, res) => {
     return res.status(200).json(data);
 };
 
+// const getDoctorBySpecialty = async (req, res) => {
+//     const { specialtyId } = req.params;
+//     try {
+//         const doctors = await db.User.findAll({
+//             where: { groupId: 2 },
+//             include: [{
+//                 model: db.DoctorInfo,
+//                 where: { specialtyId }
+//             }]
+//         });
+//         return res.json({ EC: 0, DT: doctors });
+//     } catch (err) {
+//         console.error("getDoctorBySpecialty error: ", err);
+//         return res.json({ EC: 1, EM: "Lỗi server", DT: [] });
+//     }
+// };
+
 
 const getDoctorBySpecialty = async (req, res) => {
     const { specialtyId } = req.params;
-    try {
-        const doctors = await db.User.findAll({
-            where: { groupId: 2 },
-            include: [{
-                model: db.DoctorInfo,
-                where: { specialtyId }
-            }]
-        });
-        return res.json({ EC: 0, DT: doctors });
-    } catch (err) {
-        console.error(err);
-        return res.json({ EC: 1, EM: "Lỗi server", DT: [] });
-    }
+    let result = await doctorService.getDoctorBySpecialty(specialtyId);
+    return res.status(200).json(result);
 };
 
 

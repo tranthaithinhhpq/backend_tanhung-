@@ -2,7 +2,7 @@
 
 module.exports = {
     up: async (queryInterface) => {
-        await queryInterface.bulkInsert('DrugPrices', [
+        await queryInterface.bulkInsert('DrugPrice', [
             {
                 code: 'TH001',
                 name: 'Paracetamol 500mg',
@@ -40,6 +40,6 @@ module.exports = {
     },
 
     down: async (queryInterface) => {
-        await queryInterface.bulkDelete('DrugPrices', null, {});
+        await queryInterface.bulkDelete('DrugPrice', null, {});
     }
 };

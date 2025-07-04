@@ -7,6 +7,7 @@ import positionController from '../controller/positionController';
 import doctorController from '../controller/doctorController';
 import bookingController from '../controller/bookingController';
 import specialtyController from '../controller/specialtyController';
+import newsController from '../controller/newsController';
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 import roleController from '../controller/roleController';
 import upload from '../middleware/uploadMiddleware';
@@ -49,6 +50,14 @@ const initApiRoutes = (app) => {
 
     router.get('/position/read', checkUserJWT, checkUserPermission, positionController.read);
     router.get('/degree/read', checkUserJWT, checkUserPermission, degreeController.read);
+
+
+    router.get('/news-categories', checkUserJWT, checkUserPermission, newsController.getCategories);
+    router.get('/news', checkUserJWT, checkUserPermission, newsController.getList);
+    router.get('/news/:id', checkUserJWT, checkUserPermission, newsController.getDetail);
+    router.post('/news', checkUserJWT, checkUserPermission, upload.single('image'), newsController.create);
+    router.put('/news/:id', checkUserJWT, checkUserPermission, upload.single('image'), newsController.update);
+    router.delete('/news/:id', checkUserJWT, checkUserPermission, newsController.remove);
 
     return app.use("/api/v1", router);
 };

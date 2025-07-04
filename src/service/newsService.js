@@ -1,0 +1,71 @@
+import db from "../models";
+import Sequelize from "sequelize";
+import { Op } from "sequelize";
+
+const getAllCategories = async () => {
+    const categories = await db.NewsCategory.findAll({
+        attributes: ['id', 'name', 'description'],
+        order: [['name', 'ASC']]
+    });
+    return categories;
+};
+
+const createArticle = async (data, imagePath) => {
+    return await db.NewsArticle.create({
+        title: data.title,
+        content: data.content,
+        image: imagePath,
+        categoryId: data.categoryId,
+        status: data.status || 'draft'
+    });
+};
+
+const getArticles = async (query) => {
+    const { categoryId, search, page = 1, limit = 10 } = query;
+    const where = {};
+    if (categoryId) where.categoryId = categoryId;
+    if (search) where.title = { [Sequelize.Op.like]: `%${search}%` };
+
+    const offset = (page - 1) * limit;
+    const { rows, count } = await db.NewsArticle.findAndCountAll({
+        where,
+        include: [{ model: db.NewsCategory, attributes: ['name'] }],
+        limit: +limit,
+        offset: +offset,
+        order: [['createdAt', 'DESC']]
+    });
+
+    return { rows, count };
+};
+
+const getArticleById = async (id) => {
+    return await db.NewsArticle.findOne({
+        where: { id },
+        include: [{ model: db.NewsCategory, attributes: ['name'] }]
+    });
+};
+
+const updateArticle = async (id, data, imagePath) => {
+    const updateData = {
+        title: data.title,
+        content: data.content,
+        categoryId: data.categoryId,
+        status: data.status
+    };
+    if (imagePath) updateData.image = imagePath;
+
+    return await db.NewsArticle.update(updateData, { where: { id } });
+};
+
+const deleteArticle = async (id) => {
+    return await db.NewsArticle.destroy({ where: { id } });
+};
+
+export default {
+    getAllCategories,
+    createArticle,
+    getArticles,
+    getArticleById,
+    updateArticle,
+    deleteArticle
+};

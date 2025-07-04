@@ -24,6 +24,9 @@ const initApiRoutes = (app) => {
     router.get('/doctor/by-specialty/:specialtyId', doctorController.getDoctorBySpecialty);
     router.post('/booking/create', bookingController.createBooking);
     router.get('/specialty/read', specialtyController.readSpecialties);
+    router.get('/news', newsController.getNewsList);
+    router.get('/news/:id', newsController.getNewsDetail);
+    router.get('/news-categories', newsController.getCategories);
 
     // Private routes (có check JWT + permission)
     router.post("/logout", checkUserJWT, checkUserPermission, apiController.handleLogout);

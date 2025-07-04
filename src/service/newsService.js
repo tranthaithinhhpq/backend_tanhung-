@@ -1,4 +1,4 @@
-import db from "../models";
+import db from "../models/index";
 import Sequelize from "sequelize";
 import { Op } from "sequelize";
 
@@ -23,7 +23,7 @@ const createArticle = async (data, imagePath) => {
 const getArticles = async (query) => {
     const { categoryId, search, page = 1, limit = 10 } = query;
     const where = {};
-    if (categoryId) where.categoryId = categoryId;
+    if (categoryId) where.categoryId = +categoryId;
     if (search) where.title = { [Sequelize.Op.like]: `%${search}%` };
 
     const offset = (page - 1) * limit;
@@ -32,7 +32,8 @@ const getArticles = async (query) => {
         include: [{ model: db.NewsCategory, attributes: ['name'] }],
         limit: +limit,
         offset: +offset,
-        order: [['createdAt', 'DESC']]
+        order: [['createdAt', 'DESC']],
+
     });
 
     return { rows, count };
@@ -61,11 +62,77 @@ const deleteArticle = async (id) => {
     return await db.NewsArticle.destroy({ where: { id } });
 };
 
+
+
+
+const getNewsList = async (page, limit, categoryId, keyword) => {
+
+    const offset = (page - 1) * limit;
+    const Sequelize = db.Sequelize;
+    const where = {};
+
+    if (categoryId && !isNaN(Number(categoryId))) {
+        where.categoryId = Number(categoryId);
+    }
+
+    if (keyword) {
+        where[Sequelize.Op.or] = [
+            { title: { [Sequelize.Op.like]: `%${keyword}%` } },
+            { content: { [Sequelize.Op.like]: `%${keyword}%` } }
+        ];
+    }
+
+    console.log("WHERE condition:", JSON.stringify(where, null, 2));
+
+    const { rows, count } = await db.NewsArticle.findAndCountAll({
+        where,
+        include: [{ model: db.NewsCategory, attributes: ['name'] }],
+        limit,
+        offset,
+        order: [['createdAt', 'DESC']]
+    });
+
+    return {
+        EC: 0,
+        EM: 'Lấy danh sách thành công',
+        DT: {
+            news: rows,
+            pagination: {
+                total: count,
+                page,
+                limit
+            }
+        }
+    };
+};
+
+
+
+
+
+
+
+
+const getNewsDetail = async (id) => {
+    const news = await db.NewsArticle.findOne({
+        where: { id },
+        include: [{ model: db.NewsCategory, attributes: ['name'] }]
+    });
+
+    if (!news) {
+        return { EC: 1, EM: 'Không tìm thấy bài viết', DT: {} };
+    }
+
+    return { EC: 0, EM: 'Lấy chi tiết thành công', DT: news };
+};
+
 export default {
     getAllCategories,
     createArticle,
     getArticles,
     getArticleById,
     updateArticle,
-    deleteArticle
+    deleteArticle,
+    getNewsList,
+    getNewsDetail
 };

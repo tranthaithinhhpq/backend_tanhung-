@@ -62,11 +62,37 @@ const remove = async (req, res) => {
     }
 };
 
+const getNewsList = async (req, res) => {
+    try {
+
+        const { page = 1, limit = 5, categoryId, keyword } = req.query;
+        console.log("Query params:", req.query);
+        const data = await newsService.getNewsList(+page, +limit, categoryId, keyword);
+        return res.status(200).json(data);
+    } catch (err) {
+        console.error("getNewsList error:", err);
+        return res.status(500).json({ EC: -1, EM: 'Lỗi server', DT: [] });
+    }
+};
+
+const getNewsDetail = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await newsService.getNewsDetail(id);
+        return res.status(200).json(data);
+    } catch (err) {
+        console.error("getNewsDetail error:", err);
+        return res.status(500).json({ EC: -1, EM: 'Lỗi server', DT: {} });
+    }
+};
+
 export default {
     getCategories,
     create,
     getList,
     getDetail,
     update,
-    remove
+    remove,
+    getNewsList,
+    getNewsDetail
 };

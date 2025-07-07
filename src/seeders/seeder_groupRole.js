@@ -19,7 +19,9 @@ module.exports = {
             { groupId: 1, roleId: 13 },
             { groupId: 1, roleId: 14 },
             { groupId: 1, roleId: 15 },
-
+            { groupId: 1, roleId: 16 },
+            { groupId: 1, roleId: 17 },
+            { groupId: 1, roleId: 18 },
             // Group 2 (Doctor)
             { groupId: 2, roleId: 1 },
             { groupId: 2, roleId: 2 },

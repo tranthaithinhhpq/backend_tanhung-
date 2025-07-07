@@ -38,8 +38,6 @@ const initApiRoutes = (app) => {
 
     // Doctor – public catalogue
     router.get("/doctor-gallery", doctorController.readDoctorGallery);
-    router.get("/doctor/detail/:userId", doctorController.getDoctorDetailById);
-    router.get("/doctor/others/:userId", doctorController.getOtherDoctors);
     router.get("/doctor/by-specialty/:specialtyId", doctorController.getDoctorBySpecialty);
 
     // Booking
@@ -85,17 +83,22 @@ const initApiRoutes = (app) => {
 
     /* ---------- Doctor info (admin) ----------------------------------------- */
     router.get("/doctor-info/:userId", checkUserJWT, checkUserPermission, userController.getDoctorInfoWithAllData);
-    // router.post("/doctor-info", checkUserJWT, checkUserPermission, doctorController.createDoctorInfo);
-    router.put("/doctor-info/:userId", checkUserJWT, checkUserPermission, upload.single("image"), doctorController.updateDoctorInfo);
     router.post('/doctor-info/create', checkUserJWT, checkUserPermission, upload.single('image'), doctorController.createDoctorInfo);
-    router.get("/doctor/list", checkUserJWT, checkUserPermission, doctorController.getDoctorListPaginate);
+    router.get('/doctor/list', checkUserJWT, checkUserPermission, doctorController.getDoctorList);
+    router.get("/doctor/others/:id", checkUserJWT, checkUserPermission, doctorController.getOtherDoctors);
+
+
+
 
 
 
     /* ---------- Doctor catalogue (admin) ------------------------------------ */
     router.get("/doctor/list", checkUserJWT, checkUserPermission, doctorController.getDoctorList);
-    router.get("/doctor/detail/:id", checkUserJWT, checkUserPermission, doctorController.getDoctorDetail);
-    router.delete("/doctor/:id", checkUserJWT, checkUserPermission, doctorController.deleteDoctor);
+    router.get("/doctor/detail/:id", checkUserJWT, checkUserPermission, doctorController.getDoctorDetailById);
+
+
+    router.put('/doctor/:id', checkUserJWT, checkUserPermission, upload.single("image"), doctorController.updateDoctorInfo);
+    router.delete('/doctor/:id', checkUserJWT, checkUserPermission, doctorController.deleteDoctorInfo);
 
     /* ---------- Static reference tables ------------------------------------- */
     router.get("/position/read", positionController.read);

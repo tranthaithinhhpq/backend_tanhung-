@@ -1,65 +1,50 @@
 'use strict';
 
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable('DoctorInfo', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
-
-      userId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'User', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+      doctorName: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
-
+      image: {
+        type: Sequelize.STRING
+      },
       positionId: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-        references: { model: 'Position', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        allowNull: true
       },
-
       degreeId: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-        references: { model: 'Degree', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        allowNull: true
       },
-
       specialtyId: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-        references: { model: 'Specialty', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL',
+        allowNull: true
       },
-
       markdownContent: {
-        type: Sequelize.TEXT,
-        allowNull: true,
+        type: Sequelize.TEXT
       },
-
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
+        defaultValue: Sequelize.fn('NOW')
       },
-
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-      },
+        defaultValue: Sequelize.fn('NOW')
+      }
     });
   },
 
-  down: async (queryInterface, Sequelize) => {
+  async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('DoctorInfo');
-  },
+  }
 };

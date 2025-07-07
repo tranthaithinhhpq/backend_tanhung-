@@ -7,13 +7,15 @@ const getAllSpecialties = async () => {
             order: [['name', 'ASC']]
         });
 
+        console.log("✅ specialties:", specialties);
+
         return {
             EC: 0,
             EM: 'Lấy danh sách chuyên khoa thành công',
             DT: specialties
         };
     } catch (error) {
-        console.error("Error in getAllSpecialties:", error);
+        console.error("❌ Error in getAllSpecialties:", error);  // Bắt chi tiết lỗi
         return {
             EC: -1,
             EM: 'Lỗi server khi lấy danh sách chuyên khoa',

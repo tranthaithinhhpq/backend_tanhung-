@@ -7,6 +7,7 @@ import newsController from '../controller/newsController';
 import apiController from '../controller/apiController';
 import upload from '../middleware/uploadMiddleware';
 import specialtyController from '../controller/specialtyController';
+import deviceController from '../controller/deviceController';
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
 const router = express.Router();
@@ -54,5 +55,11 @@ router.get("/specialty/read", specialtyController.readSpecialties);
 router.post("/specialty", upload.single("image"), specialtyController.createSpecialty);
 router.put("/specialty/:id", upload.single("image"), specialtyController.updateSpecialty);
 router.delete("/specialty/:id", specialtyController.deleteSpecialty);
+
+// Device admin
+router.get('/device/read', deviceController.readDevices);
+router.post('/device', upload.single('image'), deviceController.createDevice);
+router.put('/device/:id', upload.single('image'), deviceController.updateDevice);
+router.delete('/device/:id', deviceController.deleteDevice);
 
 export default router;

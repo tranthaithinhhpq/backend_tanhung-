@@ -6,6 +6,7 @@ import specialtyController from '../controller/specialtyController';
 import positionController from '../controller/positionController';
 import degreeController from '../controller/degreeController';
 import newsController from '../controller/newsController';
+import deviceController from '../controller/deviceController';
 
 const router = express.Router();
 
@@ -32,5 +33,9 @@ router.get("/degree/read", degreeController.read);
 router.get("/news", newsController.getNewsList);
 router.get("/news/:id", newsController.getNewsDetail);
 router.get("/news-categories", newsController.getCategories);
+
+// Device admin
+router.get('/device/list', deviceController.readDevices);
+router.get('/device/detail/:id', deviceController.getDeviceDetail);
 
 export default router;

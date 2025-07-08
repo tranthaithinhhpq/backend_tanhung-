@@ -75,7 +75,7 @@ const readDoctorGallery = async (req, res) => {
 const getDoctorDetailById = async (req, res) => {
     try {
         const { id } = req.params;  // Đảm bảo đây là id
-        console.log("📌 getDoctorDetailById param id:", id);
+
         if (!id) {
             return res.status(400).json({ EC: 1, EM: 'Thiếu id', DT: {} });
         }

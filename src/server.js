@@ -1,7 +1,7 @@
 require("dotenv").config();
 import express from "express";
 import configViewEngine from "./config/viewEngine";
-import initApiRoutes from "./routes/api";
+import initApiRoutes from "./routes/initApiRoutes.js";
 import configCors from "./config/cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";

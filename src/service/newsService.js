@@ -82,7 +82,7 @@ const getNewsList = async (page, limit, categoryId, keyword) => {
         ];
     }
 
-    console.log("WHERE condition:", JSON.stringify(where, null, 2));
+
 
     const { rows, count } = await db.NewsArticle.findAndCountAll({
         where,

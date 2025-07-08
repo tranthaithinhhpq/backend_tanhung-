@@ -66,7 +66,7 @@ const getNewsList = async (req, res) => {
     try {
 
         const { page = 1, limit = 5, categoryId, keyword } = req.query;
-        console.log("Query params:", req.query);
+
         const data = await newsService.getNewsList(+page, +limit, categoryId, keyword);
         return res.status(200).json(data);
     } catch (err) {

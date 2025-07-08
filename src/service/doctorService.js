@@ -154,7 +154,7 @@ const getOtherDoctors = async (currentDoctorId) => {
 };
 
 const getDoctorDetailById = async (id) => {
-    console.log("📌 getDoctorDetailById service received id:", id);
+
     try {
         const doctor = await db.DoctorInfo.findOne({
             where: { id },

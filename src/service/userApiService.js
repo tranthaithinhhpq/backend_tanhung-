@@ -172,7 +172,7 @@ const getAllDoctor = async () => {
                 where: { name: "Doctor" }  // chỉ lấy user thuộc Group Doctor
             }
         });
-        console.log("get doctor: ", doctors);
+
 
         return {
             EM: 'get doctor data success',

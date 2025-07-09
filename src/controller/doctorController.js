@@ -122,9 +122,24 @@ const getOtherDoctors = async (req, res) => {
 
 
 const getDoctorBySpecialty = async (req, res) => {
-    const { specialtyId } = req.params;
-    let result = await doctorService.getDoctorBySpecialty(specialtyId);
-    return res.status(200).json(result);
+    try {
+        const { specialtyId } = req.params;
+        const doctors = await db.DoctorInfo.findAll({
+            where: { specialtyId },
+            attributes: ['id', 'doctorName']
+        });
+
+        return res.status(200).json({
+            EC: 0,
+            DT: doctors
+        });
+    } catch (error) {
+        console.error("❌ Lỗi getDoctorBySpecialty:", error);
+        return res.status(500).json({
+            EC: -1,
+            EM: 'Lỗi server'
+        });
+    }
 };
 
 const getDoctorList = async (req, res) => {

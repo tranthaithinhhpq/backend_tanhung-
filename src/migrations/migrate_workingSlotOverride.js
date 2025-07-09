@@ -2,7 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('WorkingSlotOverrides', {
+    await queryInterface.createTable('WorkingSlotOverride', {
       id: { allowNull: false, autoIncrement: true, primaryKey: true, type: Sequelize.INTEGER },
       doctorId: { type: Sequelize.INTEGER, allowNull: false },
       date: { type: Sequelize.DATEONLY, allowNull: false },
@@ -14,6 +14,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('WorkingSlotOverrides');
+    await queryInterface.dropTable('WorkingSlotOverride');
   }
 };

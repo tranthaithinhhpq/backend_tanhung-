@@ -221,6 +221,28 @@ const getDoctorListPaginate = async (req, res) => {
         return res.status(500).json({ EC: -1, EM: "Server error", DT: {} });
     }
 };
+const getDoctorAvailableSchedule = async (req, res) => {
+    try {
+        const doctorId = req.params.id;
+        const result = await doctorService.getAvailableScheduleByDoctor(doctorId);
+        return res.status(200).json(result);
+    } catch (err) {
+        console.error("Lỗi lấy lịch khám:", err);
+        return res.status(500).json({ EC: -1, EM: "Lỗi server" });
+    }
+};
 
 
-export default { createDoctorInfo, updateDoctorInfo, readDoctorGallery, getDoctorDetailById, getOtherDoctors, getDoctorBySpecialty, getDoctorList, getDoctorDetail, deleteDoctorInfo, getDoctorListPaginate };
+export default {
+    createDoctorInfo,
+    updateDoctorInfo,
+    readDoctorGallery,
+    getDoctorDetailById,
+    getOtherDoctors,
+    getDoctorBySpecialty,
+    getDoctorList,
+    getDoctorDetail,
+    deleteDoctorInfo,
+    getDoctorListPaginate,
+    getDoctorAvailableSchedule
+};

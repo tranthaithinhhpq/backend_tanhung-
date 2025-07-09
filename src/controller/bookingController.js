@@ -1,23 +1,28 @@
-import db from "../models";
+// controller/bookingController.js
+import db from '../models/index.js';
+
 const createBooking = async (req, res) => {
     try {
-        await db.Booking.create({
-            name: req.body.name,
-            phone: req.body.phone,
-            dob: req.body.dob,
-            address: req.body.address,
-            email: req.body.email,
-            reason: req.body.reason,
-            specialtyId: req.body.specialtyId,
-            doctorId: req.body.doctorId,
-            scheduleTime: req.body.scheduleTime
+        const { name, phone, dob, address, email, reason, scheduleTime, doctorId, specialtyId } = req.body;
+
+        // Check duplicate
+        const exist = await db.Booking.findOne({
+            where: { doctorId, scheduleTime }
         });
-        return res.json({ EC: 0, EM: "Đặt lịch thành công" });
+        if (exist) {
+            return res.status(409).json({ EC: 1, EM: "Khung giờ này đã có người đặt!" });
+        }
+
+        const booking = await db.Booking.create({
+            name, phone, dob, address, email, reason,
+            scheduleTime, doctorId, specialtyId
+        });
+
+        return res.status(201).json({ EC: 0, EM: 'Đặt lịch thành công', DT: booking });
     } catch (err) {
-        console.error(err);
-        return res.json({ EC: 1, EM: "Lỗi đặt lịch" });
+        console.error("❌ Lỗi createBooking:", err);
+        return res.status(500).json({ EC: -1, EM: 'Lỗi máy chủ' });
     }
 };
-module.exports = {
-    createBooking
-};
+
+export default { createBooking };

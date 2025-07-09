@@ -20,6 +20,7 @@ router.get("/doctor/detail/:id", doctorController.getDoctorDetailById);
 router.get("/doctor/others/:id", doctorController.getOtherDoctors);
 router.get("/doctor/by-specialty/:specialtyId", doctorController.getDoctorBySpecialty);
 router.get("/doctor-gallery", doctorController.readDoctorGallery);
+router.get("/doctor/:id/schedule", doctorController.getDoctorAvailableSchedule);
 
 // Booking
 router.post("/booking/create", bookingController.createBooking);

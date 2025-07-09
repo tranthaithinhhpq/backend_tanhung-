@@ -2,7 +2,7 @@
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.bulkInsert('WorkingSlotOverrides', [
+        await queryInterface.bulkInsert('WorkingSlotOverride', [
             {
                 doctorId: 1,
                 date: '2025-07-10',
@@ -15,6 +15,6 @@ module.exports = {
         ], {});
     },
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.bulkDelete('WorkingSlotOverrides', null, {});
+        await queryInterface.bulkDelete('WorkingSlotOverride', null, {});
     }
 };

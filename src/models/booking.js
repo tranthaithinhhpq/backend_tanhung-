@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     class Booking extends Model {
         static associate(models) {
             Booking.belongsTo(models.DoctorInfo, { foreignKey: 'doctorId' });
+            Booking.belongsTo(models.WorkingSlotTemplate, { foreignKey: 'slotId' });
+            Booking.belongsTo(models.Specialty, { foreignKey: 'specialtyId' });
         }
     }
 
@@ -17,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         reason: DataTypes.TEXT,
         doctorId: DataTypes.INTEGER,
         specialtyId: DataTypes.INTEGER,
+        slotId: DataTypes.INTEGER,
         scheduleTime: DataTypes.DATE
     }, {
         sequelize,

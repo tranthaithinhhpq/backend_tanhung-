@@ -3,11 +3,11 @@ import db from '../models/index.js';
 
 const createBooking = async (req, res) => {
     try {
-        const { name, phone, dob, address, email, reason, scheduleTime, doctorId, specialtyId } = req.body;
+        const { name, phone, dob, address, email, reason, scheduleTime, doctorId, specialtyId, slotId } = req.body;
 
         // Check duplicate
         const exist = await db.Booking.findOne({
-            where: { doctorId, scheduleTime }
+            where: { doctorId, scheduleTime, slotId }
         });
         if (exist) {
             return res.status(409).json({ EC: 1, EM: "Khung giờ này đã có người đặt!" });
@@ -15,7 +15,7 @@ const createBooking = async (req, res) => {
 
         const booking = await db.Booking.create({
             name, phone, dob, address, email, reason,
-            scheduleTime, doctorId, specialtyId
+            scheduleTime, doctorId, specialtyId, slotId
         });
 
         return res.status(201).json({ EC: 0, EM: 'Đặt lịch thành công', DT: booking });

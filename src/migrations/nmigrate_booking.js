@@ -12,6 +12,7 @@ module.exports = {
       reason: { type: Sequelize.TEXT },
       doctorId: { type: Sequelize.INTEGER, allowNull: false },
       specialtyId: { type: Sequelize.INTEGER },
+      slotId: { type: Sequelize.INTEGER, allowNull: false },
       scheduleTime: { type: Sequelize.DATE },
       createdAt: { allowNull: false, type: Sequelize.DATE, defaultValue: Sequelize.fn('NOW') },
       updatedAt: { allowNull: false, type: Sequelize.DATE, defaultValue: Sequelize.fn('NOW') },

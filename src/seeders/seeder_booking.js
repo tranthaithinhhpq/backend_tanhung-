@@ -12,6 +12,7 @@ module.exports = {
                 reason: 'Khám tổng quát',
                 doctorId: 1,
                 specialtyId: 1,
+                slotId: 1,
                 scheduleTime: new Date('2025-07-11T08:00:00'),
                 createdAt: new Date(),
                 updatedAt: new Date()

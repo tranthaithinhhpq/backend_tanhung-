@@ -1,6 +1,6 @@
 import db from '../models/index';
 import { Op } from "sequelize";
-import { eachDayOfInterval, format, getDay, addDays } from "date-fns";
+import { eachDayOfInterval, format, getDay, addDays, startOfDay, endOfDay } from "date-fns";
 
 const createDoctorInfo = async (body, file) => {
     try {
@@ -180,57 +180,66 @@ const DEFAULT_SLOTS = [
 ];
 
 const getAvailableScheduleByDoctor = async (doctorId) => {
+    doctorId = parseInt(doctorId);
+    console.log("🧪 typeof doctorId:", typeof doctorId, doctorId);
     try {
         const today = new Date();
         const next14Days = eachDayOfInterval({ start: today, end: addDays(today, 13) });
+        console.log("🧪 Đang lấy override với doctorId =", doctorId);
+        console.log("🧪 Ngày từ:", format(today, 'yyyy-MM-dd'), "đến", format(addDays(today, 30), 'yyyy-MM-dd'));
 
         const workingSlots = await db.WorkingSlotTemplate.findAll({ where: { doctorId } });
+        if (!workingSlots.length) return { EC: 0, DT: [] };
 
-        if (!workingSlots.length) {
-            return { EC: 0, DT: [] };
-        }
-
-        const formattedSlots = workingSlots.map((slot, index) => ({
+        const formattedSlots = workingSlots.map(slot => ({
             dayOfWeek: slot.dayOfWeek,
-            slotId: slot.id, // Dùng id làm slotId nếu không có cột riêng
+            slotId: slot.id,
             time: `${slot.startTime} - ${slot.endTime}`
         }));
 
-        console.log("slots:", formattedSlots.map(s => `${s.dayOfWeek}-${s.slotId}-${s.time}`));
+        const startDate = format(startOfDay(today), 'yyyy-MM-dd');
+        const endDate = format(endOfDay(addDays(today, 30)), 'yyyy-MM-dd');
+        console.log("🧪 Lấy override với doctorId =", doctorId);
+        console.log("🧪 Ngày từ:", startDate, "đến", endDate);
 
         const overrides = await db.WorkingSlotOverride.findAll({
             where: {
                 doctorId,
                 date: {
-                    [Op.between]: [format(today, 'yyyy-MM-dd'), format(addDays(today, 30), 'yyyy-MM-dd')]
+                    [Op.between]: [startDate, endDate]
                 }
-            }
+            },
+            logging: console.log
         });
+        console.log("🎯 Overrides từ DB:", overrides);
+        console.log("🧪 Raw today:", today);
+        // console.log("🧪 Formatted start:", format(today, 'yyyy-MM-dd'));
+        // console.log("🧪 Formatted end:", format(addDays(today, 30), 'yyyy-MM-dd'));
+
 
         const overrideMap = {};
         overrides.forEach(ov => {
+            console.log(`   ➤ Date: ${ov.date}, slotId: ${ov.slotId}, isActive: ${ov.isActive}`);
             const key = `${ov.date}-${ov.slotId}`;
-            overrideMap[key] = ov.status; // "disabled" nếu nghỉ
+            overrideMap[key] = ov.isActive === false ? 'disabled' : 'active';
         });
-
-        console.log("overrideMap:", overrideMap);
+        console.log("🧩 overrideMap đã xử lý:", overrideMap);
 
         const response = [];
-
         for (let date of next14Days) {
-            const dow = getDay(date); // 0 = CN, 1 = T2, ...
+            const dow = getDay(date);
             const dateStr = format(date, "yyyy-MM-dd");
-
             const available = [];
+            console.log(`📅 Ngày: ${dateStr} (thứ ${dow})`);
 
             for (let slot of formattedSlots) {
                 if (slot.dayOfWeek === dow) {
                     const key = `${dateStr}-${slot.slotId}`;
-                    if (overrideMap[key] !== "disabled") {
-                        available.push({
-                            slotId: slot.slotId,
-                            time: slot.time
-                        });
+                    const status = overrideMap[key];
+
+                    console.log(`  🔍 Slot ${slot.slotId} (${slot.time}) ➜ override: ${status}`);
+                    if (status !== 'disabled') {
+                        available.push({ slotId: slot.slotId, time: slot.time });
                     }
                 }
             }
@@ -246,8 +255,6 @@ const getAvailableScheduleByDoctor = async (doctorId) => {
         return { EC: -1, EM: "Lỗi khi lấy lịch bác sĩ", DT: [] };
     }
 };
-
-
 
 export default {
     createDoctorInfo,

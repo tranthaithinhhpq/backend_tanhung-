@@ -5,14 +5,14 @@ module.exports = (sequelize, DataTypes) => {
     class WorkingSlotOverride extends Model {
         static associate(models) {
             WorkingSlotOverride.belongsTo(models.DoctorInfo, { foreignKey: 'doctorId' });
+            WorkingSlotOverride.belongsTo(models.WorkingSlotTemplate, { foreignKey: 'slotId' });
         }
     }
 
     WorkingSlotOverride.init({
         doctorId: DataTypes.INTEGER,
+        slotId: DataTypes.INTEGER, // Tham chiếu slot
         date: DataTypes.DATEONLY,
-        startTime: DataTypes.STRING,
-        endTime: DataTypes.STRING,
         isActive: DataTypes.BOOLEAN
     }, {
         sequelize,

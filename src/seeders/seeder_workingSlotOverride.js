@@ -5,9 +5,8 @@ module.exports = {
         await queryInterface.bulkInsert('WorkingSlotOverride', [
             {
                 doctorId: 1,
+                slotId: 2, // Giả định slotId = 2 tương ứng 08:00 - 09:00
                 date: '2025-07-10',
-                startTime: '08:00',
-                endTime: '09:00',
                 isActive: false,
                 createdAt: new Date(),
                 updatedAt: new Date()

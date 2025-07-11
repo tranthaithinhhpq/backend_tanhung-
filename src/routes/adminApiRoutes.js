@@ -8,6 +8,7 @@ import apiController from '../controller/apiController';
 import upload from '../middleware/uploadMiddleware';
 import specialtyController from '../controller/specialtyController';
 import deviceController from '../controller/deviceController';
+import workingSlotOverrideController from '../controller/workingSlotOverrideController';
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
 const router = express.Router();
@@ -61,5 +62,13 @@ router.get('/device/read', deviceController.readDevices);
 router.post('/device', upload.single('image'), deviceController.createDevice);
 router.put('/device/:id', upload.single('image'), deviceController.updateDevice);
 router.delete('/device/:id', deviceController.deleteDevice);
+
+// workingSlotOverride admin
+router.get('/doctor-day-off', workingSlotOverrideController.getOverrides);
+router.get('/doctor-day-off/slots', workingSlotOverrideController.getDoctorSlotsByDate);
+router.post('/doctor-day-off', workingSlotOverrideController.createOverride);
+router.put('/doctor-day-off/:id', workingSlotOverrideController.updateOverride);
+router.delete('/doctor-day-off/:id', workingSlotOverrideController.deleteOverride);
+router.get('/doctor-day-off-paginate', workingSlotOverrideController.getDayOffPaginate);
 
 export default router;

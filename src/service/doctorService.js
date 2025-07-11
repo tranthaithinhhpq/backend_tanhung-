@@ -181,12 +181,11 @@ const DEFAULT_SLOTS = [
 
 const getAvailableScheduleByDoctor = async (doctorId) => {
     doctorId = parseInt(doctorId);
-    console.log("🧪 typeof doctorId:", typeof doctorId, doctorId);
+
     try {
         const today = new Date();
         const next14Days = eachDayOfInterval({ start: today, end: addDays(today, 13) });
-        console.log("🧪 Đang lấy override với doctorId =", doctorId);
-        console.log("🧪 Ngày từ:", format(today, 'yyyy-MM-dd'), "đến", format(addDays(today, 30), 'yyyy-MM-dd'));
+
 
         const workingSlots = await db.WorkingSlotTemplate.findAll({ where: { doctorId } });
         if (!workingSlots.length) return { EC: 0, DT: [] };
@@ -199,8 +198,7 @@ const getAvailableScheduleByDoctor = async (doctorId) => {
 
         const startDate = format(startOfDay(today), 'yyyy-MM-dd');
         const endDate = format(endOfDay(addDays(today, 30)), 'yyyy-MM-dd');
-        console.log("🧪 Lấy override với doctorId =", doctorId);
-        console.log("🧪 Ngày từ:", startDate, "đến", endDate);
+
 
         const overrides = await db.WorkingSlotOverride.findAll({
             where: {
@@ -209,12 +207,10 @@ const getAvailableScheduleByDoctor = async (doctorId) => {
                     [Op.between]: [startDate, endDate]
                 }
             },
-            logging: console.log
+
         });
-        console.log("🎯 Overrides từ DB:", overrides);
-        console.log("🧪 Raw today:", today);
-        // console.log("🧪 Formatted start:", format(today, 'yyyy-MM-dd'));
-        // console.log("🧪 Formatted end:", format(addDays(today, 30), 'yyyy-MM-dd'));
+
+
 
 
         const overrideMap = {};
@@ -228,16 +224,19 @@ const getAvailableScheduleByDoctor = async (doctorId) => {
         const response = [];
         for (let date of next14Days) {
             const dow = getDay(date);
-            const dateStr = format(date, "yyyy-MM-dd");
+
+            const dateStr = date.getFullYear() + '-' +
+                String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                String(date.getDate()).padStart(2, '0');
             const available = [];
-            console.log(`📅 Ngày: ${dateStr} (thứ ${dow})`);
+
 
             for (let slot of formattedSlots) {
                 if (slot.dayOfWeek === dow) {
                     const key = `${dateStr}-${slot.slotId}`;
                     const status = overrideMap[key];
 
-                    console.log(`  🔍 Slot ${slot.slotId} (${slot.time}) ➜ override: ${status}`);
+
                     if (status !== 'disabled') {
                         available.push({ slotId: slot.slotId, time: slot.time });
                     }

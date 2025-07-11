@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
         doctorId: DataTypes.INTEGER,
         slotId: DataTypes.INTEGER, // Tham chiếu slot
         date: DataTypes.DATEONLY,
+        note: DataTypes.TEXT,
         isActive: DataTypes.BOOLEAN
     }, {
         sequelize,

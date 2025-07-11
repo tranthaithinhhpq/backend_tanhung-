@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     class WorkingSlotTemplate extends Model {
         static associate(models) {
             WorkingSlotTemplate.belongsTo(models.DoctorInfo, { foreignKey: 'doctorId' });
+
         }
     }
 

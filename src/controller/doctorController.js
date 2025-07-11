@@ -8,36 +8,21 @@ const createDoctorInfo = async (req, res) => {
         const { doctorName, specialtyId, degreeId, positionId, markdownContent } = req.body;
         const file = req.file;
 
-        if (!doctorName || !specialtyId || !degreeId || !positionId || !file) {
-            return res.status(400).json({
-                EC: 1,
-                EM: 'Thiếu thông tin bắt buộc',
-                DT: ''
-            });
-        }
-
         const newDoctor = await db.DoctorInfo.create({
             doctorName,
             specialtyId,
             degreeId,
             positionId,
             markdownContent: markdownContent || '',
-            image: `/images/${file.filename}`
+            image: file ? `/images/${file.filename}` : null
         });
 
-        return res.status(200).json({
-            EC: 0,
-            EM: 'Tạo bác sĩ thành công',
-            DT: newDoctor
-        });
+        await createDefaultSlotsForDoctor(newDoctor.id);
 
+        return res.status(201).json({ EC: 0, EM: 'Tạo bác sĩ và lịch mặc định thành công' });
     } catch (err) {
-        console.error('❌ createDoctorInfo error:', err);
-        return res.status(500).json({
-            EC: -1,
-            EM: 'Lỗi server',
-            DT: ''
-        });
+        console.error("❌ createDoctorInfo error:", err);
+        return res.status(500).json({ EC: 1, EM: 'Lỗi khi tạo bác sĩ' });
     }
 };
 
@@ -200,14 +185,31 @@ const getDoctorDetail = async (req, res) => {
 
 const deleteDoctorInfo = async (req, res) => {
     try {
-        const id = req.params.id;
-        const data = await doctorService.deleteDoctorInfo(id);
-        return res.status(200).json(data);
+        const doctorId = req.params.id;
+
+        // Kiểm tra bác sĩ có tồn tại không
+        const doctor = await db.DoctorInfo.findByPk(doctorId);
+        if (!doctor) {
+            return res.status(404).json({ EC: 1, EM: 'Bác sĩ không tồn tại', DT: null });
+        }
+
+        // Xóa các slot làm việc mặc định
+        await db.WorkingSlotTemplate.destroy({
+            where: { doctorId }
+        });
+
+        // (Nếu có thêm bảng liên quan như booking thì xử lý tại đây)
+
+        // Xóa bác sĩ
+        await doctor.destroy();
+
+        return res.status(200).json({ EC: 0, EM: 'Xóa bác sĩ và lịch làm việc thành công', DT: null });
     } catch (e) {
         console.error("❌ deleteDoctorInfo error:", e);
-        return res.status(500).json({ EC: -1, EM: "Server error", DT: {} });
+        return res.status(500).json({ EC: -1, EM: "Lỗi server", DT: {} });
     }
 };
+
 const getDoctorListPaginate = async (req, res) => {
     try {
         let page = +req.query.page || 1;
@@ -232,6 +234,77 @@ const getDoctorAvailableSchedule = async (req, res) => {
     }
 };
 
+const createDefaultSlotsForDoctor = async (doctorId) => {
+    const defaultSlots = [
+        // Monday (1)
+        { dayOfWeek: 1, startTime: '07:00', endTime: '08:00' },
+        { dayOfWeek: 1, startTime: '08:00', endTime: '09:00' },
+        { dayOfWeek: 1, startTime: '09:00', endTime: '10:00' },
+        { dayOfWeek: 1, startTime: '10:00', endTime: '11:00' },
+        { dayOfWeek: 1, startTime: '13:00', endTime: '14:00' },
+        { dayOfWeek: 1, startTime: '14:00', endTime: '15:00' },
+        { dayOfWeek: 1, startTime: '15:00', endTime: '16:00' },
+        { dayOfWeek: 1, startTime: '16:00', endTime: '17:00' },
+
+        // Tuesday (2)
+        { dayOfWeek: 2, startTime: '07:00', endTime: '08:00' },
+        { dayOfWeek: 2, startTime: '08:00', endTime: '09:00' },
+        { dayOfWeek: 2, startTime: '09:00', endTime: '10:00' },
+        { dayOfWeek: 2, startTime: '10:00', endTime: '11:00' },
+        { dayOfWeek: 2, startTime: '13:00', endTime: '14:00' },
+        { dayOfWeek: 2, startTime: '14:00', endTime: '15:00' },
+        { dayOfWeek: 2, startTime: '15:00', endTime: '16:00' },
+        { dayOfWeek: 2, startTime: '16:00', endTime: '17:00' },
+
+        // Wednesday (3)
+        { dayOfWeek: 3, startTime: '07:00', endTime: '08:00' },
+        { dayOfWeek: 3, startTime: '08:00', endTime: '09:00' },
+        { dayOfWeek: 3, startTime: '09:00', endTime: '10:00' },
+        { dayOfWeek: 3, startTime: '10:00', endTime: '11:00' },
+        { dayOfWeek: 3, startTime: '13:00', endTime: '14:00' },
+        { dayOfWeek: 3, startTime: '14:00', endTime: '15:00' },
+        { dayOfWeek: 3, startTime: '15:00', endTime: '16:00' },
+        { dayOfWeek: 3, startTime: '16:00', endTime: '17:00' },
+
+        // Thursday (4)
+        { dayOfWeek: 4, startTime: '07:00', endTime: '08:00' },
+        { dayOfWeek: 4, startTime: '08:00', endTime: '09:00' },
+        { dayOfWeek: 4, startTime: '09:00', endTime: '10:00' },
+        { dayOfWeek: 4, startTime: '10:00', endTime: '11:00' },
+        { dayOfWeek: 4, startTime: '13:00', endTime: '14:00' },
+        { dayOfWeek: 4, startTime: '14:00', endTime: '15:00' },
+        { dayOfWeek: 4, startTime: '15:00', endTime: '16:00' },
+        { dayOfWeek: 4, startTime: '16:00', endTime: '17:00' },
+
+        // Friday (5)
+        { dayOfWeek: 5, startTime: '07:00', endTime: '08:00' },
+        { dayOfWeek: 5, startTime: '08:00', endTime: '09:00' },
+        { dayOfWeek: 5, startTime: '09:00', endTime: '10:00' },
+        { dayOfWeek: 5, startTime: '10:00', endTime: '11:00' },
+        { dayOfWeek: 5, startTime: '13:00', endTime: '14:00' },
+        { dayOfWeek: 5, startTime: '14:00', endTime: '15:00' },
+        { dayOfWeek: 5, startTime: '15:00', endTime: '16:00' },
+        { dayOfWeek: 5, startTime: '16:00', endTime: '17:00' },
+
+        // Saturday (6)
+        { dayOfWeek: 6, startTime: '07:00', endTime: '08:00' },
+        { dayOfWeek: 6, startTime: '08:00', endTime: '09:00' },
+        { dayOfWeek: 6, startTime: '09:00', endTime: '10:00' },
+        { dayOfWeek: 6, startTime: '10:00', endTime: '11:00' },
+        { dayOfWeek: 6, startTime: '13:00', endTime: '14:00' },
+        { dayOfWeek: 6, startTime: '14:00', endTime: '15:00' },
+        { dayOfWeek: 6, startTime: '15:00', endTime: '16:00' },
+        { dayOfWeek: 6, startTime: '16:00', endTime: '17:00' },
+    ];
+
+    const slotWithDoctor = defaultSlots.map(slot => ({
+        ...slot,
+        doctorId
+    }));
+
+    await db.WorkingSlotTemplate.bulkCreate(slotWithDoctor);
+};
+
 
 export default {
     createDoctorInfo,
@@ -244,5 +317,6 @@ export default {
     getDoctorDetail,
     deleteDoctorInfo,
     getDoctorListPaginate,
-    getDoctorAvailableSchedule
+    getDoctorAvailableSchedule,
+    createDefaultSlotsForDoctor
 };

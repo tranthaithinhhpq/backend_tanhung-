@@ -9,6 +9,7 @@ import upload from '../middleware/uploadMiddleware';
 import specialtyController from '../controller/specialtyController';
 import deviceController from '../controller/deviceController';
 import workingSlotOverrideController from '../controller/workingSlotOverrideController';
+import servicePriceController from '../controller/servicePriceController';
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
 const router = express.Router();
@@ -70,5 +71,13 @@ router.post('/doctor-day-off', workingSlotOverrideController.createOverride);
 router.put('/doctor-day-off/:id', workingSlotOverrideController.updateOverride);
 router.delete('/doctor-day-off/:id', workingSlotOverrideController.deleteOverride);
 router.get('/doctor-day-off-paginate', workingSlotOverrideController.getDayOffPaginate);
+
+// Service Price admin
+
+router.get('/service-price/read', servicePriceController.readPaginate); // phân trang
+router.get('/service-price/all', servicePriceController.getAllServicePrices); // toàn bộ (nếu cần)
+router.post('/service-price', servicePriceController.createServicePrice);
+router.put('/service-price/:id', servicePriceController.updateServicePrice);
+router.delete('/service-price/:id', servicePriceController.deleteServicePrice);
 
 export default router;

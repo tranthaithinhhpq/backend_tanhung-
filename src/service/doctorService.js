@@ -184,7 +184,8 @@ const getAvailableScheduleByDoctor = async (doctorId) => {
 
     try {
         const today = new Date();
-        const next14Days = eachDayOfInterval({ start: today, end: addDays(today, 13) });
+        const next30Days = eachDayOfInterval({ start: today, end: addDays(today, 30) });
+        console.log("next30Days: ", next30Days);
 
 
         const workingSlots = await db.WorkingSlotTemplate.findAll({ where: { doctorId } });
@@ -197,7 +198,8 @@ const getAvailableScheduleByDoctor = async (doctorId) => {
         }));
 
         const startDate = format(startOfDay(today), 'yyyy-MM-dd');
-        const endDate = format(endOfDay(addDays(today, 30)), 'yyyy-MM-dd');
+        const endDate = format(endOfDay(addDays(today, 10)), 'yyyy-MM-dd');
+        console.log("endDate: ", endDate, "endDate: ");
 
 
         const overrides = await db.WorkingSlotOverride.findAll({
@@ -222,7 +224,7 @@ const getAvailableScheduleByDoctor = async (doctorId) => {
         console.log("🧩 overrideMap đã xử lý:", overrideMap);
 
         const response = [];
-        for (let date of next14Days) {
+        for (let date of next30Days) {
             const dow = getDay(date);
 
             const dateStr = date.getFullYear() + '-' +

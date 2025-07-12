@@ -7,6 +7,7 @@ import positionController from '../controller/positionController';
 import degreeController from '../controller/degreeController';
 import newsController from '../controller/newsController';
 import deviceController from '../controller/deviceController';
+import servicePriceController from '../controller/servicePriceController';
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ router.get("/doctor/by-specialty/:specialtyId", doctorController.getDoctorBySpec
 router.get("/doctor-gallery", doctorController.readDoctorGallery);
 router.get("/doctor/:id/schedule", doctorController.getDoctorAvailableSchedule);
 
+
 // Booking
 router.post("/booking/create", bookingController.createBooking);
 
@@ -35,8 +37,11 @@ router.get("/news", newsController.getNewsList);
 router.get("/news/:id", newsController.getNewsDetail);
 router.get("/news-categories", newsController.getCategories);
 
-// Device admin
+// Device 
 router.get('/device/list', deviceController.readDevices);
 router.get('/device/detail/:id', deviceController.getDeviceDetail);
+
+// Service 
+router.get('/service-price/selectable/:specialtyId', servicePriceController.getSelectableServicesBySpecialty);
 
 export default router;

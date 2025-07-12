@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
             Booking.belongsTo(models.DoctorInfo, { foreignKey: 'doctorId' });
             Booking.belongsTo(models.WorkingSlotTemplate, { foreignKey: 'slotId' });
             Booking.belongsTo(models.Specialty, { foreignKey: 'specialtyId' });
+            Booking.belongsTo(models.ServicePrice, { foreignKey: 'servicePriceId' });
         }
     }
 
@@ -19,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         reason: DataTypes.TEXT,
         doctorId: DataTypes.INTEGER,
         specialtyId: DataTypes.INTEGER,
+        servicePriceId: DataTypes.INTEGER,
         slotId: DataTypes.INTEGER,
         scheduleTime: DataTypes.DATE
     }, {

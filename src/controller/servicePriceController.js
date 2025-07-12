@@ -1,4 +1,5 @@
 import servicePriceService from '../service/servicePriceService';
+import db from '../models/index.js';
 
 const getAllServicePrices = async (req, res) => {
     try {
@@ -56,10 +57,32 @@ const readPaginate = async (req, res) => {
     }
 };
 
+
+const getSelectableServicesBySpecialty = async (req, res) => {
+    try {
+        const { specialtyId } = req.params;
+
+        const services = await db.ServicePrice.findAll({
+            where: {
+                specialtyId,
+                isSelectable: true
+            },
+            attributes: ['id', 'name', 'price', 'group']
+        });
+
+        return res.status(200).json({ EC: 0, DT: services });
+    } catch (error) {
+        console.error("❌ getSelectableServicesBySpecialty:", error);
+        return res.status(500).json({ EC: 1, EM: 'Server error', DT: [] });
+    }
+};
+
+
 export default {
     getAllServicePrices,
     createServicePrice,
     updateServicePrice,
     deleteServicePrice,
-    readPaginate
+    readPaginate,
+    getSelectableServicesBySpecialty
 };

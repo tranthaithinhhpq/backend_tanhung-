@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.js';
 
 const getAll = async (query) => {
     const page = parseInt(query.page) || 1;
@@ -34,7 +34,7 @@ const getAll = async (query) => {
 };
 
 const create = async (data) => {
-    const required = ['name', 'group', 'price', 'priceInsurance', 'specialtyId'];
+    const required = ['name', 'group', 'price', 'specialtyId'];
     for (let field of required) {
         if (!data[field]) {
             return { EC: 1, EM: `Thiếu thông tin bắt buộc: ${field}` };
@@ -45,7 +45,6 @@ const create = async (data) => {
         name: data.name,
         group: data.group,
         price: data.price,
-        priceInsurance: data.priceInsurance,
         isSelectable: data.isSelectable ?? false,
         specialtyId: data.specialtyId
     });
@@ -61,7 +60,6 @@ const update = async (id, data) => {
         name: data.name,
         group: data.group,
         price: data.price,
-        priceInsurance: data.priceInsurance,
         isSelectable: data.isSelectable,
         specialtyId: data.specialtyId
     });

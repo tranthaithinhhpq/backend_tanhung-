@@ -82,8 +82,11 @@ router.delete('/service-price/:id', servicePriceController.deleteServicePrice);
 
 // Booking admin
 router.get('/booking', bookingController.getBookingPaginate);
+router.get('/booking/:id', bookingController.getBookingById);
+
 router.post('/booking/create', bookingController.createBookingForClient);
 router.delete('/booking/:id', bookingController.deleteBookingForClient);
 router.put('/booking/:id', bookingController.updateBooking);
+
 
 export default router;

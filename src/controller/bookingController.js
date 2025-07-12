@@ -19,7 +19,7 @@ const createBooking = async (req, res) => {
             specialtyId,
             slotId,
             scheduleTime,
-            servicePriceId // ✅ dòng này phải có
+            servicePriceId
         });
 
         return res.status(200).json({ EC: 0, EM: 'Đặt lịch thành công', DT: booking });
@@ -47,11 +47,29 @@ const getBookingPaginate = async (req, res) => {
 };
 const createBookingForClient = async (req, res) => {
     try {
-        const data = await db.Booking.create(req.body);
-        return res.status(201).json({ EC: 0, EM: "Đặt lịch thành công", DT: data });
-    } catch (e) {
-        console.error("createBooking error:", e);
-        return res.status(500).json({ EC: 1, EM: "Lỗi khi tạo booking" });
+        const {
+            name, phone, dob, address, email, reason,
+            doctorId, specialtyId, slotId, scheduleTime, servicePriceId
+        } = req.body;
+
+        const booking = await db.Booking.create({
+            name,
+            phone,
+            dob,
+            address,
+            email,
+            reason,
+            doctorId,
+            specialtyId,
+            slotId,
+            scheduleTime,
+            servicePriceId
+        });
+
+        return res.status(200).json({ EC: 0, EM: 'Đặt lịch thành công', DT: booking });
+    } catch (error) {
+        console.error('❌ createBooking error:', error);
+        return res.status(500).json({ EC: 1, EM: 'Lỗi tạo booking', DT: {} });
     }
 };
 
@@ -67,36 +85,156 @@ const deleteBookingForClient = async (req, res) => {
 };
 
 const updateBooking = async (req, res) => {
-    const bookingId = req.params.id;
-    const {
-        name, phone, dob, address, email,
-        reason, doctorId, specialtyId,
-        servicePriceId, slotId, scheduleTime
-    } = req.body;
-
     try {
-        const booking = await db.Booking.findByPk(bookingId);
-        if (!booking) {
-            return res.status(404).json({ EC: 1, EM: 'Không tìm thấy lịch khám', DT: null });
+        const { id } = req.params;
+        const {
+            name, phone, dob, address, email, reason,
+            specialtyId, doctorId, servicePriceId, slotId, scheduleTime
+        } = req.body;
+
+        if (!name || !phone || !doctorId || !slotId || !scheduleTime) {
+            return res.status(400).json({ EC: 1, EM: 'Thiếu thông tin bắt buộc' });
         }
 
-        await booking.update({
-            name, phone, dob, address, email,
-            reason, doctorId, specialtyId,
-            servicePriceId, slotId, scheduleTime
-        });
+        const booking = await db.Booking.findByPk(id);
+        if (!booking) {
+            return res.status(404).json({ EC: 1, EM: 'Không tìm thấy lịch hẹn' });
+        }
 
-        return res.status(200).json({ EC: 0, EM: 'Cập nhật thành công', DT: booking });
-    } catch (error) {
-        console.error("❌ updateBooking error:", error);
-        return res.status(500).json({ EC: 1, EM: 'Lỗi server', DT: null });
+        // Không cho phép cập nhật lịch trong quá khứ
+        if (new Date(scheduleTime) < new Date()) {
+            return res.status(400).json({ EC: 1, EM: 'Không thể đặt lịch cho thời gian trong quá khứ' });
+        }
+
+        // Cập nhật các trường
+        booking.name = name;
+        booking.phone = phone;
+        booking.dob = dob || null;
+        booking.address = address || null;
+        booking.email = email || null;
+        booking.reason = reason || null;
+        booking.specialtyId = specialtyId;
+        booking.doctorId = doctorId;
+        booking.servicePriceId = servicePriceId || null;
+        booking.slotId = slotId;
+        booking.scheduleTime = scheduleTime;
+
+        await booking.save();
+
+        return res.status(200).json({
+            EC: 0,
+            EM: 'Cập nhật lịch hẹn thành công',
+            DT: booking
+        });
+    } catch (err) {
+        console.error('❌ Lỗi update booking:', err);
+        return res.status(500).json({
+            EC: -1,
+            EM: 'Lỗi server',
+            DT: err.message
+        });
     }
 };
+
+// const getBookingById = async (req, res) => {
+//     try {
+//         const { id } = req.params;
+
+//         const booking = await Booking.findByPk(id, {
+//             include: [
+//                 { model: db.DoctorInfo, attributes: ['id', 'doctorName'] },
+//                 { model: db.Specialty, attributes: ['id', 'name'] },
+//                 { model: db.ServicePrice, attributes: ['id', 'name'] },
+//                 { model: db.WorkingSlotTemplate, attributes: ['id', 'time'] }
+//             ]
+//         });
+
+//         if (!booking) {
+//             return res.status(404).json({ EC: 1, EM: 'Không tìm thấy lịch hẹn' });
+//         }
+
+//         return res.status(200).json({
+//             EC: 0,
+//             EM: 'Lấy thông tin lịch hẹn thành công',
+//             DT: {
+//                 id: booking.id,
+//                 name: booking.name,
+//                 phone: booking.phone,
+//                 dob: booking.dob,
+//                 address: booking.address,
+//                 email: booking.email,
+//                 reason: booking.reason,
+//                 doctorId: booking.Doctor?.id,
+//                 doctorName: booking.Doctor?.doctorName,
+//                 specialtyId: booking.Specialty?.id,
+//                 specialtyName: booking.Specialty?.name,
+//                 servicePriceId: booking.ServicePrice?.id,
+//                 serviceName: booking.ServicePrice?.name,
+//                 slotId: booking.WorkingSlotTemplate?.id,
+//                 slotTime: booking.WorkingSlotTemplate?.time,
+//                 scheduleTime: booking.scheduleTime
+//             }
+//         });
+//     } catch (err) {
+//         console.error("❌ Lỗi get booking:", err);
+//         return res.status(500).json({ EC: -1, EM: 'Lỗi server', DT: err.message });
+//     }
+// };
+
+
+const getBookingById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const Booking = db.Booking; // ✅ thêm dòng này
+
+        const booking = await Booking.findByPk(id, {
+            include: [
+                { model: db.DoctorInfo, attributes: ['id', 'doctorName'] },
+                { model: db.Specialty, attributes: ['id', 'name'] },
+                { model: db.ServicePrice, attributes: ['id', 'name'] },
+                { model: db.WorkingSlotTemplate, attributes: ['id', 'startTime', 'endTime'] }
+            ]
+        });
+
+        if (!booking) {
+            return res.status(404).json({ EC: 1, EM: 'Không tìm thấy lịch hẹn' });
+        }
+
+        return res.status(200).json({
+            EC: 0,
+            EM: 'Lấy thông tin lịch hẹn thành công',
+            DT: {
+                id: booking.id,
+                name: booking.name,
+                phone: booking.phone,
+                dob: booking.dob,
+                address: booking.address,
+                email: booking.email,
+                reason: booking.reason,
+                doctorId: booking.DoctorInfo?.id,
+                doctorName: booking.DoctorInfo?.doctorName,
+                specialtyId: booking.Specialty?.id,
+                specialtyName: booking.Specialty?.name,
+                servicePriceId: booking.ServicePrice?.id,
+                serviceName: booking.ServicePrice?.name,
+                slotId: booking.WorkingSlotTemplate?.id,
+                slotTime: `${booking.WorkingSlotTemplate?.startTime} - ${booking.WorkingSlotTemplate?.endTime}`,
+                scheduleTime: booking.scheduleTime
+            }
+        });
+    } catch (err) {
+        console.error("❌ Lỗi get booking:", err);
+        return res.status(500).json({ EC: -1, EM: 'Lỗi server', DT: err.message });
+    }
+};
+
+
 
 
 export default {
     createBooking,
     getBookingPaginate,
+    getBookingById,
     createBookingForClient,
     deleteBookingForClient,
     updateBooking

@@ -10,6 +10,7 @@ import specialtyController from '../controller/specialtyController';
 import deviceController from '../controller/deviceController';
 import workingSlotOverrideController from '../controller/workingSlotOverrideController';
 import servicePriceController from '../controller/servicePriceController';
+import bookingController from '../controller/bookingController';
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
 const router = express.Router();
@@ -73,11 +74,16 @@ router.delete('/doctor-day-off/:id', workingSlotOverrideController.deleteOverrid
 router.get('/doctor-day-off-paginate', workingSlotOverrideController.getDayOffPaginate);
 
 // Service Price admin
-
 router.get('/service-price/read', servicePriceController.readPaginate); // phân trang
 router.get('/service-price/all', servicePriceController.getAllServicePrices); // toàn bộ (nếu cần)
 router.post('/service-price', servicePriceController.createServicePrice);
 router.put('/service-price/:id', servicePriceController.updateServicePrice);
 router.delete('/service-price/:id', servicePriceController.deleteServicePrice);
+
+// Booking admin
+router.get('/booking', bookingController.getBookingPaginate);
+router.post('/booking/create', bookingController.createBookingForClient);
+router.delete('/booking/:id', bookingController.deleteBookingForClient);
+router.put('/booking/:id', bookingController.updateBooking);
 
 export default router;

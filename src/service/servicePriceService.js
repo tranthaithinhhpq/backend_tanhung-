@@ -1,4 +1,5 @@
 import db from '../models/index.js';
+import { Op } from 'sequelize';
 
 const getAll = async (query) => {
     const page = parseInt(query.page) || 1;
@@ -92,6 +93,28 @@ const getPaginatedServices = async (page, limit) => {
     };
 };
 
+const getPublicList = async ({ page = 1, limit = 10, specialtyId, q }) => {
+    const offset = (page - 1) * limit;
+    const where = {};
+
+    if (specialtyId) where.specialtyId = specialtyId;
+    if (q) where.name = { [Op.like]: `%${q}%` };
+
+    const { count, rows } = await db.ServicePrice.findAndCountAll({
+        where,
+        limit: +limit,
+        offset: +offset,
+        order: [['name', 'ASC']],
+        attributes: ['id', 'name', 'group', 'price', 'priceInsurance', 'specialtyId'],
+        include: [{ model: db.Specialty, attributes: ['id', 'name'] }]
+    });
+
+    return {
+        rows,
+        totalPages: Math.ceil(count / limit)
+    };
+};
+
 
 
 
@@ -100,5 +123,6 @@ export default {
     getAll,
     create,
     update,
-    remove
+    remove,
+    getPublicList
 };

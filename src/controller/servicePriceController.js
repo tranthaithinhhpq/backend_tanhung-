@@ -67,7 +67,7 @@ const getSelectableServicesBySpecialty = async (req, res) => {
                 specialtyId,
                 isSelectable: true
             },
-            attributes: ['id', 'name', 'price', 'group']
+            attributes: ['id', 'name', 'price', 'priceInsurance', 'group']
         });
 
         return res.status(200).json({ EC: 0, DT: services });
@@ -113,6 +113,19 @@ const getAll = async (req, res) => {
 };
 
 
+
+const getPublicServicePrices = async (req, res) => {
+    try {
+        const { page = 1, limit = 10, specialtyId, q } = req.query;
+        const data = await servicePriceService.getPublicList({ page, limit, specialtyId, q });
+        return res.status(200).json({ EC: 0, DT: data });
+    } catch (error) {
+        console.error("getPublicServicePrices error:", error);
+        return res.status(500).json({ EC: -1, EM: "Lỗi server", DT: [] });
+    }
+};
+
+
 export default {
     getAllServicePrices,
     createServicePrice,
@@ -120,5 +133,6 @@ export default {
     deleteServicePrice,
     readPaginate,
     getSelectableServicesBySpecialty,
-    getAll
+    getAll,
+    getPublicServicePrices
 };

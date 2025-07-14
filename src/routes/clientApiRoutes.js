@@ -42,6 +42,6 @@ router.get('/device/detail/:id', deviceController.getDeviceDetail);
 
 // Service 
 router.get('/service-price/selectable/:specialtyId', servicePriceController.getSelectableServicesBySpecialty);
-// router.get('/serviceprice', servicePriceClientController.getAll);
+router.get('/serviceprice', servicePriceController.getPublicServicePrices);
 
 export default router;

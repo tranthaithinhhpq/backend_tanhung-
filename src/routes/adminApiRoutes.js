@@ -11,6 +11,8 @@ import deviceController from '../controller/deviceController';
 import workingSlotOverrideController from '../controller/workingSlotOverrideController';
 import servicePriceController from '../controller/servicePriceController';
 import bookingController from '../controller/bookingController';
+import drugPriceController from '../controller/drugPriceController.js';
+
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
 const router = express.Router();
@@ -87,6 +89,13 @@ router.get('/booking/:id', bookingController.getBookingById);
 router.post('/booking/create', bookingController.createBookingForClient);
 router.delete('/booking/:id', bookingController.deleteBookingForClient);
 router.put('/booking/:id', bookingController.updateBooking);
+
+// Drug Price admin
+// router.get('/medicine/read', drugPriceController.readPaginate);
+router.get('/medicine', drugPriceController.readPaginate);
+router.post('/medicine', drugPriceController.createDrug);
+router.put('/medicine/:id', drugPriceController.updateDrug);
+router.delete('/medicine/:id', drugPriceController.deleteDrug);
 
 
 export default router;

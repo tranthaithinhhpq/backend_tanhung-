@@ -17,7 +17,7 @@ const createServicePrice = async (req, res) => {
         return res.status(201).json(result);
     } catch (err) {
         console.error("createServicePrice error:", err);
-        return res.status(500).json({ EC: -1, EM: "Lỗi server" });
+        return res.status(500).json({ EC: -1, EM: "Lỗi server rồi con chó" });
     }
 };
 
@@ -78,11 +78,47 @@ const getSelectableServicesBySpecialty = async (req, res) => {
 };
 
 
+const getAll = async (req, res) => {
+    try {
+        const { page = 1, limit = 10, specialtyId, name } = req.query;
+        const offset = (page - 1) * limit;
+
+        let where = {};
+        if (specialtyId) where.specialtyId = specialtyId;
+        if (name) where.name = { [db.Sequelize.Op.like]: `%${name}%` };
+
+        const { rows, count } = await db.ServicePrice.findAndCountAll({
+            where,
+            offset: +offset,
+            limit: +limit,
+            include: [{ model: db.Specialty, attributes: ['name'] }],
+            order: [['name', 'ASC']],
+        });
+
+        return res.status(200).json({
+            EC: 0,
+            DT: {
+                totalRecords: count,
+                totalPages: Math.ceil(count / limit),
+                records: rows
+            }
+        });
+    } catch (error) {
+        console.error("Fetch serviceprice failed", error);
+        return res.status(500).json({
+            EC: -1,
+            EM: "Lỗi server",
+        });
+    }
+};
+
+
 export default {
     getAllServicePrices,
     createServicePrice,
     updateServicePrice,
     deleteServicePrice,
     readPaginate,
-    getSelectableServicesBySpecialty
+    getSelectableServicesBySpecialty,
+    getAll
 };

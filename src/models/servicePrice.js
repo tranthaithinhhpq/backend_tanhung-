@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.FLOAT,
                 allowNull: false
             },
+            priceInsurance: {
+                type: DataTypes.FLOAT,
+                allowNull: false
+            },
 
             isSelectable: {
                 type: DataTypes.BOOLEAN,

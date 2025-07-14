@@ -23,7 +23,6 @@ router.get("/doctor/by-specialty/:specialtyId", doctorController.getDoctorBySpec
 router.get("/doctor-gallery", doctorController.readDoctorGallery);
 router.get("/doctor/:id/schedule", doctorController.getDoctorAvailableSchedule);
 
-
 // Booking
 router.post("/booking/create", bookingController.createBooking);
 
@@ -43,5 +42,6 @@ router.get('/device/detail/:id', deviceController.getDeviceDetail);
 
 // Service 
 router.get('/service-price/selectable/:specialtyId', servicePriceController.getSelectableServicesBySpecialty);
+// router.get('/serviceprice', servicePriceClientController.getAll);
 
 export default router;

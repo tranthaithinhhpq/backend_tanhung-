@@ -8,6 +8,7 @@ import degreeController from '../controller/degreeController';
 import newsController from '../controller/newsController';
 import deviceController from '../controller/deviceController';
 import servicePriceController from '../controller/servicePriceController';
+import drugPriceController from '../controller/drugPriceController';
 
 const router = express.Router();
 
@@ -40,8 +41,10 @@ router.get("/news-categories", newsController.getCategories);
 router.get('/device/list', deviceController.readDevices);
 router.get('/device/detail/:id', deviceController.getDeviceDetail);
 
-// Service 
+// Service Prices
 router.get('/service-price/selectable/:specialtyId', servicePriceController.getSelectableServicesBySpecialty);
 router.get('/serviceprice', servicePriceController.getPublicServicePrices);
+// Drugs Prices
+router.get('/client/medicine', drugPriceController.getPublicDrugPrices);
 
 export default router;

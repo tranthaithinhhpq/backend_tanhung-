@@ -43,9 +43,21 @@ const deleteDrug = async (req, res) => {
     }
 };
 
+const getPublicDrugPrices = async (req, res) => {
+    try {
+        const { page = 1, limit = 10, q } = req.query;
+        const result = await drugPriceService.getPublicList({ page, limit, q });
+        return res.status(200).json({ EC: 0, DT: result });
+    } catch (error) {
+        console.error("getPublicDrugPrices error:", error);
+        return res.status(500).json({ EC: -1, EM: "Lỗi server", DT: [] });
+    }
+};
+
 export default {
     readPaginate,
     createDrug,
     updateDrug,
-    deleteDrug
+    deleteDrug,
+    getPublicDrugPrices
 };

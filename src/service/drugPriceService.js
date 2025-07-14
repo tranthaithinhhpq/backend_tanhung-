@@ -43,9 +43,32 @@ const remove = async (id) => {
     return { EC: 0, EM: 'Xóa thành công' };
 };
 
+const getPublicList = async ({ page = 1, limit = 10, q }) => {
+    const offset = (page - 1) * limit;
+    const where = {};
+
+    if (q) {
+        where.name = { [Op.like]: `%${q}%` };
+    }
+
+    const { count, rows } = await db.DrugPrice.findAndCountAll({
+        where,
+        limit: +limit,
+        offset: +offset,
+        order: [['name', 'ASC']],
+        attributes: ['id', 'code', 'name', 'activeIngredient', 'concentration', 'unit', 'price', 'insurancePrice']
+    });
+
+    return {
+        rows,
+        totalPages: Math.ceil(count / limit)
+    };
+};
+
 export default {
     readPaginate,
     create,
     update,
-    remove
+    remove,
+    getPublicList
 };

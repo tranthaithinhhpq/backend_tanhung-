@@ -15,11 +15,26 @@ module.exports = {
       servicePriceId: { type: Sequelize.INTEGER },
       slotId: { type: Sequelize.INTEGER, allowNull: false },
       scheduleTime: { type: Sequelize.DATE },
+      status: {
+        type: Sequelize.ENUM(
+          'PENDING',
+          'CONFIRMED',
+          'CANCELLED',
+          'RESCHEDULED',
+          'CHECKED_IN',
+          'COMPLETED',
+          'NO_SHOW'
+        ),
+        defaultValue: 'PENDING'
+      },
       createdAt: { allowNull: false, type: Sequelize.DATE, defaultValue: Sequelize.fn('NOW') },
       updatedAt: { allowNull: false, type: Sequelize.DATE, defaultValue: Sequelize.fn('NOW') },
     });
   },
+
   async down(queryInterface, Sequelize) {
+    // Phải xóa ENUM trước khi drop table
+    await queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_Booking_status";');
     await queryInterface.dropTable('Booking');
   }
 };

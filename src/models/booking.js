@@ -22,7 +22,19 @@ module.exports = (sequelize, DataTypes) => {
         specialtyId: DataTypes.INTEGER,
         servicePriceId: DataTypes.INTEGER,
         slotId: DataTypes.INTEGER,
-        scheduleTime: DataTypes.DATE
+        scheduleTime: DataTypes.DATE,
+        status: {
+            type: DataTypes.ENUM(
+                'PENDING',
+                'CONFIRMED',
+                'CANCELLED',
+                'RESCHEDULED',
+                'CHECKED_IN',
+                'COMPLETED',
+                'NO_SHOW'
+            ),
+            defaultValue: 'PENDING'
+        }
     }, {
         sequelize,
         modelName: 'Booking',

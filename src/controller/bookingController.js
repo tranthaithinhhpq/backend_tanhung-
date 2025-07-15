@@ -89,7 +89,7 @@ const updateBooking = async (req, res) => {
         const { id } = req.params;
         const {
             name, phone, dob, address, email, reason,
-            specialtyId, doctorId, servicePriceId, slotId, scheduleTime
+            specialtyId, doctorId, servicePriceId, slotId, scheduleTime, status
         } = req.body;
 
         if (!name || !phone || !doctorId || !slotId || !scheduleTime) {
@@ -118,6 +118,7 @@ const updateBooking = async (req, res) => {
         booking.servicePriceId = servicePriceId || null;
         booking.slotId = slotId;
         booking.scheduleTime = scheduleTime;
+        booking.status = status;
 
         await booking.save();
 
@@ -135,51 +136,6 @@ const updateBooking = async (req, res) => {
         });
     }
 };
-
-// const getBookingById = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-
-//         const booking = await Booking.findByPk(id, {
-//             include: [
-//                 { model: db.DoctorInfo, attributes: ['id', 'doctorName'] },
-//                 { model: db.Specialty, attributes: ['id', 'name'] },
-//                 { model: db.ServicePrice, attributes: ['id', 'name'] },
-//                 { model: db.WorkingSlotTemplate, attributes: ['id', 'time'] }
-//             ]
-//         });
-
-//         if (!booking) {
-//             return res.status(404).json({ EC: 1, EM: 'Không tìm thấy lịch hẹn' });
-//         }
-
-//         return res.status(200).json({
-//             EC: 0,
-//             EM: 'Lấy thông tin lịch hẹn thành công',
-//             DT: {
-//                 id: booking.id,
-//                 name: booking.name,
-//                 phone: booking.phone,
-//                 dob: booking.dob,
-//                 address: booking.address,
-//                 email: booking.email,
-//                 reason: booking.reason,
-//                 doctorId: booking.Doctor?.id,
-//                 doctorName: booking.Doctor?.doctorName,
-//                 specialtyId: booking.Specialty?.id,
-//                 specialtyName: booking.Specialty?.name,
-//                 servicePriceId: booking.ServicePrice?.id,
-//                 serviceName: booking.ServicePrice?.name,
-//                 slotId: booking.WorkingSlotTemplate?.id,
-//                 slotTime: booking.WorkingSlotTemplate?.time,
-//                 scheduleTime: booking.scheduleTime
-//             }
-//         });
-//     } catch (err) {
-//         console.error("❌ Lỗi get booking:", err);
-//         return res.status(500).json({ EC: -1, EM: 'Lỗi server', DT: err.message });
-//     }
-// };
 
 
 const getBookingById = async (req, res) => {

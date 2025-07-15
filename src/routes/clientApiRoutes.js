@@ -9,6 +9,7 @@ import newsController from '../controller/newsController';
 import deviceController from '../controller/deviceController';
 import servicePriceController from '../controller/servicePriceController';
 import drugPriceController from '../controller/drugPriceController';
+import homepageController from '../controller/homepageController';
 
 const router = express.Router();
 
@@ -46,5 +47,8 @@ router.get('/service-price/selectable/:specialtyId', servicePriceController.getS
 router.get('/serviceprice', servicePriceController.getPublicServicePrices);
 // Drugs Prices
 router.get('/client/medicine', drugPriceController.getPublicDrugPrices);
+
+// Home 
+router.get('/homepage', homepageController.getPublicHomepage);
 
 export default router;

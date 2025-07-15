@@ -12,6 +12,7 @@ import workingSlotOverrideController from '../controller/workingSlotOverrideCont
 import servicePriceController from '../controller/servicePriceController';
 import bookingController from '../controller/bookingController';
 import drugPriceController from '../controller/drugPriceController.js';
+import homepageController from '../controller/homepageController';
 
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
@@ -96,6 +97,10 @@ router.get('/medicine', drugPriceController.readPaginate);
 router.post('/medicine', drugPriceController.createDrug);
 router.put('/medicine/:id', drugPriceController.updateDrug);
 router.delete('/medicine/:id', drugPriceController.deleteDrug);
+
+// ✅ Home admin
+router.get('/banner', homepageController.getAdminBanners);
+router.put('/banner/:id', homepageController.updateBanner);
 
 
 export default router;

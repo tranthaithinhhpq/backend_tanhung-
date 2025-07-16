@@ -1,4 +1,5 @@
 import deviceService from '../service/deviceService.js';
+import db from '../models/index.js';
 
 const readDevices = async (req, res) => {
     try {
@@ -45,10 +46,37 @@ const deleteDevice = async (req, res) => {
     }
 };
 
+const getDevicesPaginate = async (req, res) => {
+    try {
+        let page = +req.query.page || 1;
+        let limit = +req.query.limit || 5;
+        let offset = (page - 1) * limit;
+
+        const { count, rows } = await db.Device.findAndCountAll({
+            limit,
+            offset,
+            order: [['createdAt', 'DESC']]
+        });
+
+        return res.status(200).json({
+            EC: 0,
+            EM: 'Lấy danh sách thiết bị thành công',
+            DT: {
+                devices: rows,
+                totalPages: Math.ceil(count / limit)
+            }
+        });
+    } catch (e) {
+        console.error('getDevicesPaginate error:', e);
+        return res.status(500).json({ EC: -1, EM: 'Lỗi server', DT: [] });
+    }
+};
+
 export default {
     readDevices,
     getDeviceDetail,
     createDevice,
     updateDevice,
-    deleteDevice
+    deleteDevice,
+    getDevicesPaginate
 };

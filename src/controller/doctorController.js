@@ -1,5 +1,5 @@
 import doctorService from '../service/doctorService';
-import specialtyService from '../service/specialtyService';
+
 import db from '../models/index.js';
 
 

@@ -67,6 +67,7 @@ router.get('/device/read', deviceController.readDevices);
 router.post('/device', upload.single('image'), deviceController.createDevice);
 router.put('/device/:id', upload.single('image'), deviceController.updateDevice);
 router.delete('/device/:id', deviceController.deleteDevice);
+router.get('/device/paginate', deviceController.getDevicesPaginate);
 
 // workingSlotOverride admin
 router.get('/doctor-day-off', workingSlotOverrideController.getOverrides);

@@ -100,8 +100,25 @@ router.put('/medicine/:id', drugPriceController.updateDrug);
 router.delete('/medicine/:id', drugPriceController.deleteDrug);
 
 // ✅ Home admin
-router.get('/banner', homepageController.getAdminBanners);
-router.put('/banner/:id', homepageController.updateBanner);
+// router.get('/banner', homepageController.getAdminBanners);
+
+
+// Banner admin
+router.get('/banner', homepageController.getBannerPaginate);
+router.post(
+    '/banner',
+    upload.fields([
+        { name: 'imageDesktop', maxCount: 1 },
+        { name: 'imagePhone', maxCount: 1 },
+    ]),
+    homepageController.create
+);
+
+router.put('/banner/:id', upload.fields([
+    { name: 'imageDesktop', maxCount: 1 },
+    { name: 'imagePhone', maxCount: 1 }
+]), homepageController.update);
+router.delete('/banner/:id', homepageController.remove);
 
 
 export default router;

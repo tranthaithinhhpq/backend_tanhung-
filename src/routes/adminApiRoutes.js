@@ -13,6 +13,7 @@ import servicePriceController from '../controller/servicePriceController';
 import bookingController from '../controller/bookingController';
 import drugPriceController from '../controller/drugPriceController.js';
 import homepageController from '../controller/homepageController';
+import pageImageContentController from '../controller/pageImageContentController';
 
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
@@ -99,10 +100,6 @@ router.post('/medicine', drugPriceController.createDrug);
 router.put('/medicine/:id', drugPriceController.updateDrug);
 router.delete('/medicine/:id', drugPriceController.deleteDrug);
 
-// ✅ Home admin
-// router.get('/banner', homepageController.getAdminBanners);
-
-
 // Banner admin
 router.get('/banner', homepageController.getBannerPaginate);
 router.post(
@@ -119,6 +116,20 @@ router.put('/banner/:id', upload.fields([
     { name: 'imagePhone', maxCount: 1 }
 ]), homepageController.update);
 router.delete('/banner/:id', homepageController.remove);
+
+// PageImageContent admin
+router.get('/pageimagecontent', pageImageContentController.getPaginate);
+router.post(
+    '/pageimagecontent',
+    upload.fields([{ name: 'image', maxCount: 1 }]),
+    pageImageContentController.create
+);
+router.put(
+    '/pageimagecontent/:id',
+    upload.fields([{ name: 'image', maxCount: 1 }]),
+    pageImageContentController.update
+);
+router.delete('/pageimagecontent/:id', pageImageContentController.remove);
 
 
 export default router;

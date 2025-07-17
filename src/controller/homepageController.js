@@ -133,8 +133,18 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
     const id = req.params.id;
-    const result = await homepageService.delete(id);
+    const result = await homepageService.remove(id);
     return res.status(200).json(result);
+};
+
+const getPublicBanners = async (req, res) => {
+    try {
+        const banners = await homepageService.getBannersClient();
+        return res.status(200).json({ EC: 0, DT: banners });
+    } catch (err) {
+        console.error("getPublicBanners error:", err);
+        return res.status(500).json({ EC: 1, EM: "Server error" });
+    }
 };
 
 
@@ -146,6 +156,7 @@ export default {
     getBannerPaginate,
     create,
     update,
-    remove
+    remove,
+    getPublicBanners
 
 };

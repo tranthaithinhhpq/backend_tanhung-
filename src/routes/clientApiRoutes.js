@@ -50,5 +50,6 @@ router.get('/client/medicine', drugPriceController.getPublicDrugPrices);
 
 // Home 
 router.get('/homepage', homepageController.getPublicHomepage);
+router.get('/client/banner', homepageController.getPublicBanners);
 
 export default router;

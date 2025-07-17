@@ -93,6 +93,19 @@ const remove = async (id) => {
     }
 };
 
+const getBannersClient = async () => {
+    try {
+        const banners = await db.Banner.findAll({
+            order: [['sortOrder', 'ASC']],
+            attributes: ['id', 'title', 'imageDesktop', 'imagePhone', 'sortOrder']
+        });
+        return banners;
+    } catch (err) {
+        console.error("getBanners error:", err);
+        return [];
+    }
+};
+
 
 
 
@@ -108,5 +121,6 @@ export default {
     update,
     create,
     remove,
+    getBannersClient
 
 };

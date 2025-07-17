@@ -126,6 +126,25 @@ const getNewsDetail = async (id) => {
     return { EC: 0, EM: 'Lấy chi tiết thành công', DT: news };
 };
 
+const getNewsPaginate = async ({ limit, offset }) => {
+    const { count, rows } = await db.NewsArticle.findAndCountAll({
+        limit,
+        offset,
+        order: [["createdAt", "DESC"]]
+    });
+
+    return {
+        news: rows,
+        pagination: {
+            total: count,
+            page: Math.floor(offset / limit) + 1,
+            limit
+        }
+    };
+};
+
+
+
 export default {
     getAllCategories,
     createArticle,
@@ -134,5 +153,7 @@ export default {
     updateArticle,
     deleteArticle,
     getNewsList,
-    getNewsDetail
+    getNewsDetail,
+    getNewsPaginate
+
 };

@@ -86,6 +86,21 @@ const getNewsDetail = async (req, res) => {
     }
 };
 
+const getNewsSlider = async (req, res) => {
+    try {
+        const page = +req.query.page || 1;
+        const limit = +req.query.limit || 8;
+        const offset = (page - 1) * limit;
+
+        const result = await newsService.getNewsPaginate({ limit, offset });
+
+        return res.status(200).json({ EC: 0, DT: result });
+    } catch (error) {
+        console.error("Error getNewsSlider:", error);
+        return res.status(500).json({ EC: -1, message: "Internal server error" });
+    }
+};
+
 export default {
     getCategories,
     create,
@@ -94,5 +109,7 @@ export default {
     update,
     remove,
     getNewsList,
-    getNewsDetail
+    getNewsDetail,
+    getNewsSlider
+
 };

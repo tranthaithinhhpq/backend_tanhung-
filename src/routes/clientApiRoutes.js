@@ -52,4 +52,7 @@ router.get('/client/medicine', drugPriceController.getPublicDrugPrices);
 router.get('/homepage', homepageController.getPublicHomepage);
 router.get('/client/banner', homepageController.getPublicBanners);
 
+// router.get('/client/news/preview', newsController.getPaginatedNewsPreview);
+router.get("/client/news/slider", newsController.getNewsSlider);
+
 export default router;

@@ -14,6 +14,7 @@ import bookingController from '../controller/bookingController';
 import drugPriceController from '../controller/drugPriceController.js';
 import homepageController from '../controller/homepageController';
 import pageImageContentController from '../controller/pageImageContentController';
+import pageController from '../controller/pageController';
 
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
@@ -131,5 +132,12 @@ router.put(
 );
 router.delete('/pageimagecontent/:id', pageImageContentController.remove);
 
+
+// page
+router.post('/page', pageController.createPage);
+router.get('/page', pageController.getAllPages);
+router.get('/page/:id', pageController.getPageById);
+router.put('/page/:id', pageController.updatePage);
+router.delete('/page/:id', pageController.deletePage);
 
 export default router;

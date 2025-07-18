@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             contentThumbnail: DataTypes.TEXT,
             videoYoutubeId: DataTypes.STRING,
             status: DataTypes.BOOLEAN,
+            section: DataTypes.STRING,
         },
         {
             sequelize,

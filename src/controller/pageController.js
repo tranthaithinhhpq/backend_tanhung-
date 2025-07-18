@@ -47,10 +47,27 @@ const deletePage = async (req, res) => {
     }
 };
 
+const getPagesBySection = async (req, res) => {
+    try {
+        const { section } = req.query;
+        if (!section) {
+            return res.status(400).json({ EC: 1, EM: 'Missing section param', DT: [] });
+        }
+
+        const data = await pageService.getPagesBySection(section);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.error('getPagesBySection error:', error);
+        return res.status(500).json({ EC: -1, EM: 'Server error', DT: [] });
+    }
+};
+
+
 module.exports = {
     createPage,
     getAllPages,
     getPageById,
     updatePage,
-    deletePage
+    deletePage,
+    getPagesBySection
 };

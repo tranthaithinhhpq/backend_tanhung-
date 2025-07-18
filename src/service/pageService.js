@@ -35,10 +35,34 @@ const deletePage = async (id) => {
     return { EC: 0, EM: 'Deleted' };
 };
 
+const getPagesBySection = async (section) => {
+    try {
+        const pages = await db.Page.findAll({
+            where: { section, status: true },
+            attributes: ['slug', 'title'],
+            order: [['createdAt', 'ASC']],
+        });
+
+        return {
+            EC: 0,
+            EM: 'Success',
+            DT: pages
+        };
+    } catch (error) {
+        console.error('getPagesBySection service error:', error);
+        return {
+            EC: -1,
+            EM: 'Error fetching pages',
+            DT: []
+        };
+    }
+};
+
 module.exports = {
     create,
     getAllPages,
     getPageById,
     updatePage,
-    deletePage
+    deletePage,
+    getPagesBySection
 };

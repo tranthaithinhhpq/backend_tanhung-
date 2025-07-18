@@ -10,7 +10,7 @@ import deviceController from '../controller/deviceController';
 import servicePriceController from '../controller/servicePriceController';
 import drugPriceController from '../controller/drugPriceController';
 import homepageController from '../controller/homepageController';
-
+import pageController from '../controller/pageController';
 const router = express.Router();
 
 // Auth
@@ -56,9 +56,11 @@ router.get('/client/home-videos', homepageController.getHomeVideos);
 
 // router.get('/client/news/preview', newsController.getPaginatedNewsPreview);
 router.get("/client/news/slider", newsController.getNewsSlider);
-
 router.get('/client/statistics', homepageController.getStatistics);
 router.get('/client/partners', homepageController.getPartnerImages);
+
+// Page
+router.get('/page', pageController.getPagesBySection);
 
 
 export default router;

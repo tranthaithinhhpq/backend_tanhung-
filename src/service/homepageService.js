@@ -106,6 +106,33 @@ const getBannersClient = async () => {
     }
 };
 
+const getSections = async (sections) => {
+    const images = await db.PageImageContent.findAll({
+        where: { section: sections },
+        order: [['sortOrder', 'ASC']],
+    });
+
+    const result = {};
+    sections.forEach(sec => {
+        result[sec] = images.filter(img => img.section === sec);
+    });
+
+    return result;
+};
+
+const getStatistics = async () => {
+    const stats = await db.PageTextContent.findAll({
+        where: { section: 'statistic' },
+        order: [['sortOrder', 'ASC']],
+        attributes: ['id', 'title', 'contentText']
+    });
+
+    return {
+        EC: 0,
+        DT: stats
+    };
+};
+
 
 
 
@@ -121,6 +148,8 @@ export default {
     update,
     create,
     remove,
-    getBannersClient
+    getBannersClient,
+    getSections,
+    getStatistics
 
 };

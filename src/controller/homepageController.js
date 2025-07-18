@@ -1,5 +1,6 @@
 import homepageService from '../service/homepageService';
 import db from "../models/index.js";
+// import path from 'path';
 
 const formatPath = (fullPath) => {
     if (!fullPath) return '';
@@ -148,6 +149,64 @@ const getPublicBanners = async (req, res) => {
 };
 
 
+const getHomeSections = async (req, res) => {
+    try {
+        const data = await homepageService.getSections(['shot_1', 'shot_2']);
+        return res.status(200).json({ EC: 0, DT: data });
+    } catch (err) {
+        return res.status(500).json({ EC: 1, message: 'Lỗi server' });
+    }
+};
+
+const getHomeVideos = async (req, res) => {
+    try {
+        const videos = await db.PageVideoContent.findAll({
+            where: { section: 'intro-video' },
+            order: [['sortOrder', 'ASC']],
+        });
+
+        res.status(200).json({
+            EC: 0,
+            DT: videos
+        });
+    } catch (err) {
+        console.error('Lỗi getHomeVideos:', err);
+        res.status(500).json({ EC: -1, EM: 'Lỗi server', DT: [] });
+    }
+};
+
+const getStatistics = async (req, res) => {
+    try {
+        const data = await homepageService.getStatistics();
+        return res.status(200).json(data);
+    } catch (err) {
+        console.error("Error getStatistics:", err);
+        return res.status(500).json({ EC: -1, EM: "Lỗi server", DT: [] });
+    }
+};
+
+
+
+
+const getPartnerImages = async (req, res) => {
+    try {
+        const data = await db.PageImageContent.findAll({
+            where: { section: 'partner' },
+            order: [['sortOrder', 'ASC']]
+        });
+
+        const formattedData = data.map(item => ({
+            ...item.toJSON(),
+            image: formatPath(item.image)
+        }));
+
+        return res.status(200).json({ EC: 0, DT: formattedData });
+    } catch (err) {
+        console.error('getPartnerImages error:', err);
+        return res.status(500).json({ EC: -1, EM: 'Lỗi server', DT: [] });
+    }
+};
+
 
 export default {
     getPublicHomepage,
@@ -157,6 +216,10 @@ export default {
     create,
     update,
     remove,
-    getPublicBanners
+    getPublicBanners,
+    getHomeSections,
+    getHomeVideos,
+    getStatistics,
+    getPartnerImages
 
 };

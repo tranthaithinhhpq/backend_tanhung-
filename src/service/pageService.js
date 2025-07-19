@@ -37,7 +37,7 @@ const deletePage = async (id) => {
 
 const getPagesBySection = async (section) => {
     try {
-        const pages = await db.Page.findAll({
+        const pages = await db.PageClient.findAll({
             where: { section, status: true },
             attributes: ['slug', 'title'],
             order: [['createdAt', 'ASC']],

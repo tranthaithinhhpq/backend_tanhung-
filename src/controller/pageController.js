@@ -1,4 +1,5 @@
 import pageService from "../service/pageService";
+import db from "../models/index.js";
 const createPage = async (req, res) => {
     try {
         const { slug, title, videoYoutubeId, status, contentThumbnail } = req.body;
@@ -50,6 +51,7 @@ const deletePage = async (req, res) => {
 const getPagesBySection = async (req, res) => {
     try {
         const { section } = req.query;
+        console.log("section is: ", section);
         if (!section) {
             return res.status(400).json({ EC: 1, EM: 'Missing section param', DT: [] });
         }
@@ -63,11 +65,36 @@ const getPagesBySection = async (req, res) => {
 };
 
 
+const getPageBySlug = async (req, res) => {
+    try {
+        const { slug } = req.params;
+
+        if (!slug) {
+            return res.status(400).json({ EC: 1, EM: 'Missing slug param', DT: null });
+        }
+
+        const page = await db.PageClient.findOne({
+            where: { slug, status: true }
+        });
+
+        if (!page) {
+            return res.status(404).json({ EC: 2, EM: 'Page not found', DT: null });
+        }
+
+        return res.status(200).json({ EC: 0, EM: 'Success', DT: page });
+    } catch (error) {
+        console.error('getPageBySlug error:', error);
+        return res.status(500).json({ EC: -1, EM: 'Server error', DT: null });
+    }
+};
+
+
 module.exports = {
     createPage,
     getAllPages,
     getPageById,
     updatePage,
     deletePage,
-    getPagesBySection
+    getPagesBySection,
+    getPageBySlug
 };

@@ -60,7 +60,8 @@ router.get('/client/statistics', homepageController.getStatistics);
 router.get('/client/partners', homepageController.getPartnerImages);
 
 // Page
-router.get('/page', pageController.getPagesBySection);
+router.get('/client/page', pageController.getPagesBySection);
+router.get('/client/page/:slug', pageController.getPageBySlug);
 
 
 export default router;

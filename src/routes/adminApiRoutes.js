@@ -15,6 +15,7 @@ import drugPriceController from '../controller/drugPriceController.js';
 import homepageController from '../controller/homepageController';
 import pageImageContentController from '../controller/pageImageContentController';
 import pageController from '../controller/pageController';
+import uploadController from "../controller/uploadController.js";
 
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
@@ -22,6 +23,9 @@ const router = express.Router();
 
 // All routes below require authentication
 router.use(checkUserJWT, checkUserPermission);
+
+// Route upload ảnh từ Quill
+router.post("/upload", upload.single("image"), uploadController.handleImageUpload);
 
 // Auth protected
 router.post("/logout", apiController.handleLogout);
@@ -57,6 +61,8 @@ router.get("/news-admin/:id", newsController.getDetail);
 router.post("/news", upload.single("image"), newsController.create);
 router.put("/news/:id", upload.single("image"), newsController.update);
 router.delete("/news/:id", newsController.remove);
+
+
 
 // specialty admin
 router.get("/specialty/read", specialtyController.readSpecialties);

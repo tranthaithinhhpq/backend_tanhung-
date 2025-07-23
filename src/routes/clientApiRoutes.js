@@ -34,8 +34,8 @@ router.get("/position/read", positionController.read);
 router.get("/degree/read", degreeController.read);
 
 // News (public)
-// router.get("/news", newsController.getNewsList);
-// router.get("/news/:id", newsController.getNewsDetail);
+router.get("/client/news", newsController.getNewsList);
+router.get("/client/news/:id", newsController.getNewsDetail);
 router.get("/news-categories", newsController.getCategories);
 
 // Device 

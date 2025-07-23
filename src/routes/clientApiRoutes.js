@@ -34,8 +34,8 @@ router.get("/position/read", positionController.read);
 router.get("/degree/read", degreeController.read);
 
 // News (public)
-router.get("/news", newsController.getNewsList);
-router.get("/news/:id", newsController.getNewsDetail);
+// router.get("/news", newsController.getNewsList);
+// router.get("/news/:id", newsController.getNewsDetail);
 router.get("/news-categories", newsController.getCategories);
 
 // Device 
@@ -53,6 +53,7 @@ router.get('/homepage', homepageController.getPublicHomepage);
 router.get('/client/banner', homepageController.getPublicBanners);
 router.get('/client/home-sections', homepageController.getHomeSections);
 router.get('/client/home-videos', homepageController.getHomeVideos);
+router.get('/client/logo', homepageController.getLogoImage);
 
 // router.get('/client/news/preview', newsController.getPaginatedNewsPreview);
 router.get("/client/news/slider", newsController.getNewsSlider);

@@ -2,6 +2,11 @@ import db from "../models/index";
 import Sequelize from "sequelize";
 import { Op } from "sequelize";
 
+const buildImagePath = (filePath) => {
+    if (!filePath) return '';
+    return filePath.replace(/^.*?public[\\/]/, '/').replace(/\\/g, '/'); // chuẩn hóa dấu gạch chéo
+};
+
 const getAllCategories = async () => {
     const categories = await db.NewsCategory.findAll({
         attributes: ['id', 'name', 'description'],
@@ -11,10 +16,12 @@ const getAllCategories = async () => {
 };
 
 const createArticle = async (data, imagePath) => {
+    const cleanPath = buildImagePath(imagePath);
+
     return await db.NewsArticle.create({
         title: data.title,
         content: data.content,
-        image: imagePath,
+        image: cleanPath,
         categoryId: data.categoryId,
         status: data.status || 'draft'
     });
@@ -53,7 +60,9 @@ const updateArticle = async (id, data, imagePath) => {
         categoryId: data.categoryId,
         status: data.status
     };
-    if (imagePath) updateData.image = imagePath;
+    if (imagePath) {
+        updateData.image = buildImagePath(imagePath);
+    }
 
     return await db.NewsArticle.update(updateData, { where: { id } });
 };
@@ -108,11 +117,6 @@ const getNewsList = async (page, limit, categoryId, keyword) => {
 
 
 
-
-
-
-
-
 const getNewsDetail = async (id) => {
     const news = await db.NewsArticle.findOne({
         where: { id },
@@ -143,6 +147,24 @@ const getNewsPaginate = async ({ limit, offset }) => {
     };
 };
 
+const getNewsPaginateTable = async (page, limit) => {
+    const offset = (page - 1) * limit;
+    const { count, rows } = await db.NewsArticle.findAndCountAll({
+        limit,
+        offset,
+        order: [['createdAt', 'DESC']]
+    });
+
+    return {
+        EC: 0,
+        EM: 'Success',
+        DT: {
+            articles: rows,
+            totalPages: Math.ceil(count / limit)
+        }
+    };
+};
+
 
 
 export default {
@@ -154,6 +176,7 @@ export default {
     deleteArticle,
     getNewsList,
     getNewsDetail,
-    getNewsPaginate
+    getNewsPaginate,
+    getNewsPaginateTable
 
 };

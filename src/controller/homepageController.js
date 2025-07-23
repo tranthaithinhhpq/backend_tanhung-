@@ -207,6 +207,36 @@ const getPartnerImages = async (req, res) => {
     }
 };
 
+const getLogoImage = async (req, res) => {
+    try {
+        const logo = await db.PageImageContent.findOne({
+            where: { section: 'logo' },
+            order: [['sortOrder', 'ASC'], ['createdAt', 'ASC']]
+        });
+
+        if (logo) {
+            return res.status(200).json({
+                EC: 0,
+                EM: 'Get logo successfully',
+                DT: logo
+            });
+        } else {
+            return res.status(404).json({
+                EC: 1,
+                EM: 'No logo found',
+                DT: null
+            });
+        }
+    } catch (error) {
+        console.error('Error fetching logo:', error);
+        return res.status(500).json({
+            EC: -1,
+            EM: 'Server error',
+            DT: null
+        });
+    }
+};
+
 
 export default {
     getPublicHomepage,
@@ -220,6 +250,7 @@ export default {
     getHomeSections,
     getHomeVideos,
     getStatistics,
-    getPartnerImages
+    getPartnerImages,
+    getLogoImage
 
 };

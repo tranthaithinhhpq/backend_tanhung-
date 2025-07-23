@@ -57,10 +57,13 @@ router.get("/group/read", groupController.read);
 
 // News admin
 router.get("/news-admin", newsController.getList);
-router.get("/news-admin/:id", newsController.getDetail);
+// router.get("/news-admin/:id", newsController.getDetail);
 router.post("/news", upload.single("image"), newsController.create);
-router.put("/news/:id", upload.single("image"), newsController.update);
+router.put("/news/edit/:id", upload.single("image"), newsController.update);
+router.get('/admin/news/:id', newsController.getDetail);
+router.put('/news/:id', upload.single('image'), newsController.update);
 router.delete("/news/:id", newsController.remove);
+router.get('/news/paginate', newsController.getNewsPaginate);
 
 
 

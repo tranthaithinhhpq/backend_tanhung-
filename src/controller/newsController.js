@@ -1,4 +1,5 @@
 import newsService from "../service/newsService";
+import db from "../models/index.js";
 
 const getCategories = async (req, res) => {
     try {
@@ -33,11 +34,14 @@ const getList = async (req, res) => {
 
 const getDetail = async (req, res) => {
     try {
-        const article = await newsService.getArticleById(req.params.id);
-        res.json({ EC: 0, DT: article });
+        const article = await db.NewsArticle.findByPk(req.params.id);
+        if (!article) {
+            return res.status(404).json({ EC: 1, EM: "Không tìm thấy bài viết" });
+        }
+        return res.json({ EC: 0, DT: article });
     } catch (err) {
         console.error(err);
-        res.json({ EC: 1, EM: "Lỗi server" });
+        return res.status(500).json({ EC: 1, EM: "Lỗi server" });
     }
 };
 
@@ -101,6 +105,31 @@ const getNewsSlider = async (req, res) => {
     }
 };
 
+const getNewsPaginate = async (req, res) => {
+    try {
+        const page = +req.query.page || 1;
+        const limit = +req.query.limit || 5;
+        const offset = (page - 1) * limit;
+
+        const { count, rows } = await db.NewsArticle.findAndCountAll({
+            limit,
+            offset,
+            order: [['createdAt', 'DESC']]
+        });
+
+        return res.status(200).json({
+            EC: 0,
+            EM: 'Thành công',
+            DT: {
+                articles: rows,
+                totalPages: Math.ceil(count / limit)
+            }
+        });
+    } catch (e) {
+        return res.status(500).json({ EC: -1, EM: 'Server error', DT: [] });
+    }
+};
+
 export default {
     getCategories,
     create,
@@ -110,6 +139,7 @@ export default {
     remove,
     getNewsList,
     getNewsDetail,
-    getNewsSlider
+    getNewsSlider,
+    getNewsPaginate
 
 };

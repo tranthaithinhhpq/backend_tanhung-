@@ -1,15 +1,3 @@
-// const handleImageUpload = async (req, res) => {
-//     if (!req.file) {
-//         return res.status(400).json({ message: "Không có file nào được upload" });
-//     }
-
-//     const filePath = req.file.path.replace("src/public/", ""); // Tạo path public
-//     return res.status(200).json({ path: filePath });
-// };
-
-// export default { handleImageUpload };
-
-
 const handleImageUpload = async (req, res) => {
     try {
         if (!req.file) {

@@ -111,7 +111,7 @@ const getDoctorBySpecialty = async (req, res) => {
         const { specialtyId } = req.params;
         const doctors = await db.DoctorInfo.findAll({
             where: { specialtyId },
-            attributes: ['id', 'doctorName']
+            attributes: ['id', 'doctorName', 'image']
         });
 
         return res.status(200).json({
@@ -129,11 +129,27 @@ const getDoctorBySpecialty = async (req, res) => {
 
 const getDoctorList = async (req, res) => {
     try {
-        let page = +req.query.page || 1;
-        let limit = +req.query.limit || 5;
-        let offset = (page - 1) * limit;
+        let { page = 1, limit = 10, search, degreeId, specialtyId, positionId } = req.query;
+        page = +page;
+        limit = +limit;
+        const offset = (page - 1) * limit;
+
+        const where = {};
+        if (search) {
+            where.doctorName = { [db.Sequelize.Op.like]: `%${search}%` };
+        }
+        if (degreeId) {
+            where.degreeId = degreeId;
+        }
+        if (specialtyId) {
+            where.specialtyId = specialtyId;
+        }
+        if (positionId) {
+            where.positionId = positionId;
+        }
 
         const { count, rows } = await db.DoctorInfo.findAndCountAll({
+            where,
             include: [
                 { model: db.Position, attributes: ['id', 'name'] },
                 { model: db.Degree, attributes: ['id', 'name'] },
@@ -291,10 +307,7 @@ const createDefaultSlotsForDoctor = async (doctorId) => {
         { dayOfWeek: 6, startTime: '08:00', endTime: '09:00' },
         { dayOfWeek: 6, startTime: '09:00', endTime: '10:00' },
         { dayOfWeek: 6, startTime: '10:00', endTime: '11:00' },
-        { dayOfWeek: 6, startTime: '13:00', endTime: '14:00' },
-        { dayOfWeek: 6, startTime: '14:00', endTime: '15:00' },
-        { dayOfWeek: 6, startTime: '15:00', endTime: '16:00' },
-        { dayOfWeek: 6, startTime: '16:00', endTime: '17:00' },
+
     ];
 
     const slotWithDoctor = defaultSlots.map(slot => ({

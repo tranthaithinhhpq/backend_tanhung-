@@ -1,11 +1,11 @@
 import db from '../models/index.js';
 import path from 'path';
+import fs from 'fs';
 
+// Utility để xử lý đường dẫn
 const formatPath = (filePath) => {
-    if (!filePath) return null;
-    const normalized = filePath.replace(/\\/g, '/');
-    const index = normalized.indexOf('/images/');
-    return index !== -1 ? normalized.substring(index) : '/' + path.basename(normalized);
+    const relative = filePath.split('public')[1];
+    return relative ? relative.replace(/\\/g, '/') : filePath;
 };
 
 // GET (phân trang)
@@ -57,7 +57,6 @@ const create = async (req, res) => {
     }
 };
 
-// PUT (cập nhật)
 const update = async (req, res) => {
     try {
         const id = req.params.id;
@@ -65,18 +64,31 @@ const update = async (req, res) => {
         if (!item) return res.status(404).json({ EC: 1, EM: 'Không tìm thấy' });
 
         const { section, title, sortOrder } = req.body;
-        const imagePath = req.files?.image?.[0]?.path;
+        const imageFile = req.files?.image?.[0];
+
+        // Nếu có ảnh mới
+        if (imageFile) {
+            // Xóa ảnh cũ nếu tồn tại
+            if (item.image) {
+                const oldImagePath = path.join(__dirname, '../public', item.image.startsWith('/') ? item.image.slice(1) : item.image);
+                if (fs.existsSync(oldImagePath)) {
+                    fs.unlinkSync(oldImagePath);
+                }
+            }
+        }
+
+        const imagePath = imageFile ? formatPath(imageFile.path) : item.image;
 
         await item.update({
             section: section || item.section,
             title: title || item.title,
             sortOrder: sortOrder ?? item.sortOrder,
-            image: imagePath ? formatPath(imagePath) : item.image,
+            image: imagePath,
         });
 
         return res.status(200).json({ EC: 0, EM: "Cập nhật thành công", DT: item });
     } catch (err) {
-        console.error("updatePageImageContent:", err);
+        console.error("❌ updatePageImageContent error:", err);
         return res.status(500).json({ EC: -1, EM: "Lỗi khi cập nhật", DT: {} });
     }
 };
@@ -88,10 +100,19 @@ const remove = async (req, res) => {
         const item = await db.PageImageContent.findByPk(id);
         if (!item) return res.status(404).json({ EC: 1, EM: 'Không tìm thấy' });
 
+        // Xoá file ảnh nếu có
+        if (item.image) {
+            const imagePath = path.join(__dirname, '../public', item.image.startsWith('/') ? item.image.slice(1) : item.image);
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
+        }
+
+        // Xoá bản ghi DB
         await item.destroy();
         return res.status(200).json({ EC: 0, EM: "Xoá thành công" });
     } catch (err) {
-        console.error("deletePageImageContent:", err);
+        console.error("❌ deletePageImageContent error:", err);
         return res.status(500).json({ EC: -1, EM: "Lỗi khi xoá" });
     }
 };

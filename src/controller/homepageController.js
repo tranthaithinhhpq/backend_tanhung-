@@ -100,9 +100,15 @@ const update = async (req, res) => {
 
         const { title, sortOrder } = req.body;
 
-        // Xử lý đường dẫn ảnh: chỉ lấy phần sau "/public"
-        const imageDesktopPath = req.files?.imageDesktop?.[0]?.path;
-        const imagePhonePath = req.files?.imagePhone?.[0]?.path;
+        const imageDesktopFile = req.files?.imageDesktop?.[0];
+        const imagePhoneFile = req.files?.imagePhone?.[0];
+
+        const deleteFile = (filePath) => {
+            if (!filePath) return;
+            const normalized = filePath.startsWith('/') ? filePath.slice(1) : filePath;
+            const fullPath = path.join(__dirname, '../public', normalized);
+            if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+        };
 
         const formatPath = (filePath) => {
             if (!filePath) return null;
@@ -111,26 +117,41 @@ const update = async (req, res) => {
             return index !== -1 ? normalized.substring(index) : '/' + path.basename(normalized);
         };
 
+        let newImageDesktopPath = banner.imageDesktop;
+        let newImagePhonePath = banner.imagePhone;
+
+        if (imageDesktopFile) {
+            deleteFile(banner.imageDesktop); // xóa ảnh cũ
+            newImageDesktopPath = formatPath(imageDesktopFile.path);
+        }
+
+        if (imagePhoneFile) {
+            deleteFile(banner.imagePhone); // xóa ảnh cũ
+            newImagePhonePath = formatPath(imagePhoneFile.path);
+        }
+
         await banner.update({
             title: title || banner.title,
             sortOrder: sortOrder ?? banner.sortOrder,
-            imageDesktop: imageDesktopPath ? formatPath(imageDesktopPath) : banner.imageDesktop,
-            imagePhone: imagePhonePath ? formatPath(imagePhonePath) : banner.imagePhone,
+            imageDesktop: newImageDesktopPath,
+            imagePhone: newImagePhonePath,
         });
 
         return res.status(200).json({
             EC: 0,
-            EM: "Banner updated",
+            EM: "Cập nhật banner thành công",
             DT: banner
         });
+
     } catch (error) {
         console.error("Error update banner", error);
         return res.status(500).json({
             EC: -1,
-            EM: "Server error",
+            EM: "Lỗi server khi cập nhật banner",
         });
     }
 };
+
 
 
 const remove = async (req, res) => {

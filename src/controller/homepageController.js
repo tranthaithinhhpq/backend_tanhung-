@@ -1,6 +1,7 @@
 import homepageService from '../service/homepageService';
 import db from "../models/index.js";
-// import path from 'path';
+import path from 'path';
+import fs from 'fs';
 
 const formatPath = (fullPath) => {
     if (!fullPath) return '';
@@ -133,9 +134,44 @@ const update = async (req, res) => {
 
 
 const remove = async (req, res) => {
-    const id = req.params.id;
-    const result = await homepageService.remove(id);
-    return res.status(200).json(result);
+    try {
+        const { id, imageDesktop, imageMobile } = req.body;
+
+        if (!id) return res.status(400).json({ message: "Thiếu ID banner" });
+
+        // Xoá file ảnh nếu tồn tại
+        const deleteFile = (filePath) => {
+            if (!filePath) return;
+
+            const normalizedPath = filePath.startsWith('/') ? filePath.slice(1) : filePath;
+            const fullPath = path.join(__dirname, '../public', normalizedPath);
+
+            console.log("Đường dẫn xóa:", fullPath);
+
+            if (fs.existsSync(fullPath)) {
+                fs.unlinkSync(fullPath);
+            }
+        };
+
+        if (imageDesktop) deleteFile(imageDesktop);
+        if (imageMobile) deleteFile(imageMobile);
+
+        // Xoá khỏi DB
+        await db.Banner.destroy({ where: { id } });
+
+        return res.status(200).json({
+            EC: 0,
+            EM: 'Xoá banner thành công',
+            DT: null
+        });
+    } catch (error) {
+        console.error("Lỗi xoá banner:", error);
+        return res.status(500).json({
+            EC: 1,
+            EM: 'Xoá banner thất bại',
+            DT: null
+        });
+    }
 };
 
 const getPublicBanners = async (req, res) => {

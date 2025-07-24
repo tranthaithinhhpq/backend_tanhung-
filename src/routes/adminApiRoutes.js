@@ -125,7 +125,8 @@ router.put('/banner/:id', upload.fields([
     { name: 'imageDesktop', maxCount: 1 },
     { name: 'imagePhone', maxCount: 1 }
 ]), homepageController.update);
-router.delete('/banner/:id', homepageController.remove);
+// router.delete('/banner/:id', homepageController.remove);
+router.post('/banner/delete', homepageController.remove);
 
 // PageImageContent admin
 router.get('/pageimagecontent', pageImageContentController.getPaginate);

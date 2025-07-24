@@ -1,6 +1,8 @@
 import db from '../models/index';
 import { Op } from "sequelize";
 import { eachDayOfInterval, format, getDay, addDays, startOfDay, endOfDay } from "date-fns";
+import path from 'path';
+import fs from 'fs';
 
 const createDoctorInfo = async (body, file) => {
     try {
@@ -25,13 +27,29 @@ const updateDoctorInfo = async (id, body, file) => {
         const doctor = await db.DoctorInfo.findByPk(id);
         if (!doctor) return { EC: 1, EM: 'Bác sĩ không tồn tại', DT: {} };
 
+        let newImagePath = doctor.image;
+
+        // Nếu có ảnh mới → xóa ảnh cũ trong thư mục
+        if (file) {
+            // Xóa ảnh cũ
+            if (doctor.image) {
+                const oldPath = path.join(__dirname, '../public', doctor.image.startsWith('/') ? doctor.image.slice(1) : doctor.image);
+                if (fs.existsSync(oldPath)) {
+                    fs.unlinkSync(oldPath);
+                }
+            }
+
+            // Cập nhật ảnh mới
+            newImagePath = `/images/${file.filename}`;
+        }
+
         await doctor.update({
             doctorName: body.doctorName,
             specialtyId: body.specialtyId,
             degreeId: body.degreeId,
             positionId: body.positionId,
             markdownContent: body.markdownContent,
-            image: file ? `/images/${file.filename}` : doctor.image
+            image: newImagePath
         });
 
         return { EC: 0, EM: 'Cập nhật thành công', DT: {} };

@@ -25,7 +25,7 @@ const router = express.Router();
 router.use(checkUserJWT, checkUserPermission);
 
 // Route upload ảnh từ Quill
-router.post("/upload", upload.single("image"), uploadController.handleImageUpload);
+router.post("/upload", upload.single("file"), uploadController.handleImageUpload);
 
 // Auth protected
 router.post("/logout", apiController.handleLogout);

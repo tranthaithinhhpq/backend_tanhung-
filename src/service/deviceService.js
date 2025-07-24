@@ -1,4 +1,6 @@
 import db from '../models/index.js';
+import fs from 'fs';
+import path from 'path';
 
 const buildImagePath = (filePath) => {
     if (!filePath) return '';
@@ -32,14 +34,18 @@ const updateDevice = async (id, data, file) => {
     const device = await db.Device.findByPk(id);
     if (!device) return { EC: 1, EM: 'Device not found' };
 
-    const updateData = {
-        name,
-        code,
-        category,
-        markdownContent,
-    };
+    const updateData = { name, code, category, markdownContent };
 
     if (file) {
+        // ✅ Xóa ảnh cũ nếu có
+        if (device.image) {
+            const oldPath = path.join(__dirname, '..', 'public', device.image.startsWith('/') ? device.image.slice(1) : device.image);
+            if (fs.existsSync(oldPath)) {
+                fs.unlinkSync(oldPath);
+            }
+        }
+
+        // ✅ Chuẩn hóa đường dẫn trước khi lưu
         updateData.image = buildImagePath(file.path);
     }
 
@@ -50,7 +56,18 @@ const updateDevice = async (id, data, file) => {
 const deleteDevice = async (id) => {
     const device = await db.Device.findByPk(id);
     if (!device) return { EC: 1, EM: 'Not found' };
+
+    // ✅ Xoá ảnh trong thư mục nếu tồn tại
+    if (device.image) {
+        const imagePath = path.join(__dirname, '..', 'public', device.image.startsWith('/') ? device.image.slice(1) : device.image);
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+        }
+    }
+
+    // ✅ Xóa bản ghi
     await device.destroy();
+
     return { EC: 0, EM: 'Deleted successfully' };
 };
 

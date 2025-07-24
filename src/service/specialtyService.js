@@ -1,4 +1,6 @@
 import db from "../models/index";
+import fs from 'fs';
+import path from 'path';
 
 const getAllSpecialties = async () => {
     try {
@@ -28,6 +30,15 @@ const updateSpecialty = async (id, body, file) => {
         const spec = await db.Specialty.findByPk(id);
         if (!spec) return { EC: -1, EM: 'Không tìm thấy chuyên khoa' };
 
+        // Nếu có file mới thì xóa ảnh cũ
+        if (file && spec.image) {
+            const currentPath = path.join(__dirname, '..', 'public', spec.image.startsWith('/') ? spec.image.slice(1) : spec.image);
+            if (fs.existsSync(currentPath)) {
+                fs.unlinkSync(currentPath); // 🔥 Xoá ảnh cũ khỏi thư mục images
+            }
+        }
+
+        // Cập nhật dữ liệu
         spec.name = body.name;
         spec.description = body.description;
         spec.markdownContent = body.markdownContent;
@@ -36,15 +47,30 @@ const updateSpecialty = async (id, body, file) => {
 
         return { EC: 0, EM: 'Cập nhật thành công' };
     } catch (err) {
+        console.error("Update Specialty Error:", err);
         return { EC: -1, EM: 'Lỗi khi cập nhật' };
     }
 };
 
 const deleteSpecialty = async (id) => {
     try {
-        await db.Specialty.destroy({ where: { id } });
+        const specialty = await db.Specialty.findByPk(id);
+        if (!specialty) {
+            return { EC: 1, EM: 'Chuyên khoa không tồn tại' };
+        }
+
+        // ✅ Xóa ảnh nếu có
+        if (specialty.image) {
+            const imgPath = path.join(__dirname, '..', 'public', specialty.image.startsWith('/') ? specialty.image.slice(1) : specialty.image);
+            if (fs.existsSync(imgPath)) {
+                fs.unlinkSync(imgPath); // xóa ảnh
+            }
+        }
+
+        await specialty.destroy();
         return { EC: 0, EM: 'Xóa thành công' };
     } catch (err) {
+        console.error('❌ deleteSpecialty error:', err);
         return { EC: -1, EM: 'Lỗi khi xóa' };
     }
 };

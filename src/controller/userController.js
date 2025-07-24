@@ -1,4 +1,6 @@
 import userApiService from '../service/userApiService';
+import fs from 'fs';
+import path from 'path';
 const db = require('../models');
 
 const read = async (req, res) => {
@@ -64,13 +66,24 @@ const create = async (req, res) => {
 // controller/userController.js
 const update = async (req, res) => {
     try {
-        // Nếu có file mới ⇒ lấy đường dẫn; nếu không, giữ nguyên đường dẫn cũ
-        let imagePath = req.file ? `/images/${req.file.filename}` : req.body.image || '';
+        // 1. Lấy user hiện tại từ DB
+        const user = await db.User.findByPk(req.body.id);
+        if (!user) return res.status(404).json({ EM: 'User not found', EC: 1, DT: '' });
 
+        // 2. Xử lý ảnh: nếu có ảnh mới thì xoá ảnh cũ
+        let imagePath = req.file ? `/images/${req.file.filename}` : req.body.image || '';
+        if (req.file && user.image && user.image !== imagePath) {
+            const fullPath = path.join(__dirname, '..', 'public', user.image.startsWith('/') ? user.image.slice(1) : user.image);
+            if (fs.existsSync(fullPath)) {
+                fs.unlinkSync(fullPath); // Xóa ảnh cũ
+            }
+        }
+
+        // 3. Gọi service update
         let data = await userApiService.updateUser({ ...req.body, image: imagePath });
         return res.status(200).json(data);
     } catch (error) {
-        console.log(error);
+        console.error('❌ Update user error:', error);
         return res.status(500).json({ EM: 'error from server', EC: -1, DT: '' });
     }
 };

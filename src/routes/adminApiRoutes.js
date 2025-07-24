@@ -37,7 +37,7 @@ router.get("/user/read-doctor", userController.readDoctor);
 router.post("/user", upload.single("image"), userController.create);
 router.post("/user/create", upload.single("image"), userController.create);
 router.put("/user/:id", upload.single("image"), userController.update);
-router.delete("/user/:id", userController.remove);
+router.delete("/user/delete/:id", userController.remove);
 
 // Doctor Info
 router.get("/doctor-info/:userId", userController.getDoctorInfoWithAllData);

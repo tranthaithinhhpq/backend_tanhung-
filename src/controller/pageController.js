@@ -2,8 +2,8 @@ import pageService from "../service/pageService";
 import db from "../models/index.js";
 const createPage = async (req, res) => {
     try {
-        const { slug, title, videoYoutubeId, status, contentThumbnail } = req.body;
-        const data = await pageService.create({ slug, title, videoYoutubeId, status, contentThumbnail });
+        const { slug, title, section, videoYoutubeId, status, contentThumbnail } = req.body;
+        const data = await pageService.create({ slug, title, section, videoYoutubeId, status, contentThumbnail });
         return res.status(201).json(data);
     } catch (e) {
         console.log("loi create: ", e)

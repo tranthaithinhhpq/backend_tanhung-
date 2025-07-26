@@ -147,10 +147,10 @@ router.delete('/pageimagecontent/:id', pageImageContentController.remove);
 
 
 // page
-router.post('/page', pageController.createPage);
+router.post('/page', upload.single('image'), pageController.createPage);
 router.get('/page', pageController.getAllPages);
 router.get('/page/:id', pageController.getPageById);
-router.put('/page/:id', pageController.updatePage);
+router.put('/page/:id', upload.single('image'), pageController.updatePage);
 router.delete('/page/:id', pageController.deletePage);
 
 export default router;

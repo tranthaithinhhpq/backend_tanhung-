@@ -1,5 +1,9 @@
 
 import db from '../models/index.js';
+import path from 'path';
+import fs from 'fs';
+
+
 const create = async (data) => {
     try {
         await db.PageClient.create(data);
@@ -12,27 +16,65 @@ const create = async (data) => {
 
 const getAllPages = async () => {
     const pages = await db.PageClient.findAll({ order: [['createdAt', 'DESC']] });
-    return { EC: 0, EM: 'Success', DT: pages };
+    return { EC: 0, EM: 'Success 1', DT: pages };
 };
 
 const getPageById = async (id) => {
     const page = await db.PageClient.findByPk(id);
     if (!page) return { EC: 1, EM: 'PageClient not found' };
-    return { EC: 0, EM: 'Success', DT: page };
+    return { EC: 0, EM: 'Success 2', DT: page };
 };
 
-const updatePage = async (id, body) => {
-    const page = await db.PageClient.findByPk(id);
-    if (!page) return { EC: 1, EM: 'PageClient not found' };
-    await page.update(body);
-    return { EC: 0, EM: 'Updated', DT: page };
+const updatePage = async (id, body, file) => {
+    try {
+        const page = await db.PageClient.findByPk(id);
+        if (!page) return { EC: 1, EM: 'PageClient not found' };
+
+        let newImage = page.image;
+
+        if (file) {
+            // Xoá ảnh cũ nếu có
+            if (page.image) {
+                const oldImagePath = path.join(__dirname, '../public', page.image.startsWith('/') ? page.image.slice(1) : page.image);
+                if (fs.existsSync(oldImagePath)) {
+                    fs.unlinkSync(oldImagePath);
+                }
+            }
+
+            // Gán ảnh mới
+            newImage = `/images/${file.filename}`;
+        }
+
+        await page.update({
+            ...body,
+            image: newImage
+        });
+
+        return { EC: 0, EM: 'Updated', DT: page };
+    } catch (e) {
+        console.error('❌ updatePage error:', e);
+        return { EC: 1, EM: 'Lỗi khi cập nhật trang' };
+    }
 };
 
 const deletePage = async (id) => {
-    const page = await db.PageClient.findByPk(id);
-    if (!page) return { EC: 1, EM: 'PageClient not found' };
-    await page.destroy();
-    return { EC: 0, EM: 'Deleted' };
+    try {
+        const page = await db.PageClient.findByPk(id);
+        if (!page) return { EC: 1, EM: 'PageClient not found' };
+
+        if (page.image) {
+            const imagePath = path.join(__dirname, '../public', page.image.startsWith('/') ? page.image.slice(1) : page.image);
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
+        }
+
+        await page.destroy();
+        return { EC: 0, EM: 'Deleted' };
+    } catch (e) {
+        console.error("❌ deletePage error:", e);
+        return { EC: 1, EM: 'Lỗi khi xóa trang' };
+    }
 };
 
 const getPagesBySection = async (section) => {
@@ -45,7 +87,7 @@ const getPagesBySection = async (section) => {
 
         return {
             EC: 0,
-            EM: 'Success',
+            EM: 'Success r nha',
             DT: pages
         };
     } catch (error) {

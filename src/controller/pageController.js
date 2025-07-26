@@ -1,9 +1,18 @@
 import pageService from "../service/pageService";
 import db from "../models/index.js";
+
+
 const createPage = async (req, res) => {
     try {
         const { slug, title, section, videoYoutubeId, status, contentThumbnail } = req.body;
-        const data = await pageService.create({ slug, title, section, videoYoutubeId, status, contentThumbnail });
+        let image = req.body.image;
+
+        // Nếu có file upload
+        if (req.file) {
+            image = `/images/${req.file.filename}`; // hoặc tuỳ cách bạn xử lý file
+        }
+
+        const data = await pageService.create({ slug, title, section, videoYoutubeId, image, status, contentThumbnail });
         return res.status(201).json(data);
     } catch (e) {
         console.log("loi create: ", e)
@@ -32,7 +41,7 @@ const getPageById = async (req, res) => {
 
 const updatePage = async (req, res) => {
     try {
-        const data = await pageService.updatePage(req.params.id, req.body);
+        const data = await pageService.updatePage(req.params.id, req.body, req.file);
         return res.status(200).json(data);
     } catch (err) {
         return res.status(500).json({ EC: -1, EM: 'Server error' });
@@ -81,7 +90,7 @@ const getPageBySlug = async (req, res) => {
             return res.status(404).json({ EC: 2, EM: 'Page not found', DT: null });
         }
 
-        return res.status(200).json({ EC: 0, EM: 'Success', DT: page });
+        return res.status(200).json({ EC: 0, EM: 'Success q', DT: page });
     } catch (error) {
         console.error('getPageBySlug error:', error);
         return res.status(500).json({ EC: -1, EM: 'Server error', DT: null });

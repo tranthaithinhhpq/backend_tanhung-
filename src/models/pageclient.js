@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             slug: DataTypes.STRING,
             title: DataTypes.STRING,
             contentThumbnail: DataTypes.TEXT,
+            image: DataTypes.STRING,
             videoYoutubeId: DataTypes.STRING,
             status: DataTypes.BOOLEAN,
             section: DataTypes.STRING,

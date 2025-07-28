@@ -11,6 +11,7 @@ import servicePriceController from '../controller/servicePriceController';
 import drugPriceController from '../controller/drugPriceController';
 import homepageController from '../controller/homepageController';
 import pageController from '../controller/pageController';
+import questionController from "../controller/questionController.js";
 const router = express.Router();
 
 // Auth
@@ -63,6 +64,9 @@ router.get('/client/partners', homepageController.getPartnerImages);
 // Page
 router.get('/client/page', pageController.getPagesBySection);
 router.get('/client/page/:slug', pageController.getPageBySlug);
+
+// Question
+router.post('/question', questionController.submitQuestion);
 
 
 export default router;

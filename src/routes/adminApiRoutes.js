@@ -16,6 +16,7 @@ import homepageController from '../controller/homepageController';
 import pageImageContentController from '../controller/pageImageContentController';
 import pageController from '../controller/pageController';
 import uploadController from "../controller/uploadController.js";
+import questionController from "../controller/questionController.js";
 
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
@@ -152,5 +153,12 @@ router.get('/page', pageController.getAllPages);
 router.get('/page/:id', pageController.getPageById);
 router.put('/page/:id', upload.single('image'), pageController.updatePage);
 router.delete('/page/:id', pageController.deletePage);
+
+
+// question
+router.get('/question', questionController.getPaginate);
+router.post('/question', questionController.create);
+router.put('/question/:id', questionController.update);
+router.post('/question/delete', questionController.remove);
 
 export default router;

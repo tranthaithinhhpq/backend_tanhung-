@@ -57,7 +57,7 @@ router.get('/client/home-videos', homepageController.getHomeVideos);
 router.get('/client/logo', homepageController.getLogoImage);
 
 // router.get('/client/news/preview', newsController.getPaginatedNewsPreview);
-router.get("/client/news/slider", newsController.getNewsSlider);
+router.get("/client/news-preview", newsController.getNewsSlider);
 router.get('/client/statistics', homepageController.getStatistics);
 router.get('/client/partners', homepageController.getPartnerImages);
 

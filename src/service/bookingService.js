@@ -21,42 +21,43 @@ const getPaginatedBookings = async ({
         // Lọc theo trạng thái
         if (status) where.status = status;
 
-        // Lọc theo ngày cụ thể
-        if (date) {
+        // Lọc theo thời gian
+        if (startDate || endDate) {
+            // Ưu tiên lọc theo khoảng
+            where.scheduleTime = {};
+            if (startDate) {
+                where.scheduleTime[Op.gte] = `${startDate} 00:00:00`;
+            }
+            if (endDate) {
+                where.scheduleTime[Op.lte] = `${endDate} 23:59:59`;
+            }
+        } else if (date) {
+            // Nếu không có startDate/endDate thì lọc theo ngày đơn
             where.scheduleTime = {
                 [Op.gte]: `${date} 00:00:00`,
                 [Op.lt]: `${date} 23:59:59`
             };
         }
 
-        // Lọc theo khoảng thời gian
-        if (startDate && endDate) {
-            where.scheduleTime = {
-                [Op.gte]: `${startDate} 00:00:00`,
-                [Op.lte]: `${endDate} 23:59:59`
-            };
-        } else if (startDate) {
-            where.scheduleTime = {
-                [Op.gte]: `${startDate} 00:00:00`
-            };
-        } else if (endDate) {
-            where.scheduleTime = {
-                [Op.lte]: `${endDate} 23:59:59`
-            };
-        }
-
-        // Include condition cho DoctorInfo nếu lọc theo specialtyId
+        // Tạo include cho DoctorInfo (lọc theo chuyên khoa nếu có)
         const doctorInclude = {
             model: db.DoctorInfo,
-            attributes: ['id', 'doctorName'],
-            where: specialtyId ? { specialtyId: +specialtyId } : undefined
+            attributes: ['id', 'doctorName', 'specialtyId'],
+            ...(specialtyId && {
+                where: { specialtyId: +specialtyId }
+            }),
+            include: [ // luôn include Specialty
+                {
+                    model: db.Specialty,
+                    attributes: ['id', 'name']
+                }
+            ]
         };
 
         const { count, rows } = await db.Booking.findAndCountAll({
             where,
             include: [
                 doctorInclude,
-                { model: db.Specialty, attributes: ['id', 'name'] },
                 { model: db.ServicePrice, attributes: ['id', 'name', 'price'] },
                 {
                     model: db.WorkingSlotTemplate,
@@ -77,13 +78,10 @@ const getPaginatedBookings = async ({
             }
         };
     } catch (e) {
-        console.error("getPaginatedBookings error:", e);
-        return { EC: 1, EM: "Lỗi truy vấn booking", DT: [] };
+        console.error('getPaginatedBookings error:', e);
+        return { EC: 1, EM: 'Lỗi truy vấn booking', DT: [] };
     }
 };
-
-
-
 
 export default {
     getPaginatedBookings

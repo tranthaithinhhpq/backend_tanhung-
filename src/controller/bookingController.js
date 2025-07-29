@@ -29,14 +29,29 @@ const createBooking = async (req, res) => {
     }
 };
 
+
 const getBookingPaginate = async (req, res) => {
     try {
-        const { page, limit, doctorId, date } = req.query;
+        const {
+            page,
+            limit,
+            doctorId,
+            date,
+            specialtyId,
+            status,
+            startDate,
+            endDate
+        } = req.query;
+
         const result = await bookingService.getPaginatedBookings({
             page: +page || 1,
             limit: +limit || 10,
             doctorId,
-            date
+            date,
+            specialtyId,
+            status,
+            startDate,
+            endDate
         });
 
         return res.status(200).json(result);
@@ -45,6 +60,9 @@ const getBookingPaginate = async (req, res) => {
         return res.status(500).json({ EC: 1, EM: "Server error", DT: [] });
     }
 };
+
+
+
 const createBookingForClient = async (req, res) => {
     try {
         const {

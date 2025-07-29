@@ -17,7 +17,7 @@ const createServicePrice = async (req, res) => {
         return res.status(201).json(result);
     } catch (err) {
         console.error("createServicePrice error:", err);
-        return res.status(500).json({ EC: -1, EM: "Lỗi server rồi con chó" });
+        return res.status(500).json({ EC: -1, EM: "Lỗi server" });
     }
 };
 

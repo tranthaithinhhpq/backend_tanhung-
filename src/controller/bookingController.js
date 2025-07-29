@@ -202,6 +202,36 @@ const getBookingById = async (req, res) => {
     }
 };
 
+const getBookingsByPhone = async (req, res) => {
+    try {
+        const { phone } = req.query;
+        if (!phone) {
+            return res.status(400).json({ EC: 1, EM: 'Thiếu số điện thoại', DT: [] });
+        }
+
+        const bookings = await db.Booking.findAll({
+            where: { phone },
+            include: [
+                { model: db.DoctorInfo, attributes: ['id', 'doctorName'] },
+                { model: db.Specialty, attributes: ['id', 'name'] },
+                { model: db.ServicePrice, attributes: ['id', 'name'] },
+                { model: db.WorkingSlotTemplate, attributes: ['id', 'startTime', 'endTime'] }
+            ],
+            order: [['scheduleTime', 'DESC']]
+        });
+
+        return res.status(200).json({
+            EC: 0,
+            EM: 'Lấy lịch hẹn thành công',
+            DT: bookings
+        });
+    } catch (err) {
+        console.error("getBookingsByPhone error:", err);
+        return res.status(500).json({ EC: 1, EM: 'Lỗi server', DT: [] });
+    }
+};
+
+
 
 
 
@@ -211,5 +241,6 @@ export default {
     getBookingById,
     createBookingForClient,
     deleteBookingForClient,
-    updateBooking
+    updateBooking,
+    getBookingsByPhone
 };

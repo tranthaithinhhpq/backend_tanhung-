@@ -35,7 +35,8 @@ const getAll = async (query) => {
 };
 
 const create = async (data) => {
-    const required = ['name', 'group', 'price', 'priceInsurance', 'specialtyId'];
+    // const required = ['name', 'group', 'price', 'priceInsurance', 'specialtyId'];
+    const required = ['name', 'price', 'priceInsurance'];
     for (let field of required) {
         if (!data[field]) {
             return { EC: 1, EM: `Thiếu thông tin bắt buộc: ${field}` };

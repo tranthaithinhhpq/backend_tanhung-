@@ -68,5 +68,8 @@ router.get('/client/page/:slug', pageController.getPageBySlug);
 // Question
 router.post('/question', questionController.submitQuestion);
 
+// History
+router.get('/booking-history', bookingController.getBookingsByPhone);
+
 
 export default router;

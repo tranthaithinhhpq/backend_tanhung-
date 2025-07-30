@@ -12,6 +12,7 @@ import drugPriceController from '../controller/drugPriceController';
 import homepageController from '../controller/homepageController';
 import pageController from '../controller/pageController';
 import questionController from "../controller/questionController.js";
+import searchController from "../controller/searchController.js";
 const router = express.Router();
 
 // Auth
@@ -40,7 +41,8 @@ router.get("/client/news/:id", newsController.getNewsDetail);
 router.get("/news-categories", newsController.getCategories);
 
 // Device 
-router.get('/device/list', deviceController.readDevices);
+
+router.get('/client/device', deviceController.readDevices);
 router.get('/device/detail/:id', deviceController.getDeviceDetail);
 
 // Service Prices
@@ -70,6 +72,11 @@ router.post('/question', questionController.submitQuestion);
 
 // History
 router.get('/booking-history', bookingController.getBookingsByPhone);
+
+// Search
+router.get("/search", searchController.searchAll);
+
+
 
 
 export default router;

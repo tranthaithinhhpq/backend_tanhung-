@@ -22,6 +22,7 @@ import positionController from '../controller/positionController';
 import pageTextcontentController from '../controller/pageTextcontentController';
 import pageVideoContentController from '../controller/pageVideoContentController';
 import newsCategoryController from '../controller/newsCategoryController';
+import workingSlotTemplateController from '../controller/workingSlotTemplateController';
 
 
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
@@ -200,5 +201,11 @@ router.get('/news-category/paginate', newsCategoryController.getPaginate);
 router.post('/news-category', newsCategoryController.create);
 router.put('/news-category/:id', newsCategoryController.update);
 router.post('/news-category/delete', newsCategoryController.remove);
+
+// workingSlotTemplateController
+router.get('/working-slot-template/paginate', workingSlotTemplateController.getPaginate);
+router.post('/working-slot-template', workingSlotTemplateController.create);
+router.put('/working-slot-template/:id', workingSlotTemplateController.update);
+router.post('/working-slot-template/delete', workingSlotTemplateController.remove);
 
 export default router;

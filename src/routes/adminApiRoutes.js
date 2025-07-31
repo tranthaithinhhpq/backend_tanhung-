@@ -18,6 +18,10 @@ import pageController from '../controller/pageController';
 import uploadController from "../controller/uploadController.js";
 import questionController from "../controller/questionController.js";
 import degreeController from '../controller/degreeController';
+import positionController from '../controller/positionController';
+import pageTextcontentController from '../controller/pageTextcontentController';
+import pageVideoContentController from '../controller/pageVideoContentController';
+
 
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
@@ -168,5 +172,23 @@ router.get('/degree/paginate', degreeController.getPaginate);
 router.post('/degree', degreeController.create);
 router.put('/degree/:id', degreeController.update);
 router.post('/degree/delete', degreeController.remove);
+
+//Position
+router.get('/position/paginate', positionController.getPaginate);
+router.post('/position', positionController.create);
+router.put('/position/:id', positionController.update);
+router.post('/position/delete', positionController.remove);
+
+// pageTextContent
+router.get('/page-text-content/paginate', pageTextcontentController.getPaginate);
+router.post('/page-text-content', pageTextcontentController.create);
+router.put('/page-text-content/:id', pageTextcontentController.update);
+router.post('/page-text-content/delete', pageTextcontentController.remove);
+
+// page-video-content
+router.get('/page-video-content/paginate', pageVideoContentController.getPaginate);
+router.post('/page-video-content', pageVideoContentController.create);
+router.put('/page-video-content/:id', pageVideoContentController.update);
+router.post('/page-video-content/delete', pageVideoContentController.remove);
 
 export default router;

@@ -204,8 +204,13 @@ router.post('/news-category/delete', newsCategoryController.remove);
 
 // workingSlotTemplateController
 router.get('/working-slot-template/paginate', workingSlotTemplateController.getPaginate);
+router.get('/working-slot-template/paginate', workingSlotTemplateController.getPaginate);
 router.post('/working-slot-template', workingSlotTemplateController.create);
 router.put('/working-slot-template/:id', workingSlotTemplateController.update);
 router.post('/working-slot-template/delete', workingSlotTemplateController.remove);
+
+router.get('/doctor-schedule', doctorController.getAllDoctors);
+
+
 
 export default router;

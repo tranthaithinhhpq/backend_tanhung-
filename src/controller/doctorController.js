@@ -327,6 +327,18 @@ const createDefaultSlotsForDoctor = async (doctorId) => {
     await db.WorkingSlotTemplate.bulkCreate(slotWithDoctor);
 };
 
+const getAllDoctors = async (req, res) => {
+    try {
+        const result = await doctorService.getAllDoctors();
+        return res.status(200).json(result);
+    } catch (error) {
+        console.error('❌ getAllDoctors error:', error);
+        return res.status(500).json({ EC: 1, EM: 'Lỗi server', DT: [] });
+    }
+};
+
+
+
 
 export default {
     createDoctorInfo,
@@ -340,5 +352,6 @@ export default {
     deleteDoctorInfo,
     getDoctorListPaginate,
     getDoctorAvailableSchedule,
-    createDefaultSlotsForDoctor
+    createDefaultSlotsForDoctor,
+    getAllDoctors
 };

@@ -76,6 +76,30 @@ const getDoctorList = async () => {
     }
 };
 
+const getAllDoctors = async () => {
+    try {
+        const doctors = await db.DoctorInfo.findAll({
+            attributes: ['id', 'doctorName'],
+            order: [['doctorName', 'ASC']]
+        });
+
+        return {
+            EC: 0,
+            EM: 'Lấy danh sách bác sĩ thành công',
+            DT: doctors
+        };
+    } catch (error) {
+        console.error('❌ getAllDoctors service error:', error);
+        return {
+            EC: 1,
+            EM: 'Lỗi khi lấy danh sách bác sĩ',
+            DT: []
+        };
+    }
+};
+
+
+
 const getDoctorListPaginate = async (page, limit) => {
     try {
         let offset = (page - 1) * limit;
@@ -285,5 +309,6 @@ export default {
     getDoctorBySpecialty,
     getOtherDoctors,
     getDoctorDetailById,
-    getAvailableScheduleByDoctor
+    getAvailableScheduleByDoctor,
+    getAllDoctors
 };

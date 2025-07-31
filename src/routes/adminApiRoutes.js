@@ -17,6 +17,7 @@ import pageImageContentController from '../controller/pageImageContentController
 import pageController from '../controller/pageController';
 import uploadController from "../controller/uploadController.js";
 import questionController from "../controller/questionController.js";
+import degreeController from '../controller/degreeController';
 
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
@@ -160,5 +161,12 @@ router.get('/question', questionController.getPaginate);
 router.post('/question', questionController.create);
 router.put('/question/:id', questionController.update);
 router.post('/question/delete', questionController.remove);
+
+// Degree
+router.get('/degree', degreeController.getAll);
+router.get('/degree/paginate', degreeController.getPaginate);
+router.post('/degree', degreeController.create);
+router.put('/degree/:id', degreeController.update);
+router.post('/degree/delete', degreeController.remove);
 
 export default router;

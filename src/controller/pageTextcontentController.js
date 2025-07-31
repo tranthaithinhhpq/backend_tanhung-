@@ -22,4 +22,9 @@ const remove = async (req, res) => {
     return res.status(200).json(data);
 };
 
-export default { getPaginate, create, update, remove };
+const getTopBarContent = async (req, res) => {
+    const result = await pageTextcontentService.getBySectionList(['phone', 'emergency_number', 'address']);
+    return res.status(200).json(result);
+};
+
+export default { getTopBarContent, getPaginate, create, update, remove };

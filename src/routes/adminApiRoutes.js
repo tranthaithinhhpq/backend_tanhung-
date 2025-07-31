@@ -21,6 +21,7 @@ import degreeController from '../controller/degreeController';
 import positionController from '../controller/positionController';
 import pageTextcontentController from '../controller/pageTextcontentController';
 import pageVideoContentController from '../controller/pageVideoContentController';
+import newsCategoryController from '../controller/newsCategoryController';
 
 
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
@@ -190,5 +191,14 @@ router.get('/page-video-content/paginate', pageVideoContentController.getPaginat
 router.post('/page-video-content', pageVideoContentController.create);
 router.put('/page-video-content/:id', pageVideoContentController.update);
 router.post('/page-video-content/delete', pageVideoContentController.remove);
+
+// page-text-content
+router.get('/page-text-content/topbar', pageTextcontentController.getTopBarContent);
+
+// news category
+router.get('/news-category/paginate', newsCategoryController.getPaginate);
+router.post('/news-category', newsCategoryController.create);
+router.put('/news-category/:id', newsCategoryController.update);
+router.post('/news-category/delete', newsCategoryController.remove);
 
 export default router;

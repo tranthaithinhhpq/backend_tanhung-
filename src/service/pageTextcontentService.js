@@ -39,4 +39,18 @@ const remove = async (id) => {
     return { EC: 0, EM: 'Deleted' };
 };
 
-export default { getPaginate, create, update, remove };
+const getBySectionList = async (sections = []) => {
+    try {
+        const data = await db.PageTextContent.findAll({
+            where: { section: sections },
+            order: [['sortOrder', 'ASC']]
+        });
+        return { EC: 0, EM: 'Success', DT: data };
+    } catch (err) {
+        console.error('getBySectionList error:', err);
+        return { EC: -1, EM: 'Error', DT: [] };
+    }
+};
+
+
+export default { getBySectionList, getPaginate, create, update, remove };

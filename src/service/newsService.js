@@ -7,13 +7,24 @@ const buildImagePath = (filePath) => {
     return filePath.replace(/^.*?public[\\/]/, '/').replace(/\\/g, '/'); // chuẩn hóa dấu gạch chéo
 };
 
-const getAllCategories = async () => {
+// const getAllCategories = async () => {
+//     const categories = await db.NewsCategory.findAll({
+//         attributes: ['id', 'name', 'description'],
+//         order: [['name', 'ASC']]
+//     });
+//     return categories;
+// };
+
+const getAllCategories = async (group) => {
+    const whereClause = group ? { group } : {};
     const categories = await db.NewsCategory.findAll({
-        attributes: ['id', 'name', 'description'],
+        where: whereClause,
+        attributes: ['id', 'name', 'description', 'group'],
         order: [['name', 'ASC']]
     });
     return categories;
 };
+
 
 const createArticle = async (data, imagePath) => {
     const cleanPath = buildImagePath(imagePath);
@@ -53,19 +64,38 @@ const getArticleById = async (id) => {
     });
 };
 
+// const updateArticle = async (id, data, imagePath) => {
+//     const updateData = {
+//         title: data.title,
+//         content: data.content,
+//         categoryId: data.categoryId,
+//         status: data.status
+//     };
+//     if (imagePath) {
+//         updateData.image = buildImagePath(imagePath);
+//     }
+
+//     return await db.NewsArticle.update(updateData, { where: { id } });
+// };
+
+
 const updateArticle = async (id, data, imagePath) => {
     const updateData = {
         title: data.title,
         content: data.content,
         categoryId: data.categoryId,
-        status: data.status
+        status: data.status,
+        group: data.group || "news"  // thêm trường group
     };
+
     if (imagePath) {
         updateData.image = buildImagePath(imagePath);
     }
 
     return await db.NewsArticle.update(updateData, { where: { id } });
 };
+
+
 
 const deleteArticle = async (id) => {
     return await db.NewsArticle.destroy({ where: { id } });
@@ -118,9 +148,12 @@ const getNewsList = async (page, limit, categoryId, keyword) => {
 
 
 const getNewsDetail = async (id) => {
-    const news = await db.NewsArticle.findOne({
-        where: { id },
-        include: [{ model: db.NewsCategory, attributes: ['name'] }]
+    const news = await db.NewsArticle.findByPk(id, {
+        include: {
+            model: db.NewsCategory,
+            as: "category", // phải đúng alias!
+            attributes: ['id', 'name', 'group']
+        }
     });
 
     if (!news) {

@@ -39,16 +39,15 @@ const remove = async (id) => {
     return { EC: 0, EM: 'Deleted' };
 };
 
-const getAllCategories = async () => {
-    try {
-        const categories = await db.NewsCategory.findAll({
-            attributes: ['id', 'name'],
-            order: [['name', 'ASC']],
-        });
-        return categories;
-    } catch (error) {
-        throw error;
-    }
+const getAllCategories = async (group = 'news') => {
+    const whereClause = group ? { group } : {};
+    const categories = await db.NewsCategory.findAll({
+        where: whereClause,
+        attributes: ['id', 'name'],
+        order: [['name', 'ASC']],
+    });
+    return categories;
 };
+
 
 export default { getPaginate, create, update, remove, getAllCategories };

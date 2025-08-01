@@ -199,6 +199,39 @@ const getNewsList = async (page, limit, categoryId, keyword, group) => {
     };
 };
 
+const getTopNews = async (group = 'news') => {
+    try {
+        const Sequelize = db.Sequelize;
+
+        const news = await db.NewsArticle.findAll({
+            limit: 8,
+            order: [['createdAt', 'DESC']],
+            include: [
+                {
+                    model: db.NewsCategory,
+                    as: 'category',
+                    attributes: ['id', 'name', 'group'],
+                    where: { group }, // ✅ bắt buộc đúng group
+                    required: true    // ✅ INNER JOIN để lọc đúng
+                }
+            ]
+        });
+
+        return {
+            EC: 0,
+            EM: 'Lấy danh sách tin tức thành công',
+            DT: { news }
+        };
+    } catch (err) {
+        console.error('❌ getTopNews error:', err);
+        return {
+            EC: -1,
+            EM: 'Lỗi khi lấy tin tức',
+            DT: []
+        };
+    }
+};
+
 
 
 
@@ -266,6 +299,7 @@ export default {
     getNewsList,
     getNewsDetail,
     getNewsPaginate,
-    getNewsPaginateTable
+    getNewsPaginateTable,
+    getTopNews
 
 };

@@ -33,6 +33,25 @@ const getAllCategories = async (req, res) => {
     }
 };
 
+const getNewsCategoriesNav = async (req, res) => {
+    try {
+        const { group } = req.query;
+        const where = {};
+        if (group) where.group = group;
+
+        const categories = await db.NewsCategory.findAll({
+            where,
+            attributes: ['id', 'name']
+        });
+
+        return res.status(200).json({ EC: 0, EM: 'OK', DT: categories });
+    } catch (err) {
+        console.error('Lỗi getNewsCategoriesNav:', err);
+        return res.status(500).json({ EC: 1, EM: 'Lỗi server', DT: [] });
+    }
+};
 
 
-export default { getPaginate, create, update, remove, getAllCategories };
+
+
+export default { getPaginate, create, update, remove, getAllCategories, getNewsCategoriesNav };

@@ -39,4 +39,16 @@ const remove = async (id) => {
     return { EC: 0, EM: 'Deleted' };
 };
 
-export default { getPaginate, create, update, remove };
+const getAllCategories = async () => {
+    try {
+        const categories = await db.NewsCategory.findAll({
+            attributes: ['id', 'name'],
+            order: [['name', 'ASC']],
+        });
+        return categories;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export default { getPaginate, create, update, remove, getAllCategories };

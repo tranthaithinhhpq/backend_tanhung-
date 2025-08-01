@@ -13,6 +13,8 @@ import homepageController from '../controller/homepageController';
 import pageController from '../controller/pageController';
 import questionController from "../controller/questionController.js";
 import searchController from "../controller/searchController.js";
+import newsCategoryController from "../controller/newsCategoryController.js";
+
 const router = express.Router();
 
 // Auth
@@ -39,6 +41,7 @@ router.get("/degree/read", degreeController.read);
 router.get("/client/news", newsController.getNewsList);
 router.get("/client/news/:id", newsController.getNewsDetail);
 router.get("/news-categories", newsController.getCategories);
+router.get('/news-categories-nav', newsCategoryController.getAllCategories);
 
 // Device 
 

@@ -22,4 +22,23 @@ const remove = async (req, res) => {
     return res.status(200).json(data);
 };
 
-export default { getPaginate, create, update, remove };
+const getAllCategories = async (req, res) => {
+    try {
+        const data = await newsCategoryService.getAllCategories();
+        return res.status(200).json({
+            EC: 0,
+            EM: 'OK',
+            DT: data,
+        });
+    } catch (error) {
+        console.error("❌ getAllCategories error:", error);
+        return res.status(500).json({
+            EC: 1,
+            EM: 'Internal server error',
+            DT: [],
+        });
+    }
+};
+
+
+export default { getPaginate, create, update, remove, getAllCategories };

@@ -16,14 +16,20 @@ const buildImagePath = (filePath) => {
 // };
 
 const getAllCategories = async (group) => {
-    const whereClause = group ? { group } : {};
+    const where = {};
+    if (group) {
+        where.group = group;
+    }
+
     const categories = await db.NewsCategory.findAll({
-        where: whereClause,
+        where, // ✅ lọc theo group nếu có
         attributes: ['id', 'name', 'description', 'group'],
         order: [['name', 'ASC']]
     });
+
     return categories;
 };
+
 
 
 const createArticle = async (data, imagePath) => {
@@ -104,8 +110,48 @@ const deleteArticle = async (id) => {
 
 
 
-const getNewsList = async (page, limit, categoryId, keyword) => {
+// const getNewsList = async (page, limit, categoryId, keyword) => {
 
+//     const offset = (page - 1) * limit;
+//     const Sequelize = db.Sequelize;
+//     const where = {};
+
+//     if (categoryId && !isNaN(Number(categoryId))) {
+//         where.categoryId = Number(categoryId);
+//     }
+
+//     if (keyword) {
+//         where[Sequelize.Op.or] = [
+//             { title: { [Sequelize.Op.like]: `%${keyword}%` } },
+//             { content: { [Sequelize.Op.like]: `%${keyword}%` } }
+//         ];
+//     }
+
+
+
+//     const { rows, count } = await db.NewsArticle.findAndCountAll({
+//         where,
+//         include: [{ model: db.NewsCategory, attributes: ['name'] }],
+//         limit,
+//         offset,
+//         order: [['createdAt', 'DESC']]
+//     });
+
+//     return {
+//         EC: 0,
+//         EM: 'Lấy danh sách thành công',
+//         DT: {
+//             news: rows,
+//             pagination: {
+//                 total: count,
+//                 page,
+//                 limit
+//             }
+//         }
+//     };
+// };
+
+const getNewsList = async (page, limit, categoryId, keyword, group) => {
     const offset = (page - 1) * limit;
     const Sequelize = db.Sequelize;
     const where = {};
@@ -121,11 +167,19 @@ const getNewsList = async (page, limit, categoryId, keyword) => {
         ];
     }
 
+    const includeCondition = {
+        model: db.NewsCategory,
+        as: 'category', // ❗ alias phải đúng như trong association
+        attributes: ['id', 'name', 'group']
+    };
 
+    if (group) {
+        includeCondition.where = { group }; // ❗ Lọc theo group tại include
+    }
 
     const { rows, count } = await db.NewsArticle.findAndCountAll({
         where,
-        include: [{ model: db.NewsCategory, attributes: ['name'] }],
+        include: [includeCondition],
         limit,
         offset,
         order: [['createdAt', 'DESC']]
@@ -144,6 +198,8 @@ const getNewsList = async (page, limit, categoryId, keyword) => {
         }
     };
 };
+
+
 
 
 

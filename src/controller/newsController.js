@@ -1,9 +1,22 @@
 import newsService from "../service/newsService";
 import db from "../models/index.js";
 
+
 // const getCategories = async (req, res) => {
 //     try {
-//         const categories = await newsService.getAllCategories();
+//         const { group } = req.query;
+//         const categories = await newsService.getAllCategories(group);
+//         res.json({ EC: 0, DT: categories });
+//     } catch (err) {
+//         console.error(err);
+//         res.json({ EC: 1, EM: "Lỗi server" });
+//     }
+// };
+
+// const getCategories = async (req, res) => {
+//     try {
+//         const group = req.query.group;
+//         const categories = await newsService.getAllCategories(group); // truyền group vào
 //         res.json({ EC: 0, DT: categories });
 //     } catch (err) {
 //         console.error(err);
@@ -13,12 +26,16 @@ import db from "../models/index.js";
 
 const getCategories = async (req, res) => {
     try {
-        const { group } = req.query;
-        const categories = await newsService.getAllCategories(group);
-        res.json({ EC: 0, DT: categories });
-    } catch (err) {
-        console.error(err);
-        res.json({ EC: 1, EM: "Lỗi server" });
+        const where = {};
+        if (req.query.group) {
+            where.group = req.query.group;
+        }
+
+        const categories = await db.NewsCategory.findAll({ where });
+        return res.status(200).json({ EC: 0, DT: categories });
+    } catch (e) {
+        console.error('getAllCategories error:', e);
+        return res.status(500).json({ EC: 1, EM: 'Lỗi server', DT: [] });
     }
 };
 
@@ -112,10 +129,9 @@ const remove = async (req, res) => {
 
 const getNewsList = async (req, res) => {
     try {
+        const { page = 1, limit = 5, categoryId, keyword, group } = req.query;
 
-        const { page = 1, limit = 5, categoryId, keyword } = req.query;
-
-        const data = await newsService.getNewsList(+page, +limit, categoryId, keyword);
+        const data = await newsService.getNewsList(+page, +limit, categoryId, keyword, group);
         return res.status(200).json(data);
     } catch (err) {
         console.error("getNewsList error:", err);

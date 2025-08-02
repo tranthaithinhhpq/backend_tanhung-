@@ -80,6 +80,4 @@ router.get('/booking-history', bookingController.getBookingsByPhone);
 router.get("/search", searchController.searchAll);
 
 
-
-
 export default router;

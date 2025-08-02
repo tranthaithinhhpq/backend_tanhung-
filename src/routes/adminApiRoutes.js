@@ -45,17 +45,18 @@ router.get("/user/read-doctor", userController.readDoctor);
 router.post("/user", upload.single("image"), userController.create);
 router.post("/user/create", upload.single("image"), userController.create);
 router.put("/user/:id", upload.single("image"), userController.update);
-router.delete("/user/delete/:id", userController.remove);
-
+// router.delete("/user/delete/:id", userController.remove);
+router.delete("/user/delete", userController.remove);
 // Doctor Info
 router.get("/doctor-info/:userId", userController.getDoctorInfoWithAllData);
 router.post("/doctor-info/create", upload.single("image"), doctorController.createDoctorInfo);
 router.put("/doctor/:id", upload.single("image"), doctorController.updateDoctorInfo);
 router.delete("/doctor/:id", doctorController.deleteDoctorInfo);
+router.get("/doctor/read", doctorController.getDoctorList);
 
 // Roles & groups
 router.get("/role/read", roleController.read);
-router.post("/role", roleController.create);
+router.put("/role/update", roleController.updateRole);
 router.post("/role/create", roleController.create);
 router.put("/role/:id", roleController.update);
 router.delete("/role/:id", roleController.remove);
@@ -72,8 +73,6 @@ router.get('/admin/news/:id', newsController.getDetail);
 router.put('/news/:id', upload.single('image'), newsController.update);
 router.delete("/news/:id", newsController.remove);
 router.get('/news/paginate', newsController.getNewsPaginate);
-
-
 
 // specialty admin
 router.get("/specialty/read", specialtyController.readSpecialties);

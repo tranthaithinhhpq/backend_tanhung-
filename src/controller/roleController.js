@@ -118,11 +118,22 @@ const assignRoleToGroup = async (req, res) => {
 };
 
 
+const updateRole = async (req, res) => {
+    const data = req.body;
+    console.log("check data: ", data)
+
+    const result = await roleApiService.updateRole(data); // truyền nguyên object chứa id
+    return res.status(200).json(result);
+};
+
+
+
 module.exports = {
     read,
     create,
     update,
     remove,
     getRoleByGroup,
-    assignRoleToGroup
+    assignRoleToGroup,
+    updateRole
 };

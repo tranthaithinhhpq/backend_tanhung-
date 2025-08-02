@@ -149,7 +149,26 @@ const assignRoleToGroup = async (data) => {
     }
 };
 
+const updateRole = async (data) => {
+    try {
+        // if (!data.groupId) return { EM: "Error with empty GroupId", EC: 1, DT: "group" };
+
+        let role = await db.Role.findOne({ where: { id: data.id } });
+        if (role) {
+            role.url = data.url;
+            role.description = data.description;
+            await role.save();
+            return { EM: 'Update role success', EC: 0, DT: '' };
+        } else {
+            return { EM: 'Role not found', EC: 1, DT: '' };
+        }
+    } catch (e) {
+        console.log('❌ Error update role:', e);
+        return { EM: 'Something wrong in service...', EC: 1, DT: '' };
+    }
+};
+
 module.exports = {
-    createNewRoles, getAllRoles, deleteRole, getRoleByGroup, assignRoleToGroup
+    createNewRoles, getAllRoles, deleteRole, getRoleByGroup, assignRoleToGroup, updateRole
 };
 

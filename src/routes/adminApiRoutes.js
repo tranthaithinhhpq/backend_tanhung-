@@ -44,15 +44,18 @@ router.get("/admin/user/read", userController.read);
 router.get("/admin/user/read-doctor", userController.readDoctor);
 router.post("/admin/user", upload.single("image"), userController.create);
 router.post("/admin/user/create", upload.single("image"), userController.create);
+router.get("/admin/user/create", groupController.read);
 router.put("/admin/user/:id", upload.single("image"), userController.update);
+
 // router.delete("/user/delete/:id", userController.remove);
 router.delete("/admin/user/delete", userController.remove);
+
 // Doctor Info
-router.get("/admin/doctor-info/:userId", userController.getDoctorInfoWithAllData);
-router.post("/admin/doctor-info/create", upload.single("image"), doctorController.createDoctorInfo);
-router.put("/admin/doctor/edit/:id", upload.single("image"), doctorController.updateDoctorInfo);
+router.post("/admin/doctor/create", upload.single("image"), doctorController.createDoctorInfo);
+router.put("/admin/doctor/update/:id", upload.single("image"), doctorController.updateDoctorInfo);
+router.get("/admin/doctor/update/:userId", userController.getDoctorInfoWithAllData);
 router.delete("/admin/doctor/delete/:id", doctorController.deleteDoctorInfo);
-// router.get("/admin/doctor/read", doctorController.getDoctorList);
+router.get("/admin/doctor/read", doctorController.getDoctorList);
 
 // Roles & groups
 router.get("/admin/role/read", roleController.read);
@@ -65,10 +68,10 @@ router.post("/admin/role/assign-to-group", roleController.assignRoleToGroup);
 router.get("/admin/group/read", groupController.read);
 
 // News admin
-router.get("admin/news-admin", newsController.getList);
+router.get("/admin/news-admin", newsController.getList);
 // router.get("/news-admin/:id", newsController.getDetail);
-router.post("admin/news/create", upload.single("image"), newsController.create);
-router.put("admin/news/edit/:id", upload.single("image"), newsController.update);
+router.post("/admin/news/create", upload.single("image"), newsController.create);
+router.put("/admin/news/edit/:id", upload.single("image"), newsController.update);
 // router.put('/news/edit/:id', upload.single('image'), newsController.update);
 router.get('/admin/news/edit/:id', newsController.getDetail);
 
@@ -91,12 +94,12 @@ router.delete('/admin/device/delete/:id', deviceController.deleteDevice);
 router.get('/admin/device/read', deviceController.getDevicesPaginate);
 
 // workingSlotOverride admin
-router.get('/admin/doctor-day-off', workingSlotOverrideController.getOverrides);
-router.get('/admin/doctor-day-off/slots', workingSlotOverrideController.getDoctorSlotsByDate);
-router.post('/admin/doctor-day-off', workingSlotOverrideController.createOverride);
-router.put('/admin/doctor-day-off/:id', workingSlotOverrideController.updateOverride);
-router.delete('/admin/doctor-day-off/:id', workingSlotOverrideController.deleteOverride);
-router.get('/admin/doctor-day-off-paginate', workingSlotOverrideController.getDayOffPaginate);
+router.get('/admin/doctor-day-off/read', workingSlotOverrideController.getDayOffPaginate);
+router.get('/admin/doctor-day-off/create', workingSlotOverrideController.getDoctorSlotsByDate);
+router.post('/admin/doctor-day-off/create', workingSlotOverrideController.createOverride);
+router.put('/admin/doctor-day-off/update/:id', workingSlotOverrideController.updateOverride);
+router.delete('/admin/doctor-day-off/delete/:id', workingSlotOverrideController.deleteOverride);
+
 
 // Service Price admin
 router.get('/admin/service-price/read', servicePriceController.readPaginate); // phân trang
@@ -179,40 +182,38 @@ router.put('/admin/degree/edit/:id', degreeController.update);
 router.post('/admin/degree/delete', degreeController.remove);
 
 //Position
-router.get('/admin/position/paginate', positionController.getPaginate);
+router.get('/admin/position/read', positionController.getPaginate);
 router.post('/admin/position/create', positionController.create);
 router.put('/admin/position/edit/:id', positionController.update);
 router.post('/admin/position/delete', positionController.remove);
 
 // pageTextContent
-router.get('/admin/page-text-content/paginate', pageTextcontentController.getPaginate);
-router.post('/admin/page-text-content', pageTextcontentController.create);
-router.put('/admin/page-text-content/:id', pageTextcontentController.update);
+router.get('/admin/page-text-content/read', pageTextcontentController.getPaginate);
+router.post('/admin/page-text-content/create', pageTextcontentController.create);
+router.put('/admin/page-text-content/update/:id', pageTextcontentController.update);
 router.post('/admin/page-text-content/delete', pageTextcontentController.remove);
 
 // page-video-content
-router.get('/admin/page-video-content/paginate', pageVideoContentController.getPaginate);
-router.post('/admin/page-video-content', pageVideoContentController.create);
-router.put('/admin/page-video-content/:id', pageVideoContentController.update);
+router.get('/admin/page-video-content/read', pageVideoContentController.getPaginate);
+router.post('/admin/page-video-content/create', pageVideoContentController.create);
+router.put('/admin/page-video-content/update/:id', pageVideoContentController.update);
 router.post('/admin/page-video-content/delete', pageVideoContentController.remove);
 
 // page-text-content
 router.get('/admin/page-text-content/topbar', pageTextcontentController.getTopBarContent);
 
 // news category
-router.get('/admin/news-category/paginate', newsCategoryController.getPaginate);
-router.post('/admin/news-category', newsCategoryController.create);
-router.put('/admin/news-category/:id', newsCategoryController.update);
+router.get('/admin/news-category/read', newsCategoryController.getPaginate);
+router.post('/admin/news-category/create', newsCategoryController.create);
+router.put('/admin/news-category/update/:id', newsCategoryController.update);
 router.post('/admin/news-category/delete', newsCategoryController.remove);
 
 // workingSlotTemplateController
-router.get('/admin/working-slot-template/paginate', workingSlotTemplateController.getPaginate);
-router.get('/admin/working-slot-template/paginate', workingSlotTemplateController.getPaginate);
-router.post('/admin/working-slot-template', workingSlotTemplateController.create);
-router.put('/admin/working-slot-template/:id', workingSlotTemplateController.update);
+router.get('/admin/working-slot-template/read', workingSlotTemplateController.getPaginate);
+router.post('/admin/working-slot-template/create', workingSlotTemplateController.create);
+router.put('/admin/working-slot-template/update/:id', workingSlotTemplateController.update);
 router.post('/admin/working-slot-template/delete', workingSlotTemplateController.remove);
 
-router.get('/admin/doctor-schedule', doctorController.getAllDoctors);
 
 
 

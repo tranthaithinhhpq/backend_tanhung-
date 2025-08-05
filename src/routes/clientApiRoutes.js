@@ -78,8 +78,12 @@ router.get('/booking-history', bookingController.getBookingsByPhone);
 
 // Search
 router.get("/search", searchController.searchAll);
-
 router.get("/doctor/read", doctorController.getDoctorList);
+
+
+router.get('/doctor-schedule', doctorController.getAllDoctors);
+
+
 
 
 export default router;

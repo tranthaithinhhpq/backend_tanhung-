@@ -3,6 +3,8 @@ import db from "../models/index.js";
 import path from 'path';
 import fs from 'fs';
 
+
+
 const formatPath = (fullPath) => {
     if (!fullPath) return '';
     return fullPath.replace(/^src\/public/, '');
@@ -294,6 +296,11 @@ const getLogoImage = async (req, res) => {
     }
 };
 
+const handleGetHomeIntroSections = async (req, res) => {
+    const data = await homepageService.getHomeIntroSections();
+    return res.status(200).json(data);
+};
+
 
 export default {
     getPublicHomepage,
@@ -308,6 +315,7 @@ export default {
     getHomeVideos,
     getStatistics,
     getPartnerImages,
-    getLogoImage
+    getLogoImage,
+    handleGetHomeIntroSections
 
 };

@@ -134,8 +134,44 @@ const getStatistics = async () => {
 };
 
 
+const getHomeIntroSections = async () => {
+    try {
+        const sectionsToFetch = [
+            'home-title-1',
+            'home-content-1',
+            'home-title-2',
+            'home-content-2'
+        ];
 
+        const data = await db.PageTextContent.findAll({
+            where: {
+                section: sectionsToFetch
+            },
+            order: [['sortOrder', 'ASC']]
+        });
 
+        // Gom nhóm theo section
+        const grouped = {};
+        sectionsToFetch.forEach(sec => grouped[sec] = []);
+        data.forEach(item => {
+            if (!grouped[item.section]) grouped[item.section] = [];
+            grouped[item.section].push(item);
+        });
+
+        return {
+            EC: 0,
+            EM: 'OK',
+            DT: grouped
+        };
+    } catch (error) {
+        console.error("Error in getHomeIntroSections:", error);
+        return {
+            EC: 1,
+            EM: 'Lỗi server',
+            DT: null
+        };
+    }
+};
 
 export default {
     getBanners,
@@ -150,6 +186,6 @@ export default {
     remove,
     getBannersClient,
     getSections,
-    getStatistics
-
+    getStatistics,
+    getHomeIntroSections
 };

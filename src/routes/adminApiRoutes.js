@@ -15,7 +15,6 @@ import drugPriceController from '../controller/drugPriceController.js';
 import homepageController from '../controller/homepageController';
 import pageImageContentController from '../controller/pageImageContentController';
 import pageController from '../controller/pageController';
-import uploadController from "../controller/uploadController.js";
 import questionController from "../controller/questionController.js";
 import degreeController from '../controller/degreeController';
 import positionController from '../controller/positionController';
@@ -33,7 +32,7 @@ const router = express.Router();
 router.use(checkUserJWT, checkUserPermission);
 
 // Route upload ảnh từ Quill
-router.post("/admin/upload", upload.single("file"), uploadController.handleImageUpload);
+
 
 // Auth protected
 router.post("/logout", apiController.handleLogout);

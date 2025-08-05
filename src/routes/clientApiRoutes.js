@@ -14,6 +14,9 @@ import pageController from '../controller/pageController';
 import questionController from "../controller/questionController.js";
 import searchController from "../controller/searchController.js";
 import newsCategoryController from "../controller/newsCategoryController.js";
+import pageTextcontentController from "../controller/pageTextcontentController.js";
+import uploadController from "../controller/uploadController.js";
+import upload from '../middleware/uploadMiddleware';
 
 const router = express.Router();
 
@@ -57,9 +60,10 @@ router.get('/client/medicine', drugPriceController.getPublicDrugPrices);
 // Home 
 router.get('/homepage', homepageController.getPublicHomepage);
 router.get('/client/banner', homepageController.getPublicBanners);
-router.get('/client/home-sections', homepageController.getHomeSections);
+router.get('/client/home-sections-img', homepageController.getHomeSections);
 router.get('/client/home-videos', homepageController.getHomeVideos);
 router.get('/client/logo', homepageController.getLogoImage);
+router.get('/client/home-sections', homepageController.handleGetHomeIntroSections);
 
 // router.get('/client/news/preview', newsController.getPaginatedNewsPreview);
 router.get("/client/news-preview", newsController.getNewsSlider);
@@ -84,6 +88,8 @@ router.get("/doctor/read", doctorController.getDoctorList);
 router.get('/doctor-schedule', doctorController.getAllDoctors);
 
 
+router.get('/page-text-content/topbar', pageTextcontentController.getTopBarContent);
+router.post("/upload", upload.single("file"), uploadController.handleImageUpload);
 
 
 export default router;

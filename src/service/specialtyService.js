@@ -40,6 +40,7 @@ const updateSpecialty = async (id, body, file) => {
 
         // Cập nhật dữ liệu
         spec.name = body.name;
+        spec.displayOrder = body.displayOrder;
         spec.description = body.description;
         spec.markdownContent = body.markdownContent;
         if (file) spec.image = `/images/${file.filename}`;

@@ -60,7 +60,7 @@ const deletePage = async (req, res) => {
 const getPagesBySection = async (req, res) => {
     try {
         const { section } = req.query;
-        console.log("section is: ", section);
+
         if (!section) {
             return res.status(400).json({ EC: 1, EM: 'Missing section param', DT: [] });
         }

@@ -1,5 +1,5 @@
 import express from "express";
-import clientRoutes from './clientApiRoutes';
+import clientRoutes from './clientApiRoutes.js';
 import adminRoutes from './adminApiRoutes';
 
 const initApiRoutes = (app) => {

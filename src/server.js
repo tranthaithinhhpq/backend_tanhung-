@@ -1,39 +1,50 @@
-require("dotenv").config();
+import 'dotenv/config'
 import express from "express";
-import configViewEngine from "./config/viewEngine";
+import configViewEngine from "./config/viewEngine.js";
 import initApiRoutes from "./routes/initApiRoutes.js";
-import configCors from "./config/cors";
+import configCors from "./config/cors.js";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-// import connection from "./config/connectDB";
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+
+// 👉 Trust IIS/ARR reverse proxy (trên cùng sau khi tạo app)
+app.set('trust proxy', 'loopback'); // hoặc true; 'loopback' = 127.0.0.1 / ::1
+
+// (Tuỳ chọn) Nếu về sau bạn bật HTTPS ở IIS và muốn req.secure = true,
+// nhưng IIS không set X-Forwarded-Proto, thêm đoạn “map” từ x-arr-ssl:
+app.use((req, res, next) => {
+    if (req.headers['x-arr-ssl']) req.headers['x-forwarded-proto'] = 'https';
+    next();
+});
+
 //config cors
 configCors(app);
 
 //config view engine
 configViewEngine(app);
 
-// config body-parser
+// body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//config cookie-parser
+// cookie-parser
 app.use(cookieParser());
 
+// Static images
+app.use('/images', express.static('./src/public/images'));
 
-// Serve static files for uploaded images
-app.use('/images', express.static('./src/public/images')); // 👉 thêm dòng này ở đây
+// Health/test
+app.get('/welcome', (req, res) => res.status(200).type('text').send('welcome backend'));
+app.get('/', (req, res) => res.status(200).type('text').send('welcome backend'));
 
-
-//init web routes
+// API routes
 initApiRoutes(app);
 
-app.use((req, res) => {
-    return res.send('404 not found')
-})
+// 404 fallback
+app.use((req, res) => res.send('404 not found'));
 
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(">>> JWT Backend is running on the port = " + PORT);
-})
+});

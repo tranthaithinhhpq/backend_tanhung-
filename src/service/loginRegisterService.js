@@ -1,4 +1,4 @@
-require('dotenv').config();
+import 'dotenv/config'
 import db from "../models/index";
 import bcrypt from 'bcryptjs';
 import { Op } from 'sequelize';

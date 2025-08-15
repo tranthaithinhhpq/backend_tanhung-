@@ -1,5 +1,6 @@
-import db from '../models/index.js';
+import db from '../models';
 import bookingService from '../service/bookingService.js';
+import nodemailer from 'nodemailer';
 
 const createBooking = async (req, res) => {
     try {
@@ -8,6 +9,7 @@ const createBooking = async (req, res) => {
             doctorId, specialtyId, slotId, scheduleTime, servicePriceId
         } = req.body;
 
+        // 1️⃣ Lưu booking
         const booking = await db.Booking.create({
             name,
             phone,
@@ -22,12 +24,59 @@ const createBooking = async (req, res) => {
             servicePriceId
         });
 
+        // 2️⃣ Nếu có email thì gửi thông báo
+        if (email) {
+            // Lấy thêm thông tin bác sĩ, chuyên khoa, dịch vụ
+            const doctor = await db.DoctorInfo.findByPk(doctorId);
+            const specialty = await db.Specialty.findByPk(specialtyId);
+            const service = servicePriceId ? await db.ServicePrice.findByPk(servicePriceId) : null;
+            const slot = await db.WorkingSlotTemplate.findByPk(slotId);
+
+            // Cấu hình SMTP (Gmail hoặc SMTP của hosting)
+            const transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false,
+                auth: {
+                    user: process.env.SMTP_USER, // Email gửi
+                    pass: process.env.SMTP_PASS, // Mật khẩu ứng dụng
+                },
+            });
+
+            // Nội dung email
+            const htmlContent = `
+                <h3>Xin chào ${name}</h3>
+                <p>Bạn đã đặt lịch khám thành công tại <b>Bệnh viện Tân Hưng</b>.</p>
+                <p><b>Thông tin lịch hẹn:</b></p>
+                <ul>
+                    <li><b>Bác sĩ:</b> ${doctor?.doctorName || '---'}</li>
+                    <li><b>Chuyên khoa:</b> ${specialty?.name || '---'}</li>
+                    <li><b>Ngày khám:</b> ${new Date(scheduleTime).toLocaleDateString('vi-VN')}</li>
+                    <li><b>Giờ khám:</b> ${slot?.startTime || '---'}</li>
+                    <li><b>Dịch vụ:</b> ${service?.name || '---'}</li>
+                </ul>
+                <p>Vui lòng đến trước giờ hẹn 15 phút để làm thủ tục.</p>
+                <p>Xin cảm ơn!</p>
+            `;
+
+            // Gửi email
+            await transporter.sendMail({
+                from: `"Bệnh viện Tân Hưng" <${process.env.SMTP_USER}>`,
+                to: email,
+                subject: "Xác nhận lịch khám",
+                html: htmlContent,
+            });
+        }
+
         return res.status(200).json({ EC: 0, EM: 'Đặt lịch thành công', DT: booking });
+
     } catch (error) {
         console.error('❌ createBooking error:', error);
         return res.status(500).json({ EC: 1, EM: 'Lỗi tạo booking', DT: {} });
     }
 };
+
+
 
 
 const getBookingPaginate = async (req, res) => {

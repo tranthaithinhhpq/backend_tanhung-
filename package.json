@@ -26,6 +26,7 @@
     "lodash": "4.17.21",
     "multer": "^2.0.1",
     "mysql2": "2.3.3",
+    "nodemailer": "^7.0.5",
     "nodemon": "2.0.15",
     "sequelize": "6.13.0",
     "sequelize-cli": "6.3.0"

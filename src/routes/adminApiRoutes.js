@@ -22,6 +22,7 @@ import pageTextcontentController from '../controller/pageTextcontentController';
 import pageVideoContentController from '../controller/pageVideoContentController';
 import newsCategoryController from '../controller/newsCategoryController';
 import workingSlotTemplateController from '../controller/workingSlotTemplateController';
+import imageController from '../controller/imageController';
 
 
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
@@ -212,6 +213,12 @@ router.get('/admin/working-slot-template/read', workingSlotTemplateController.ge
 router.post('/admin/working-slot-template/create', workingSlotTemplateController.create);
 router.put('/admin/working-slot-template/update/:id', workingSlotTemplateController.update);
 router.post('/admin/working-slot-template/delete', workingSlotTemplateController.remove);
+
+// Lấy danh sách ảnh
+router.get('/admin/images/read', imageController.getImages);
+
+// Xóa ảnh
+router.delete('/admin/images/delete/:filename', imageController.removeImage);
 
 
 

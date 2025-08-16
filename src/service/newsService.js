@@ -7,13 +7,7 @@ const buildImagePath = (filePath) => {
     return filePath.replace(/^.*?public[\\/]/, '/').replace(/\\/g, '/'); // chuẩn hóa dấu gạch chéo
 };
 
-// const getAllCategories = async () => {
-//     const categories = await db.NewsCategory.findAll({
-//         attributes: ['id', 'name', 'description'],
-//         order: [['name', 'ASC']]
-//     });
-//     return categories;
-// };
+
 
 const getAllCategories = async (group) => {
     const where = {};
@@ -40,7 +34,8 @@ const createArticle = async (data, imagePath) => {
         content: data.content,
         image: cleanPath,
         categoryId: data.categoryId,
-        status: data.status || 'draft'
+        status: data.status || 'draft',
+        order: data.order
     });
 };
 
@@ -56,7 +51,10 @@ const getArticles = async (query) => {
         include: [{ model: db.NewsCategory, attributes: ['name'] }],
         limit: +limit,
         offset: +offset,
-        order: [['createdAt', 'DESC']],
+        order: [
+            ['order', 'ASC'],       // số order nhỏ ưu tiên
+            ['createdAt', 'DESC']   // trong cùng order thì mới nhất
+        ],
 
     });
 
@@ -70,19 +68,6 @@ const getArticleById = async (id) => {
     });
 };
 
-// const updateArticle = async (id, data, imagePath) => {
-//     const updateData = {
-//         title: data.title,
-//         content: data.content,
-//         categoryId: data.categoryId,
-//         status: data.status
-//     };
-//     if (imagePath) {
-//         updateData.image = buildImagePath(imagePath);
-//     }
-
-//     return await db.NewsArticle.update(updateData, { where: { id } });
-// };
 
 
 const updateArticle = async (id, data, imagePath) => {
@@ -91,7 +76,9 @@ const updateArticle = async (id, data, imagePath) => {
         content: data.content,
         categoryId: data.categoryId,
         status: data.status,
-        group: data.group || "news"  // thêm trường group
+        group: data.group || "news",
+        order: data.order || 0
+
     };
 
     if (imagePath) {
@@ -110,46 +97,7 @@ const deleteArticle = async (id) => {
 
 
 
-// const getNewsList = async (page, limit, categoryId, keyword) => {
 
-//     const offset = (page - 1) * limit;
-//     const Sequelize = db.Sequelize;
-//     const where = {};
-
-//     if (categoryId && !isNaN(Number(categoryId))) {
-//         where.categoryId = Number(categoryId);
-//     }
-
-//     if (keyword) {
-//         where[Sequelize.Op.or] = [
-//             { title: { [Sequelize.Op.like]: `%${keyword}%` } },
-//             { content: { [Sequelize.Op.like]: `%${keyword}%` } }
-//         ];
-//     }
-
-
-
-//     const { rows, count } = await db.NewsArticle.findAndCountAll({
-//         where,
-//         include: [{ model: db.NewsCategory, attributes: ['name'] }],
-//         limit,
-//         offset,
-//         order: [['createdAt', 'DESC']]
-//     });
-
-//     return {
-//         EC: 0,
-//         EM: 'Lấy danh sách thành công',
-//         DT: {
-//             news: rows,
-//             pagination: {
-//                 total: count,
-//                 page,
-//                 limit
-//             }
-//         }
-//     };
-// };
 
 const getNewsList = async (page, limit, categoryId, keyword, group) => {
     const offset = (page - 1) * limit;

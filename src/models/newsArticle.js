@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
         content: DataTypes.TEXT,
         image: DataTypes.STRING,
         status: DataTypes.ENUM('draft', 'published'),
-        categoryId: DataTypes.INTEGER
+        categoryId: DataTypes.INTEGER,
+        order: DataTypes.INTEGER
     }, {
         sequelize,
         modelName: 'NewsArticle',

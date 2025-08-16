@@ -60,18 +60,6 @@ const getList = async (req, res) => {
     }
 };
 
-// const getDetail = async (req, res) => {
-//     try {
-//         const article = await db.NewsArticle.findByPk(req.params.id);
-//         if (!article) {
-//             return res.status(404).json({ EC: 1, EM: "Không tìm thấy bài viết" });
-//         }
-//         return res.json({ EC: 0, DT: article });
-//     } catch (err) {
-//         console.error(err);
-//         return res.status(500).json({ EC: 1, EM: "Lỗi server" });
-//     }
-// };
 
 const getDetail = async (req, res) => {
     try {
@@ -94,16 +82,6 @@ const getDetail = async (req, res) => {
     }
 };
 
-// const update = async (req, res) => {
-//     try {
-//         const imagePath = req.file?.path;
-//         await newsService.updateArticle(req.params.id, req.body, imagePath);
-//         res.json({ EC: 0, EM: "Cập nhật thành công" });
-//     } catch (err) {
-//         console.error(err);
-//         res.json({ EC: 1, EM: "Lỗi cập nhật" });
-//     }
-// };
 
 
 const update = async (req, res) => {
@@ -150,20 +128,6 @@ const getNewsDetail = async (req, res) => {
     }
 };
 
-// const getNewsSlider = async (req, res) => {
-//     try {
-//         const page = +req.query.page || 1;
-//         const limit = +req.query.limit || 8;
-//         const offset = (page - 1) * limit;
-
-//         const result = await newsService.getNewsPaginate({ limit, offset });
-
-//         return res.status(200).json({ EC: 0, DT: result });
-//     } catch (error) {
-//         console.error("Error getNewsSlider:", error);
-//         return res.status(500).json({ EC: -1, message: "Internal server error" });
-//     }
-// };
 
 // Controller ví dụ
 const getNewsSlider = async (req, res) => {
@@ -178,31 +142,6 @@ const getNewsSlider = async (req, res) => {
 };
 
 
-// const getNewsPaginate = async (req, res) => {
-//     try {
-//         const page = +req.query.page || 1;
-//         const limit = +req.query.limit || 5;
-//         const offset = (page - 1) * limit;
-
-//         const { count, rows } = await db.NewsArticle.findAndCountAll({
-//             limit,
-//             offset,
-//             order: [['createdAt', 'DESC']]
-//         });
-
-//         return res.status(200).json({
-//             EC: 0,
-//             EM: 'Thành công',
-//             DT: {
-//                 articles: rows,
-//                 totalPages: Math.ceil(count / limit)
-//             }
-//         });
-//     } catch (e) {
-//         return res.status(500).json({ EC: -1, EM: 'Server error', DT: [] });
-//     }
-// };
-
 const getNewsPaginate = async (req, res) => {
     try {
         const page = +req.query.page || 1;
@@ -216,7 +155,7 @@ const getNewsPaginate = async (req, res) => {
             include: [
                 {
                     model: db.NewsCategory,
-                    as: 'category', // 🔥 PHẢI CÓ DÒNG NÀY
+                    as: 'category',
                     attributes: ['id', 'name', 'group']
                 }
             ]

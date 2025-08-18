@@ -25,6 +25,7 @@ import workingSlotTemplateController from '../controller/workingSlotTemplateCont
 import imageController from '../controller/imageController';
 
 
+
 import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
 
 const router = express.Router();
@@ -75,8 +76,10 @@ router.put("/admin/news/edit/:id", upload.single("image"), newsController.update
 // router.put('/news/edit/:id', upload.single('image'), newsController.update);
 router.get('/admin/news/edit/:id', newsController.getDetail);
 
+
 router.delete("/admin/news/delete/:id", newsController.remove);
 router.get('/admin/news/paginate', newsController.getNewsPaginate);
+
 
 // specialty admin
 router.get("/admin/specialty/read", specialtyController.readSpecialties);

@@ -148,15 +148,44 @@ const getNewsPaginate = async (req, res) => {
         const limit = +req.query.limit || 5;
         const offset = (page - 1) * limit;
 
+        // ⬇️ các tham số filter (tùy chọn)
+        const {
+            categoryId,      // ví dụ: ?categoryId=2
+            categoryName,    // ví dụ: ?categoryName=Tin%20nội%20bộ
+            status,          // ví dụ: ?status=published | draft
+            keyword,         // ví dụ: ?keyword=sot xuat huyet
+        } = req.query;
+
+        // where cho bảng NewsArticle
+        const where = {};
+        if (categoryId && !Number.isNaN(+categoryId)) {
+            where.categoryId = +categoryId;            // ✅ lọc theo categoryId
+        }
+        if (status) {
+            where.status = status;                     // optional
+        }
+        if (keyword) {
+            where.title = { [Op.like]: `%${keyword}%` }; // optional: tìm theo tiêu đề
+        }
+
+        // where cho include (nếu lọc theo tên danh mục)
+        const includeWhere = {};
+        if (categoryName) {
+            includeWhere.name = { [Op.like]: `%${categoryName}%` };
+        }
+
         const { count, rows } = await db.NewsArticle.findAndCountAll({
+            where,
             limit,
             offset,
             order: [['createdAt', 'DESC']],
+            distinct: true, // tránh nhân bản count khi có include
             include: [
                 {
                     model: db.NewsCategory,
                     as: 'category',
-                    attributes: ['id', 'name', 'group']
+                    attributes: ['id', 'name', 'group'],
+                    ...(Object.keys(includeWhere).length ? { where: includeWhere, required: true } : { required: false })
                 }
             ]
         });
@@ -166,14 +195,38 @@ const getNewsPaginate = async (req, res) => {
             EM: 'Thành công',
             DT: {
                 articles: rows,
-                totalPages: Math.ceil(count / limit)
+                totalPages: Math.ceil(count / limit),
+                totalItems: count,
+                page,
+                limit
             }
         });
     } catch (e) {
-        console.error("getNewsPaginate error:", e);
+        console.error('getNewsPaginate error:', e);
         return res.status(500).json({ EC: -1, EM: 'Server error', DT: [] });
     }
 };
+
+const listNewsCategories = async (req, res) => {
+    try {
+        const { group, keyword } = req.query; // optional filters
+        const data = await newsService.getAllCategoriesSearch({ group, keyword });
+
+        return res.status(200).json({
+            EC: 0,
+            EM: 'Get all categories successfully',
+            DT: data,
+        });
+    } catch (error) {
+        console.error('listNewsCategories error:', error);
+        return res.status(500).json({
+            EC: 1,
+            EM: 'Internal server error',
+            DT: null,
+        });
+    }
+};
+
 
 
 export default {
@@ -186,6 +239,7 @@ export default {
     getNewsList,
     getNewsDetail,
     getNewsSlider,
-    getNewsPaginate
+    getNewsPaginate,
+    listNewsCategories
 
 };

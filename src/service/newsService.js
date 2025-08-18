@@ -68,6 +68,33 @@ const getArticleById = async (id) => {
     });
 };
 
+const getAllCategoriesSearch = async (filters = {}) => {
+    const { group, keyword } = filters;
+
+    const where = {};
+    if (group) {
+        where.group = group; // ví dụ: 'news' | 'medicine'
+    }
+    if (keyword) {
+        // tìm theo tên hoặc mô tả
+        where[Op.or] = [
+            { name: { [Op.like]: `%${keyword}%` } },
+            { description: { [Op.like]: `%${keyword}%` } },
+        ];
+    }
+
+    const categories = await db.NewsCategory.findAll({
+        where,
+        attributes: ['id', 'name', 'description', 'group', 'createdAt', 'updatedAt'],
+        order: [
+            ['name', 'ASC'],
+            ['createdAt', 'DESC'],
+        ],
+    });
+
+    return categories;
+};
+
 
 
 const updateArticle = async (id, data, imagePath) => {
@@ -248,6 +275,7 @@ export default {
     getNewsDetail,
     getNewsPaginate,
     getNewsPaginateTable,
-    getTopNews
+    getTopNews,
+    getAllCategoriesSearch
 
 };

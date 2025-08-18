@@ -45,6 +45,7 @@ router.get("/client/news", newsController.getNewsList);
 router.get("/client/news/:id", newsController.getNewsDetail);
 router.get("/news-categories", newsController.getCategories);
 router.get('/news-categories-nav', newsCategoryController.getAllCategories);
+router.get('/newscategory/list', newsController.listNewsCategories);
 
 // Device 
 

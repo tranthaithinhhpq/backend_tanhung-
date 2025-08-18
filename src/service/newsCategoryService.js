@@ -50,4 +50,6 @@ const getAllCategories = async (group = 'news') => {
 };
 
 
+
+
 export default { getPaginate, create, update, remove, getAllCategories };

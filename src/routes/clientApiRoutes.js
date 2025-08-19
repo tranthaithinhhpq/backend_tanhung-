@@ -52,6 +52,8 @@ router.get('/newscategory/list', newsController.listNewsCategories);
 router.get('/client/device', deviceController.readDevices);
 router.get('/device/detail/:id', deviceController.getDeviceDetail);
 
+
+
 // Service Prices
 router.get('/service-price/selectable/:specialtyId', servicePriceController.getSelectableServicesBySpecialty);
 router.get('/serviceprice', servicePriceController.getPublicServicePrices);

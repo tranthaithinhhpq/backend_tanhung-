@@ -12,7 +12,11 @@ module.exports = (sequelize, DataTypes) => {
         image: DataTypes.STRING,
         status: DataTypes.ENUM('draft', 'published'),
         categoryId: DataTypes.INTEGER,
-        order: DataTypes.INTEGER
+        type: {
+            type: DataTypes.ENUM('unique', 'highlight', 'popular'),
+            allowNull: true,
+            defaultValue: null,
+        }
     }, {
         sequelize,
         modelName: 'NewsArticle',

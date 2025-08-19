@@ -35,7 +35,8 @@ const createArticle = async (data, imagePath) => {
         image: cleanPath,
         categoryId: data.categoryId,
         status: data.status || 'draft',
-        order: data.order
+        type: data.type
+
     });
 };
 
@@ -104,7 +105,8 @@ const updateArticle = async (id, data, imagePath) => {
         categoryId: data.categoryId,
         status: data.status,
         group: data.group || "news",
-        order: data.order || 0
+        type: data.type,
+
 
     };
 
@@ -126,15 +128,66 @@ const deleteArticle = async (id) => {
 
 
 
+// const getNewsList = async (page, limit, categoryId, keyword, group) => {
+//     const offset = (page - 1) * limit;
+//     const Sequelize = db.Sequelize;
+//     const where = {};
+
+//     if (categoryId && !isNaN(Number(categoryId))) {
+//         where.categoryId = Number(categoryId);
+//     }
+
+//     if (keyword) {
+//         where[Sequelize.Op.or] = [
+//             { title: { [Sequelize.Op.like]: `%${keyword}%` } },
+//             { content: { [Sequelize.Op.like]: `%${keyword}%` } }
+//         ];
+//     }
+
+//     const includeCondition = {
+//         model: db.NewsCategory,
+//         as: 'category', // ❗ alias phải đúng như trong association
+//         attributes: ['id', 'name', 'group']
+//     };
+
+//     if (group) {
+//         includeCondition.where = { group }; // ❗ Lọc theo group tại include
+//     }
+
+//     const { rows, count } = await db.NewsArticle.findAndCountAll({
+//         where,
+//         include: [includeCondition],
+//         limit,
+//         offset,
+//         order: [['createdAt', 'DESC']]
+//     });
+
+//     return {
+//         EC: 0,
+//         EM: 'Lấy danh sách thành công',
+//         DT: {
+//             news: rows,
+//             pagination: {
+//                 total: count,
+//                 page,
+//                 limit
+//             }
+//         }
+//     };
+// };
+
+
 const getNewsList = async (page, limit, categoryId, keyword, group) => {
     const offset = (page - 1) * limit;
     const Sequelize = db.Sequelize;
     const where = {};
 
+    // Filter theo categoryId
     if (categoryId && !isNaN(Number(categoryId))) {
         where.categoryId = Number(categoryId);
     }
 
+    // Filter theo keyword
     if (keyword) {
         where[Sequelize.Op.or] = [
             { title: { [Sequelize.Op.like]: `%${keyword}%` } },
@@ -142,14 +195,15 @@ const getNewsList = async (page, limit, categoryId, keyword, group) => {
         ];
     }
 
+    // Include category và filter group
     const includeCondition = {
         model: db.NewsCategory,
-        as: 'category', // ❗ alias phải đúng như trong association
+        as: 'category',
         attributes: ['id', 'name', 'group']
     };
 
     if (group) {
-        includeCondition.where = { group }; // ❗ Lọc theo group tại include
+        includeCondition.where = { group };
     }
 
     const { rows, count } = await db.NewsArticle.findAndCountAll({
@@ -157,7 +211,12 @@ const getNewsList = async (page, limit, categoryId, keyword, group) => {
         include: [includeCondition],
         limit,
         offset,
-        order: [['createdAt', 'DESC']]
+        order: [
+            // Ưu tiên type trước
+            [Sequelize.literal("CASE WHEN type = 'type' THEN 1 ELSE 2 END"), 'ASC'],
+            // Sau đó sắp xếp theo ngày cập nhật mới nhất
+            ['updatedAt', 'DESC']
+        ]
     });
 
     return {
@@ -173,6 +232,12 @@ const getNewsList = async (page, limit, categoryId, keyword, group) => {
         }
     };
 };
+
+
+
+
+
+
 
 const getTopNews = async (group = 'news') => {
     try {

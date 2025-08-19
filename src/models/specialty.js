@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             description: DataTypes.STRING,
             markdownContent: DataTypes.TEXT,
             image: DataTypes.STRING,
+            isSelectable: DataTypes.BOOLEAN
         },
         {
             sequelize,

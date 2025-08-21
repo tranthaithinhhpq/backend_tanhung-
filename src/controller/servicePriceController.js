@@ -1,6 +1,17 @@
 import servicePriceService from '../service/servicePriceService';
 import db from '../models/index.js';
 
+const getAllGroups = async (req, res) => {
+    try {
+        // Gọi service để lấy tất cả nhóm
+        const result = await servicePriceService.getAllGroups();
+        return res.status(200).json(result);
+    } catch (err) {
+        console.error("getAllGroups error:", err);
+        return res.status(500).json({ EC: -1, EM: "Lỗi server", DT: [] });
+    }
+};
+
 const getAllServicePrices = async (req, res) => {
     try {
         const result = await servicePriceService.getAll(req.query);
@@ -45,17 +56,38 @@ const deleteServicePrice = async (req, res) => {
 
 const readPaginate = async (req, res) => {
     try {
-        const { page, limit } = req.query;
-        const data = await servicePriceService.getPaginatedServices(+page, +limit);
+        // Lấy các tham số từ query string
+        const { page, limit, group, specialtyId } = req.query;
+
+        // Đảm bảo page và limit là số
+        const currentPage = +page || 1;
+        const pageLimit = +limit || 10;
+
+        // Tạo đối tượng filter để truyền vào hàm service
+        const filters = {};
+
+        if (group) {
+            filters.group = group;  // Lọc theo nhóm
+        }
+
+        if (specialtyId) {
+            filters.specialtyId = specialtyId;  // Lọc theo chuyên khoa
+        }
+
+        // Gọi hàm dịch vụ để lấy dữ liệu phân trang với các tham số lọc
+        const data = await servicePriceService.getPaginatedServices(currentPage, pageLimit, filters);
+
         return res.status(200).json({
             EC: 0,
             DT: data
         });
+
     } catch (err) {
         console.error('❌ Lỗi đọc bảng giá:', err);
         return res.status(500).json({ EC: -1, EM: 'Lỗi máy chủ' });
     }
 };
+
 
 
 const getSelectableServicesBySpecialty = async (req, res) => {
@@ -134,5 +166,6 @@ export default {
     readPaginate,
     getSelectableServicesBySpecialty,
     getAll,
-    getPublicServicePrices
+    getPublicServicePrices,
+    getAllGroups
 };

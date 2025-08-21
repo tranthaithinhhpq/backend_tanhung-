@@ -34,6 +34,30 @@ const getAll = async (query) => {
     };
 };
 
+const getAllGroups = async () => {
+    try {
+        // Lấy tất cả các nhóm (group) từ bảng ServicePrice
+        const groups = await db.ServicePrice.findAll({
+            attributes: [[db.Sequelize.fn('DISTINCT', db.Sequelize.col('group')), 'group']],  // Lấy các nhóm duy nhất
+            order: [['group', 'ASC']]  // Sắp xếp theo tên nhóm (hoặc bất kỳ thuộc tính nào khác)
+        });
+
+        // Trả về kết quả
+        return {
+            EC: 0,
+            EM: 'OK',
+            DT: groups.map(group => group.group)  // Chỉ lấy tên nhóm (group)
+        };
+    } catch (err) {
+        console.error("getAllGroups service error:", err);
+        return {
+            EC: -1,
+            EM: 'Lỗi khi lấy nhóm',
+            DT: []
+        };
+    }
+};
+
 const create = async (data) => {
     // const required = ['name', 'group', 'price', 'priceInsurance', 'specialtyId'];
     const required = ['name', 'price', 'priceInsurance'];
@@ -76,23 +100,89 @@ const remove = async (id) => {
     return { EC: 0, EM: 'Xóa thành công' };
 };
 
+// const getPaginatedServices = async (page, limit, filters) => {
+//     const offset = (page - 1) * limit;
 
-const getPaginatedServices = async (page, limit) => {
+//     const where = {};
+
+//     if (filters.group) {
+//         where.group = filters.group;
+//     }
+
+//     if (filters.specialtyId) {
+//         where.specialtyId = filters.specialtyId;
+//     }
+
+//     try {
+//         const { count, rows } = await db.ServicePrice.findAndCountAll({
+//             where,
+//             limit,
+//             offset,
+//             order: [['id', 'DESC']], // Sắp xếp theo id giảm dần
+//         });
+
+//         return {
+//             rows,
+//             totalItems: count,
+//             totalPages: Math.ceil(count / limit),  // Tính tổng số trang
+//         };
+
+//     } catch (err) {
+//         console.error('❌ Lỗi trong getPaginatedServices:', err);
+//         throw err;  // Để lỗi này tiếp tục đi lên controller để xử lý
+//     }
+// };
+
+const getPaginatedServices = async (page, limit, filters) => {
     const offset = (page - 1) * limit;
-    const { rows, count } = await db.ServicePrice.findAndCountAll({
-        include: { model: db.Specialty, attributes: ['name'] },
-        limit,
-        offset,
-        order: [['id', 'DESC']]
-    });
 
-    return {
-        totalItems: count,
-        totalPages: Math.ceil(count / limit),
-        currentPage: page,
-        rows
-    };
+    const where = {};
+
+    if (filters.group) {
+        where.group = filters.group;  // Lọc theo nhóm
+    }
+
+    if (filters.specialtyId) {
+        where.specialtyId = filters.specialtyId;  // Lọc theo chuyên khoa
+    }
+
+    try {
+        // Truy vấn với include để lấy thông tin tên chuyên khoa
+        const { count, rows } = await db.ServicePrice.findAndCountAll({
+            where,
+            limit,
+            offset,
+            order: [['id', 'DESC']],  // Sắp xếp theo id giảm dần
+            include: [
+                {
+                    model: db.Specialty,
+                    attributes: ['name']  // Lấy trường name của bảng Specialty
+                }
+            ]
+        });
+
+        // Đảm bảo trả về dữ liệu đã liên kết với bảng Specialty
+        const servicesWithSpecialtyName = rows.map(service => {
+            // Gán tên chuyên khoa vào mỗi dịch vụ
+            return {
+                ...service.dataValues,
+                Specialty: service.Specialty ? service.Specialty.name : 'N/A'  // Lấy tên chuyên khoa
+            };
+        });
+
+        return {
+            rows: servicesWithSpecialtyName,
+            totalItems: count,
+            totalPages: Math.ceil(count / limit),  // Tính tổng số trang
+        };
+
+    } catch (err) {
+        console.error('❌ Lỗi trong getPaginatedServices:', err);
+        throw err;  // Để lỗi này tiếp tục đi lên controller để xử lý
+    }
 };
+
+
 
 const getPublicList = async ({ page = 1, limit = 10, specialtyId, q }) => {
     const offset = (page - 1) * limit;
@@ -147,5 +237,6 @@ export default {
     update,
     remove,
     getPublicList,
-    getDrugList
+    getDrugList,
+    getAllGroups
 };

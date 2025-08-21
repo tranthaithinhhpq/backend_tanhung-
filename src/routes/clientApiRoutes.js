@@ -57,6 +57,8 @@ router.get('/device/detail/:id', deviceController.getDeviceDetail);
 // Service Prices
 router.get('/service-price/selectable/:specialtyId', servicePriceController.getSelectableServicesBySpecialty);
 router.get('/serviceprice', servicePriceController.getPublicServicePrices);
+router.get('/service-price/groups', servicePriceController.getAllGroups);
+
 // Drugs Prices
 router.get('/client/medicine', drugPriceController.getPublicDrugPrices);
 

@@ -22,6 +22,16 @@ module.exports = {
       image: {
         type: Sequelize.STRING,
       },
+      displayOrder: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0, // giống hình bạn chụp
+      },
+      isSelectable: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true, // tinyint(1) mặc định là 1
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

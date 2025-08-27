@@ -2,6 +2,8 @@ import doctorService from '../service/doctorService';
 import db from '../models/index.js';
 import path from 'path';
 import fs from 'fs';
+const { sequelize } = db
+
 
 
 const createDoctorInfo = async (req, res) => {
@@ -107,24 +109,46 @@ const getOtherDoctors = async (req, res) => {
 
 
 
+// const getDoctorBySpecialty = async (req, res) => {
+//     try {
+//         const { specialtyId } = req.params;
+//         const doctors = await db.DoctorInfo.findAll({
+//             where: { specialtyId },
+//             attributes: ['id', 'doctorName', 'image']
+//         });
+
+//         return res.status(200).json({
+//             EC: 0,
+//             DT: doctors
+//         });
+//     } catch (error) {
+//         console.error("❌ Lỗi getDoctorBySpecialty:", error);
+//         return res.status(500).json({
+//             EC: -1,
+//             EM: 'Lỗi server'
+//         });
+//     }
+// };
+
+
 const getDoctorBySpecialty = async (req, res) => {
     try {
         const { specialtyId } = req.params;
+
         const doctors = await db.DoctorInfo.findAll({
             where: { specialtyId },
-            attributes: ['id', 'doctorName', 'image']
+            attributes: ['id', 'doctorName', 'image'],
+            include: [
+                { model: db.Position, attributes: ['name'] },
+                { model: db.Degree, attributes: ['name'] },
+                { model: db.Specialty, attributes: ['name'] },
+            ],
         });
 
-        return res.status(200).json({
-            EC: 0,
-            DT: doctors
-        });
+        return res.status(200).json({ EC: 0, DT: doctors });
     } catch (error) {
-        console.error("❌ Lỗi getDoctorBySpecialty:", error);
-        return res.status(500).json({
-            EC: -1,
-            EM: 'Lỗi server'
-        });
+        console.error('❌ Lỗi getDoctorBySpecialty:', error);
+        return res.status(500).json({ EC: -1, EM: 'Lỗi server' });
     }
 };
 

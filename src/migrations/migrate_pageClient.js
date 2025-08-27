@@ -30,6 +30,16 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: true
       },
+      section: {
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false
+      },
+      image: {
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

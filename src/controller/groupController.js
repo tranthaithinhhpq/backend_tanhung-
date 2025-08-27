@@ -1,4 +1,4 @@
-import groupService from '../service/groupService';
+import groupService from '../service/groupService.js';
 
 const read = async (req, res) => {
     try {
@@ -18,4 +18,4 @@ const read = async (req, res) => {
         })
     }
 }
-module.exports = { read }
+export default { read }

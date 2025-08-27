@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = {
+export default {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('WorkingSlotTemplate', {
       id: { allowNull: false, autoIncrement: true, primaryKey: true, type: Sequelize.INTEGER },

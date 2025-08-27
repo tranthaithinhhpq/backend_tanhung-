@@ -1,4 +1,4 @@
-import imageService from '../service/imageService';
+import imageService from '../service/imageService.js';
 
 const getImages = async (req, res) => {
     try {

@@ -1,4 +1,4 @@
-import newsCategoryService from '../service/newsCategoryService';
+import newsCategoryService from '../service/newsCategoryService.js';
 
 const getPaginate = async (req, res) => {
     const page = +req.query.page || 1;

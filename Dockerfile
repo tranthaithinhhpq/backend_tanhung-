@@ -1,24 +1,20 @@
-# Sử dụng Node.js 18
-FROM node:18-alpine
+# Base image
+FROM node:18
 
-# Tạo thư mục làm việc
+# Set working dir
 WORKDIR /app
 
-# Copy package.json trước để cache dependencies
+# Copy package.json trước để cache layer
 COPY package*.json ./
 
 # Cài dependencies
 RUN npm install
 
-# Cài Babel CLI nếu cần build
-RUN npm install -g @babel/core @babel/cli
-
-# Copy toàn bộ code
+# Copy source code
 COPY . .
 
-# Build code bằng Babel
-RUN npm run build-src
+# Expose port
+EXPOSE 8080
 
-
-# Lệnh khởi chạy server
-CMD ["npm","run", "build"]
+# Start app
+CMD ["npm", "start"]

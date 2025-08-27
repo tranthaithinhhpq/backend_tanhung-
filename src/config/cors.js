@@ -1,26 +1,33 @@
-require("dotenv").config();
+import 'dotenv/config';
+
 const configCors = (app) => {
     // Add headers before the routes are defined
-    app.use(function (req, res, next) {
-
+    app.use((req, res, next) => {
         // Website you wish to allow to connect
         res.setHeader('Access-Control-Allow-Origin', process.env.REACT_URL);
 
         // Request methods you wish to allow
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        res.setHeader(
+            'Access-Control-Allow-Methods',
+            'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+        );
 
         // Request headers you wish to allow
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+        res.setHeader(
+            'Access-Control-Allow-Headers',
+            'X-Requested-With,content-type, Authorization'
+        );
 
-        // Set to true if you need the website to include cookies in the requests sent
-        // to the API (e.g. in case you use sessions)
+        // Allow cookies in requests (for sessions)
         res.setHeader('Access-Control-Allow-Credentials', true);
+
         if (req.method === 'OPTIONS') {
             return res.sendStatus(200);
         }
 
-        // Pass to next layer of middleware
+        // Pass to next middleware
         next();
     });
-}
+};
+
 export default configCors;

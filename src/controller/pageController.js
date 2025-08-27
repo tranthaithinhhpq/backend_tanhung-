@@ -1,4 +1,4 @@
-import pageService from "../service/pageService";
+import pageService from "../service/pageService.js";
 import db from "../models/index.js";
 
 
@@ -98,7 +98,7 @@ const getPageBySlug = async (req, res) => {
 };
 
 
-module.exports = {
+export default {
     createPage,
     getAllPages,
     getPageById,

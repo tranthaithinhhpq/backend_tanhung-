@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = {
+export default {
     up: async (queryInterface, Sequelize) => {
         await queryInterface.bulkInsert('Group_Role', [
             // Group 1 (Admin)

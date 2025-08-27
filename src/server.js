@@ -1,48 +1,48 @@
-import 'dotenv/config'
+import 'dotenv/config';
 import express from "express";
 import configViewEngine from "./config/viewEngine.js";
 import initApiRoutes from "./routes/initApiRoutes.js";
 import configCors from "./config/cors.js";
-import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import path from "path";
 
 const app = express();
 
-// 👉 Trust IIS/ARR reverse proxy (trên cùng sau khi tạo app)
-app.set('trust proxy', 'loopback'); // hoặc true; 'loopback' = 127.0.0.1 / ::1
+// Trust reverse proxy
+app.set('trust proxy', 'loopback');
 
-// (Tuỳ chọn) Nếu về sau bạn bật HTTPS ở IIS và muốn req.secure = true,
-// nhưng IIS không set X-Forwarded-Proto, thêm đoạn “map” từ x-arr-ssl:
+// Map ARR SSL header -> HTTPS
 app.use((req, res, next) => {
     if (req.headers['x-arr-ssl']) req.headers['x-forwarded-proto'] = 'https';
     next();
 });
 
-//config cors
+// Middlewares
 configCors(app);
-
-//config view engine
 configViewEngine(app);
-
-// body-parser
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// cookie-parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(morgan("dev"));
 
-// Static images
-app.use('/images', express.static('./src/public/images'));
+// Static files
+app.use('/images', express.static(path.resolve("src/public/images")));
 
-// Health/test
-app.get('/welcome', (req, res) => res.status(200).type('text').send('welcome backend'));
-app.get('/', (req, res) => res.status(200).type('text').send('welcome backend'));
+// Health check
+app.get(['/welcome', '/'], (req, res) => res.status(200).send("welcome backend"));
 
 // API routes
 initApiRoutes(app);
 
-// 404 fallback
-app.use((req, res) => res.send('404 not found'));
+// 404 handler
+app.use((req, res) => res.status(404).json({ EC: -1, EM: "API not found" }));
+
+// Error handler
+app.use((err, req, res, next) => {
+    console.error("Unhandled error:", err);
+    res.status(500).json({ EC: -1, EM: "Internal server error" });
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

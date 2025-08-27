@@ -1,5 +1,5 @@
-import db from "../models";
-import degreeService from '../service/degreeService';
+import db from "../models/index.js";
+import degreeService from '../service/degreeService.js';
 
 const read = async (req, res) => {
     try {

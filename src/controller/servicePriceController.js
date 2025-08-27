@@ -1,4 +1,4 @@
-import servicePriceService from '../service/servicePriceService';
+import servicePriceService from '../service/servicePriceService.js';
 import db from '../models/index.js';
 
 const getAllGroups = async (req, res) => {

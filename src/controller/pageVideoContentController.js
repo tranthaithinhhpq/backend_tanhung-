@@ -1,4 +1,4 @@
-import service from '../service/pageVideoContentService';
+import service from '../service/pageVideoContentService.js';
 
 const getPaginate = async (req, res) => {
     const page = +req.query.page || 1;

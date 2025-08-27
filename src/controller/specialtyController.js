@@ -1,4 +1,4 @@
-import specialtyService from "../service/specialtyService";
+import specialtyService from "../service/specialtyService.js";
 
 const readSpecialties = async (req, res) => {
     const data = await specialtyService.getAllSpecialties();

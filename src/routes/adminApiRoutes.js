@@ -1,32 +1,34 @@
 import express from 'express';
-import userController from '../controller/userController';
-import groupController from '../controller/groupController';
-import roleController from '../controller/roleController';
-import doctorController from '../controller/doctorController';
-import newsController from '../controller/newsController';
-import apiController from '../controller/apiController';
-import upload from '../middleware/uploadMiddleware';
-import specialtyController from '../controller/specialtyController';
-import deviceController from '../controller/deviceController';
-import workingSlotOverrideController from '../controller/workingSlotOverrideController';
-import servicePriceController from '../controller/servicePriceController';
-import bookingController from '../controller/bookingController';
+import userController from '../controller/userController.js';
+import groupController from '../controller/groupController.js';
+import roleController from '../controller/roleController.js';
+import doctorController from '../controller/doctorController.js';
+import newsController from '../controller/newsController.js';
+import apiController from '../controller/apiController.js';
+import upload from '../middleware/uploadMiddleware.js';
+import specialtyController from '../controller/specialtyController.js';
+import deviceController from '../controller/deviceController.js';
+import workingSlotOverrideController from '../controller/workingSlotOverrideController.js';
+import servicePriceController from '../controller/servicePriceController.js';
+import bookingController from '../controller/bookingController.js';
 import drugPriceController from '../controller/drugPriceController.js';
-import homepageController from '../controller/homepageController';
-import pageImageContentController from '../controller/pageImageContentController';
-import pageController from '../controller/pageController';
+import homepageController from '../controller/homepageController.js';
+import pageImageContentController from '../controller/pageImageContentController.js';
+import pageController from '../controller/pageController.js';
 import questionController from "../controller/questionController.js";
-import degreeController from '../controller/degreeController';
-import positionController from '../controller/positionController';
-import pageTextcontentController from '../controller/pageTextcontentController';
-import pageVideoContentController from '../controller/pageVideoContentController';
-import newsCategoryController from '../controller/newsCategoryController';
-import workingSlotTemplateController from '../controller/workingSlotTemplateController';
-import imageController from '../controller/imageController';
+import degreeController from '../controller/degreeController.js';
+import positionController from '../controller/positionController.js';
+import pageTextcontentController from '../controller/pageTextcontentController.js';
+import pageVideoContentController from '../controller/pageVideoContentController.js';
+import newsCategoryController from '../controller/newsCategoryController.js';
+import workingSlotTemplateController from '../controller/workingSlotTemplateController.js';
+import imageController from '../controller/imageController.js';
 
 
 
-import { checkUserJWT, checkUserPermission } from '../middleware/JWTAction';
+import JWTAction from '../middleware/JWTAction.js';
+
+const { checkUserJWT, checkUserPermission } = JWTAction;
 
 const router = express.Router();
 

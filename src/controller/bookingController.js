@@ -1,4 +1,4 @@
-import db from '../models';
+import db from '../models/index.js';
 import bookingService from '../service/bookingService.js';
 import nodemailer from 'nodemailer';
 

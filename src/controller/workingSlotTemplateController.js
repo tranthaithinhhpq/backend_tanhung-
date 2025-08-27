@@ -1,4 +1,4 @@
-import service from '../service/workingSlotTemplateService';
+import service from '../service/workingSlotTemplateService.js';
 
 const getPaginate = async (req, res) => {
     const page = +req.query.page || 1;

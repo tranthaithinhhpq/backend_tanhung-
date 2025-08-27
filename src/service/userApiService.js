@@ -1,6 +1,8 @@
-import { where } from 'sequelize/lib/sequelize';
-import db from '../models/index';
-import { checkEmailExist, checkPhoneExist, hashUserPassword } from './loginRegisterService';
+import { Op, where } from "sequelize";
+import db from '../models/index.js';
+import loginRegisterService from './loginRegisterService.js';
+
+const { checkEmailExist, checkPhoneExist, hashUserPassword } = loginRegisterService;
 const getAllUser = async () => {
     try {
         let user = await db.User.findAll({
@@ -193,6 +195,6 @@ const getAllDoctor = async () => {
 
 
 
-module.exports = {
+export default {
     getAllUser, createNewUser, updateUser, deleteUser, getUserWithPagination, getAllDoctor,
 }

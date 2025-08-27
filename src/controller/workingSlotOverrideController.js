@@ -1,4 +1,4 @@
-import workingSlotOverrideService from '../service/workingSlotOverrideService';
+import workingSlotOverrideService from '../service/workingSlotOverrideService.js';
 import { startOfDay, endOfDay } from 'date-fns';
 import db from '../models/index.js';
 const getOverrides = async (req, res) => {

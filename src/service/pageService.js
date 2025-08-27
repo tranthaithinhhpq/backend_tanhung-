@@ -100,7 +100,7 @@ const getPagesBySection = async (section) => {
     }
 };
 
-module.exports = {
+export default {
     create,
     getAllPages,
     getPageById,

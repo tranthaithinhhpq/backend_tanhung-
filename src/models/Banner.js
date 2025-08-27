@@ -1,14 +1,15 @@
 'use strict';
-const { Model } = require('sequelize');
+import { Model } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
     class Banner extends Model {
-        static associate(models) { }
+        static associate(models) {
+            // define association here nếu cần
+        }
     }
 
     Banner.init(
         {
-
             title: DataTypes.STRING,
             imageDesktop: DataTypes.STRING,
             imagePhone: DataTypes.STRING,

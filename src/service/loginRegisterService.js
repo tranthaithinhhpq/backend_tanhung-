@@ -1,9 +1,13 @@
 import 'dotenv/config'
-import db from "../models/index";
+import db from "../models/index.js";
 import bcrypt from 'bcryptjs';
 import { Op } from 'sequelize';
-import { getGroupWithRoles } from './JWTService.js';
-import { createJWT } from '../middleware/JWTAction';
+import JWTAction from '../middleware/JWTAction.js';
+import JWTService from './JWTService.js';
+
+const { getGroupWithRoles } = JWTService;
+
+const { createJWT } = JWTAction;
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -139,6 +143,6 @@ const handleLogin = async (rawData) => {
 }
 
 
-module.exports = {
+export default {
     registerNewUser, handleLogin, hashUserPassword, checkEmailExist, checkPhoneExist
 }

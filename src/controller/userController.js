@@ -1,7 +1,7 @@
-import userApiService from '../service/userApiService';
+import userApiService from '../service/userApiService.js';
 import fs from 'fs';
 import path from 'path';
-const db = require('../models');
+import db from '../models/index.js';
 
 const read = async (req, res) => {
     try {
@@ -194,4 +194,4 @@ const getDoctorInfoWithAllData = async (req, res) => {
 };
 
 
-module.exports = { read, create, update, remove, getUserAccount, readDoctor, getDoctorInfoByUserId, getDoctorInfoWithAllData }
+export default { read, create, update, remove, getUserAccount, readDoctor, getDoctorInfoByUserId, getDoctorInfoWithAllData }

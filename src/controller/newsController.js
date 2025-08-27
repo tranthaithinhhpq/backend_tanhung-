@@ -1,28 +1,6 @@
-import newsService from "../service/newsService";
+import newsService from "../service/newsService.js";
 import db from "../models/index.js";
 
-
-// const getCategories = async (req, res) => {
-//     try {
-//         const { group } = req.query;
-//         const categories = await newsService.getAllCategories(group);
-//         res.json({ EC: 0, DT: categories });
-//     } catch (err) {
-//         console.error(err);
-//         res.json({ EC: 1, EM: "Lỗi server" });
-//     }
-// };
-
-// const getCategories = async (req, res) => {
-//     try {
-//         const group = req.query.group;
-//         const categories = await newsService.getAllCategories(group); // truyền group vào
-//         res.json({ EC: 0, DT: categories });
-//     } catch (err) {
-//         console.error(err);
-//         res.json({ EC: 1, EM: "Lỗi server" });
-//     }
-// };
 
 const getCategories = async (req, res) => {
     try {

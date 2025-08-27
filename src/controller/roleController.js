@@ -1,6 +1,7 @@
-import userApiService from '../service/userApiService';
-import roleApiService from '../service/roleApiService';
-import { createJWT } from '../middleware/JWTAction';   // 👈
+import userApiService from '../service/userApiService.js';
+import roleApiService from '../service/roleApiService.js';
+
+
 
 const read = async (req, res) => {
     try {
@@ -128,7 +129,7 @@ const updateRole = async (req, res) => {
 
 
 
-module.exports = {
+export default {
     read,
     create,
     update,

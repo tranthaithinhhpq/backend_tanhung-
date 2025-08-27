@@ -1,4 +1,4 @@
-import homepageService from '../service/homepageService';
+import homepageService from '../service/homepageService.js';
 import db from "../models/index.js";
 import path from 'path';
 import fs from 'fs';

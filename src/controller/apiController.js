@@ -1,4 +1,4 @@
-import loginRegisterService from '../service/loginRegisterService';
+import loginRegisterService from '../service/loginRegisterService.js';
 const testApi = (req, res) => {
     return res.status(200).json({
         message: 'ok',
@@ -92,6 +92,6 @@ const handleLogout = (req, res) => {
         });
     }
 };
-module.exports = {
+export default {
     testApi, handleRegister, handleLogin, handleLogout
 }

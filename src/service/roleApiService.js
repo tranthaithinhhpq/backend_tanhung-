@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.js';
 
 const createNewRoles = async (roles) => {
     try {
@@ -168,7 +168,7 @@ const updateRole = async (data) => {
     }
 };
 
-module.exports = {
+export default {
     createNewRoles, getAllRoles, deleteRole, getRoleByGroup, assignRoleToGroup, updateRole
 };
 

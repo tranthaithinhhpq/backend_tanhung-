@@ -1,7 +1,7 @@
 'use strict';
-const { Model } = require('sequelize');
+import { Model } from 'sequelize';
 
-module.exports = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
     class DrugPrice extends Model {
         static associate(models) {
             // Bạn có thể thêm liên kết sau nếu cần

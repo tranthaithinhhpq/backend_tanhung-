@@ -1,5 +1,10 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Tạo __dirname trong ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const imageDir = path.join(__dirname, '..', 'public', 'images');
 
@@ -10,13 +15,13 @@ const getAllImages = () => {
 
             const baseUrl = process.env.APP_IMAGE_URL || 'http://localhost:8080';
 
-            const imageList = files.map(file => {
+            const imageList = files.map((file) => {
                 const stats = fs.statSync(path.join(imageDir, file));
                 return {
                     name: file,
                     url: `${baseUrl}/images/${encodeURIComponent(file)}`,
                     createdAt: stats.birthtime, // hoặc stats.mtime nếu muốn lấy thời gian chỉnh sửa
-                    sortOrder: 0 // nếu bạn có dữ liệu sortOrder riêng, cần load từ DB
+                    sortOrder: 0, // nếu có dữ liệu sortOrder riêng thì load từ DB
                 };
             });
 
@@ -45,5 +50,5 @@ const deleteImage = (filename) => {
 
 export default {
     getAllImages,
-    deleteImage
+    deleteImage,
 };

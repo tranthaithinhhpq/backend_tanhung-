@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.js';
 
 const getGroups = async () => {
     try {
@@ -20,4 +20,4 @@ const getGroups = async () => {
         }
     }
 }
-module.exports = { getGroups }
+export default { getGroups }

@@ -1,4 +1,4 @@
-import db from '../models/index';
+import db from '../models/index.js';
 import { Op } from "sequelize";
 import { eachDayOfInterval, format, getDay, addDays, startOfDay, endOfDay } from "date-fns";
 import path from 'path';

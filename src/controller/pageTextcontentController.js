@@ -1,4 +1,4 @@
-import pageTextcontentService from '../service/pageTextcontentService';
+import pageTextcontentService from '../service/pageTextcontentService.js';
 
 const getPaginate = async (req, res) => {
     const page = +req.query.page || 1;

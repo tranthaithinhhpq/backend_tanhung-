@@ -1,5 +1,5 @@
 'use strict';
-module.exports = {
+export default {
   // key: DataTypes.STRING,
   //       type: DataTypes.STRING,
   //       value_en: DataTypes.STRING,

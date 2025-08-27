@@ -1,4 +1,4 @@
-import doctorService from '../service/doctorService';
+import doctorService from '../service/doctorService.js';
 import db from '../models/index.js';
 import path from 'path';
 import fs from 'fs';

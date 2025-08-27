@@ -1,5 +1,5 @@
 'use strict';
-module.exports = {
+export default {
   // patientId: DataTypes.INTEGER,
   //       doctorId: DataTypes.INTEGER,
   //       description: DataTypes.TEXT

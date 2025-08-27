@@ -1,5 +1,5 @@
-import db from "../models";
-import positionService from '../service/positionService';
+import db from "../models/index.js";
+import positionService from '../service/positionService.js';
 
 const read = async (req, res) => {
     try {

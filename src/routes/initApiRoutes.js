@@ -1,6 +1,6 @@
 import express from "express";
 import clientRoutes from './clientApiRoutes.js';
-import adminRoutes from './adminApiRoutes';
+import adminRoutes from './adminApiRoutes.js';
 
 const initApiRoutes = (app) => {
     const router = express.Router();

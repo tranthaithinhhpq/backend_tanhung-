@@ -1,5 +1,5 @@
 'use strict';
-module.exports = {
+export default {
     up: async (queryInterface) => {
         await queryInterface.bulkInsert('NewsCategory', [
             { name: 'Tin Tức Y Tế', description: 'Thông tin y tế', createdAt: new Date(), updatedAt: new Date() },

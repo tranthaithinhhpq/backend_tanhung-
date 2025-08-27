@@ -1,5 +1,5 @@
 // File: controllers/questionController.js
-import questionService from '../service/questionService';
+import questionService from '../service/questionService.js';
 import db from '../models/index.js';
 
 const getPaginate = async (req, res) => {

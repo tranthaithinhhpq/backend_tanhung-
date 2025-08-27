@@ -1,4 +1,4 @@
-import db from "../models/index";
+import db from "../models/index.js";
 
 const getPaginate = async (page = 1, limit = 5) => {
     const offset = (page - 1) * limit;

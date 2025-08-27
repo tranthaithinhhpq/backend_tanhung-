@@ -1,4 +1,4 @@
-import searchService from '../service/searchService';
+import searchService from '../service/searchService.js';
 
 const searchAll = async (req, res) => {
     try {

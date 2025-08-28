@@ -2,6 +2,11 @@ import homepageService from '../service/homepageService.js';
 import db from "../models/index.js";
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 
 
@@ -160,26 +165,36 @@ const remove = async (req, res) => {
     try {
         const { id, imageDesktop, imageMobile } = req.body;
 
-        if (!id) return res.status(400).json({ message: "Thiếu ID banner" });
+        if (!id) {
+            return res.status(400).json({ message: "Thiếu ID banner" });
+        }
 
-        // Xoá file ảnh nếu tồn tại
+        // Hàm xoá file
         const deleteFile = (filePath) => {
             if (!filePath) return;
 
+            // Bỏ dấu "/" ở đầu nếu có
             const normalizedPath = filePath.startsWith('/') ? filePath.slice(1) : filePath;
+
+            // Ghép path tuyệt đối trong thư mục public
             const fullPath = path.join(__dirname, '../public', normalizedPath);
 
             console.log("Đường dẫn xóa:", fullPath);
 
-            if (fs.existsSync(fullPath)) {
-                fs.unlinkSync(fullPath);
+            try {
+                if (fs.existsSync(fullPath)) {
+                    fs.unlinkSync(fullPath);
+                    console.log("Đã xoá file:", fullPath);
+                }
+            } catch (err) {
+                console.error("Lỗi khi xoá file:", err);
             }
         };
 
         if (imageDesktop) deleteFile(imageDesktop);
         if (imageMobile) deleteFile(imageMobile);
 
-        // Xoá khỏi DB
+        // Xoá record khỏi DB
         await db.Banner.destroy({ where: { id } });
 
         return res.status(200).json({

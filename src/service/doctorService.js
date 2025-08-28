@@ -4,6 +4,12 @@ import { eachDayOfInterval, format, getDay, addDays, startOfDay, endOfDay } from
 import path from 'path';
 import fs from 'fs';
 
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const createDoctorInfo = async (body, file) => {
     try {
         await db.DoctorInfo.create({
@@ -31,11 +37,21 @@ const updateDoctorInfo = async (id, body, file) => {
 
         // Nếu có ảnh mới → xóa ảnh cũ trong thư mục
         if (file) {
-            // Xóa ảnh cũ
             if (doctor.image) {
-                const oldPath = path.join(__dirname, '../public', doctor.image.startsWith('/') ? doctor.image.slice(1) : doctor.image);
-                if (fs.existsSync(oldPath)) {
-                    fs.unlinkSync(oldPath);
+                // Normalize lại path: bỏ "/" đầu nếu có
+                const normalizedPath = doctor.image.startsWith('/')
+                    ? doctor.image.slice(1)
+                    : doctor.image;
+
+                const oldPath = path.join(__dirname, '../public', normalizedPath);
+
+                try {
+                    if (fs.existsSync(oldPath)) {
+                        fs.unlinkSync(oldPath);
+                        console.log("🗑 Đã xoá ảnh cũ:", oldPath);
+                    }
+                } catch (err) {
+                    console.error("⚠️ Lỗi khi xoá ảnh cũ:", err);
                 }
             }
 

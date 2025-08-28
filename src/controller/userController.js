@@ -2,6 +2,16 @@ import userApiService from '../service/userApiService.js';
 import fs from 'fs';
 import path from 'path';
 import db from '../models/index.js';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+
+
+
+
 
 const read = async (req, res) => {
     try {
@@ -68,19 +78,35 @@ const update = async (req, res) => {
     try {
         // 1. Lấy user hiện tại từ DB
         const user = await db.User.findByPk(req.body.id);
-        if (!user) return res.status(404).json({ EM: 'User not found', EC: 1, DT: '' });
+        if (!user) {
+            return res.status(404).json({ EM: 'User not found', EC: 1, DT: '' });
+        }
 
         // 2. Xử lý ảnh: nếu có ảnh mới thì xoá ảnh cũ
-        let imagePath = req.file ? `/images/${req.file.filename}` : req.body.image || '';
+        let imagePath = req.file
+            ? `/images/${req.file.filename}`
+            : req.body.image || user.image || '';
+
         if (req.file && user.image && user.image !== imagePath) {
-            const fullPath = path.join(__dirname, '..', 'public', user.image.startsWith('/') ? user.image.slice(1) : user.image);
-            if (fs.existsSync(fullPath)) {
-                fs.unlinkSync(fullPath); // Xóa ảnh cũ
+            const normalizedPath = user.image.startsWith('/')
+                ? user.image.slice(1)
+                : user.image;
+
+            const fullPath = path.join(__dirname, '..', 'public', normalizedPath);
+
+            try {
+                if (fs.existsSync(fullPath)) {
+                    fs.unlinkSync(fullPath); // Xóa ảnh cũ
+                    console.log("🗑 Đã xoá ảnh cũ:", fullPath);
+                }
+            } catch (err) {
+                console.error("⚠️ Lỗi khi xoá ảnh cũ:", err);
             }
         }
 
         // 3. Gọi service update
         let data = await userApiService.updateUser({ ...req.body, image: imagePath });
+
         return res.status(200).json(data);
     } catch (error) {
         console.error('❌ Update user error:', error);

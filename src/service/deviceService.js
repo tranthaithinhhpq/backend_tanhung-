@@ -1,6 +1,11 @@
 import db from '../models/index.js';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const buildImagePath = (filePath) => {
     if (!filePath) return '';
@@ -30,27 +35,42 @@ const createDevice = async (data, file) => {
 };
 
 const updateDevice = async (id, data, file) => {
-    const { name, code, category, markdownContent } = data;
-    const device = await db.Device.findByPk(id);
-    if (!device) return { EC: 1, EM: 'Device not found' };
+    try {
+        const { name, code, category, markdownContent } = data;
+        const device = await db.Device.findByPk(id);
+        if (!device) return { EC: 1, EM: 'Device not found' };
 
-    const updateData = { name, code, category, markdownContent };
+        const updateData = { name, code, category, markdownContent };
 
-    if (file) {
-        // ✅ Xóa ảnh cũ nếu có
-        if (device.image) {
-            const oldPath = path.join(__dirname, '..', 'public', device.image.startsWith('/') ? device.image.slice(1) : device.image);
-            if (fs.existsSync(oldPath)) {
-                fs.unlinkSync(oldPath);
+        if (file) {
+            // ✅ Xóa ảnh cũ nếu có
+            if (device.image) {
+                const normalizedPath = device.image.startsWith('/')
+                    ? device.image.slice(1)
+                    : device.image;
+
+                const oldPath = path.join(__dirname, '..', 'public', normalizedPath);
+
+                try {
+                    if (fs.existsSync(oldPath)) {
+                        fs.unlinkSync(oldPath);
+                        console.log("🗑 Đã xoá ảnh cũ:", oldPath);
+                    }
+                } catch (err) {
+                    console.error("⚠️ Lỗi khi xoá ảnh cũ:", err);
+                }
             }
+
+            // ✅ Chuẩn hóa đường dẫn trước khi lưu
+            updateData.image = buildImagePath(file.path);
         }
 
-        // ✅ Chuẩn hóa đường dẫn trước khi lưu
-        updateData.image = buildImagePath(file.path);
+        await device.update(updateData);
+        return { EC: 0, DT: device, EM: 'Update thành công' };
+    } catch (err) {
+        console.error("❌ updateDevice error:", err);
+        return { EC: 1, EM: 'Lỗi khi cập nhật thiết bị', DT: {} };
     }
-
-    await device.update(updateData);
-    return { EC: 0, DT: device, EM: 'Update thành công' };
 };
 
 const deleteDevice = async (id) => {

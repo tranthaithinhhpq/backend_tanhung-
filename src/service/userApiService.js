@@ -1,6 +1,12 @@
 import { Op, where } from "sequelize";
 import db from '../models/index.js';
 import loginRegisterService from './loginRegisterService.js';
+import { fileURLToPath } from 'url';
+import path from 'path';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const { checkEmailExist, checkPhoneExist, hashUserPassword } = loginRegisterService;
 const getAllUser = async () => {
@@ -149,17 +155,28 @@ const deleteUser = async (id) => {
         const user = await db.User.findByPk(id);
         if (!user) return { EC: 2, EM: 'User not exist', DT: [] };
 
-        // Nếu muốn xóa file ảnh trên đĩa:
+        // Nếu có ảnh đại diện → xoá file
         if (user.image) {
-            const fs = require('fs');
-            const filePath = `./src/public${user.image}`; //  /images/filename.jpg
-            fs.existsSync(filePath) && fs.unlinkSync(filePath);
+            const normalizedPath = user.image.startsWith('/')
+                ? user.image.slice(1)
+                : user.image;
+
+            const filePath = path.join(__dirname, '../public', normalizedPath);
+
+            try {
+                if (fs.existsSync(filePath)) {
+                    fs.unlinkSync(filePath);
+                    console.log("🗑 Đã xoá ảnh user:", filePath);
+                }
+            } catch (err) {
+                console.error("⚠️ Lỗi khi xoá ảnh user:", err);
+            }
         }
 
         await user.destroy();
         return { EC: 0, EM: 'Delete user success', DT: [] };
     } catch (e) {
-        console.log(e);
+        console.error("❌ deleteUser error:", e);
         return { EC: 1, EM: 'error from service', DT: [] };
     }
 };

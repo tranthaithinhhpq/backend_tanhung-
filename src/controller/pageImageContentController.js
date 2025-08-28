@@ -2,6 +2,12 @@ import db from '../models/index.js';
 import path from 'path';
 import fs from 'fs';
 
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 // Utility để xử lý đường dẫn
 const formatPath = (filePath) => {
     const relative = filePath.split('public')[1];
@@ -61,7 +67,9 @@ const update = async (req, res) => {
     try {
         const id = req.params.id;
         const item = await db.PageImageContent.findByPk(id);
-        if (!item) return res.status(404).json({ EC: 1, EM: 'Không tìm thấy' });
+        if (!item) {
+            return res.status(404).json({ EC: 1, EM: 'Không tìm thấy' });
+        }
 
         const { section, title, sortOrder } = req.body;
         const imageFile = req.files?.image?.[0];
@@ -70,9 +78,19 @@ const update = async (req, res) => {
         if (imageFile) {
             // Xóa ảnh cũ nếu tồn tại
             if (item.image) {
-                const oldImagePath = path.join(__dirname, '../public', item.image.startsWith('/') ? item.image.slice(1) : item.image);
-                if (fs.existsSync(oldImagePath)) {
-                    fs.unlinkSync(oldImagePath);
+                const normalizedPath = item.image.startsWith('/')
+                    ? item.image.slice(1)
+                    : item.image;
+
+                const oldImagePath = path.join(__dirname, '../public', normalizedPath);
+
+                try {
+                    if (fs.existsSync(oldImagePath)) {
+                        fs.unlinkSync(oldImagePath);
+                        console.log("🗑 Đã xoá ảnh cũ:", oldImagePath);
+                    }
+                } catch (err) {
+                    console.error("⚠️ Lỗi khi xoá ảnh cũ:", err);
                 }
             }
         }
@@ -86,10 +104,18 @@ const update = async (req, res) => {
             image: imagePath,
         });
 
-        return res.status(200).json({ EC: 0, EM: "Cập nhật thành công", DT: item });
+        return res.status(200).json({
+            EC: 0,
+            EM: "Cập nhật thành công",
+            DT: item,
+        });
     } catch (err) {
         console.error("❌ updatePageImageContent error:", err);
-        return res.status(500).json({ EC: -1, EM: "Lỗi khi cập nhật", DT: {} });
+        return res.status(500).json({
+            EC: -1,
+            EM: "Lỗi khi cập nhật",
+            DT: {},
+        });
     }
 };
 

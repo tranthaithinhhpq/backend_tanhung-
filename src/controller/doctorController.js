@@ -4,6 +4,12 @@ import path from 'path';
 import fs from 'fs';
 const { sequelize } = db
 
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 
 const createDoctorInfo = async (req, res) => {
@@ -231,14 +237,28 @@ const deleteDoctorInfo = async (req, res) => {
         // Kiểm tra bác sĩ có tồn tại không
         const doctor = await db.DoctorInfo.findByPk(doctorId);
         if (!doctor) {
-            return res.status(404).json({ EC: 1, EM: 'Bác sĩ không tồn tại', DT: null });
+            return res.status(404).json({
+                EC: 1,
+                EM: 'Bác sĩ không tồn tại',
+                DT: null
+            });
         }
 
         // Xóa ảnh nếu có
         if (doctor.image) {
-            const imagePath = path.join(__dirname, '../public', doctor.image.startsWith('/') ? doctor.image.slice(1) : doctor.image);
-            if (fs.existsSync(imagePath)) {
-                fs.unlinkSync(imagePath);
+            const normalizedPath = doctor.image.startsWith('/')
+                ? doctor.image.slice(1)
+                : doctor.image;
+
+            const imagePath = path.join(__dirname, '../public', normalizedPath);
+
+            try {
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath);
+                    console.log("🗑 Đã xoá ảnh bác sĩ:", imagePath);
+                }
+            } catch (err) {
+                console.error("⚠️ Lỗi khi xoá ảnh bác sĩ:", err);
             }
         }
 
@@ -247,15 +267,23 @@ const deleteDoctorInfo = async (req, res) => {
             where: { doctorId }
         });
 
-        // (Nếu có bảng booking liên quan → xử lý thêm tại đây nếu cần)
+        // (Nếu có bảng booking liên quan → xử lý thêm tại đây)
 
         // Xóa bác sĩ
         await doctor.destroy();
 
-        return res.status(200).json({ EC: 0, EM: 'Xóa bác sĩ và ảnh thành công', DT: null });
+        return res.status(200).json({
+            EC: 0,
+            EM: 'Xóa bác sĩ và ảnh thành công',
+            DT: null
+        });
     } catch (e) {
         console.error("❌ deleteDoctorInfo error:", e);
-        return res.status(500).json({ EC: -1, EM: "Lỗi server", DT: {} });
+        return res.status(500).json({
+            EC: -1,
+            EM: "Lỗi server",
+            DT: {}
+        });
     }
 };
 

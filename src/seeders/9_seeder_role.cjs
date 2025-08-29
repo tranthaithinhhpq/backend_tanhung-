@@ -189,6 +189,40 @@ module.exports = {
 
 
             },
+
+
+
+            {
+                url: 'admin/holiday/paginate',
+                description: 'Xem danh sách tắt lịch khám theo ngày',
+
+
+            },
+            {
+                url: 'admin/holiday/create',
+                description: 'Tạo danh sách tắt lịch khám theo ngày',
+
+
+            },
+            {
+                url: 'admin/holiday/update',
+                description: 'Sửa danh sách tắt lịch khám theo ngày',
+
+
+            },
+            {
+                url: 'admin/holiday/delete',
+                description: 'Xóa danh sách tắt lịch khám theo ngày',
+
+
+            },
+
+
+
+
+
+
+
             {
                 url: 'admin/device/read',
                 description: 'Xem trang thiết bị',
@@ -405,6 +439,16 @@ module.exports = {
 
 
             },
+
+            {
+                url: '/admin/doctor-day-off/bulk-delete',
+                description: 'Xóa hàng loạt lịch nghỉ bác sĩ',
+
+
+            },
+
+
+
             {
                 url: 'admin/news-category/read',
                 description: 'Xem loại tin',

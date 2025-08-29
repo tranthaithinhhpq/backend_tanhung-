@@ -1,4 +1,5 @@
 import workingSlotOverrideService from '../service/workingSlotOverrideService.js';
+import { Op } from 'sequelize';
 import { startOfDay, endOfDay } from 'date-fns';
 import db from '../models/index.js';
 const getOverrides = async (req, res) => {
@@ -112,6 +113,32 @@ const getDoctorSlotsByDate = async (req, res) => {
 };
 
 
+
+
+const bulkDelete = async (req, res) => {
+    try {
+        const { date } = req.body;
+
+        if (!date) {
+            return res.status(400).json({ EC: 1, EM: 'Thiếu ngày giới hạn' });
+        }
+
+        // Kiểm tra model nào đúng
+        const deletedCount = await db.WorkingSlotOverride.destroy({
+            where: {
+                date: { [Op.lte]: date }   // dùng <= để bao gồm cả ngày đó
+            }
+        });
+
+        return res.status(200).json({ EC: 0, EM: `Đã xóa ${deletedCount} lịch nghỉ trước ngày ${date}` });
+    } catch (e) {
+        console.error('❌ bulkDelete error:', e);
+        return res.status(500).json({ EC: 1, EM: 'Lỗi server' });
+    }
+};
+
+
+
 const getDayOffPaginate = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -166,6 +193,8 @@ export default {
     createOverride,
     updateOverride,
     deleteOverride,
-    getDoctorSlotsByDate,
-    getDayOffPaginate
+    getDayOffPaginate,
+    bulkDelete,
+    getDoctorSlotsByDate
+
 };

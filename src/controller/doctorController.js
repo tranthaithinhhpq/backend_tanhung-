@@ -405,5 +405,5 @@ export default {
     getDoctorListPaginate,
     getDoctorAvailableSchedule,
     createDefaultSlotsForDoctor,
-    getAllDoctors
+    getAllDoctors,
 };

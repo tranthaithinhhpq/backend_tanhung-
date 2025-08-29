@@ -23,6 +23,7 @@ import pageVideoContentController from '../controller/pageVideoContentController
 import newsCategoryController from '../controller/newsCategoryController.js';
 import workingSlotTemplateController from '../controller/workingSlotTemplateController.js';
 import imageController from '../controller/imageController.js';
+import holidayController from '../controller/holidayController.js';
 
 
 
@@ -102,8 +103,10 @@ router.get('/admin/device/read', deviceController.getDevicesPaginate);
 router.get('/admin/doctor-day-off/read', workingSlotOverrideController.getDayOffPaginate);
 router.get('/admin/doctor-day-off/create', workingSlotOverrideController.getDoctorSlotsByDate);
 router.post('/admin/doctor-day-off/create', workingSlotOverrideController.createOverride);
+// router.post('/admin/doctor-day-off/day-off-all', workingSlotOverrideController.dayOffAll);
 router.put('/admin/doctor-day-off/update/:id', workingSlotOverrideController.updateOverride);
 router.delete('/admin/doctor-day-off/delete/:id', workingSlotOverrideController.deleteOverride);
+router.delete('/admin/doctor-day-off/bulk-delete', workingSlotOverrideController.bulkDelete);
 
 
 // Service Price admin
@@ -116,7 +119,7 @@ router.delete('/admin/service-price/delete/:id', servicePriceController.deleteSe
 // Booking admin
 router.get('/admin/booking/read', bookingController.getBookingPaginate);
 router.get('/admin/booking/update/:id', bookingController.getBookingById);
-router.post("admin/booking/create", bookingController.createBooking);
+router.post("/admin/booking/create", bookingController.createBooking);
 
 router.post('/admin/booking/create', bookingController.createBookingForClient);
 router.delete('/admin/booking/delete/:id', bookingController.deleteBookingForClient);
@@ -219,11 +222,18 @@ router.post('/admin/working-slot-template/create', workingSlotTemplateController
 router.put('/admin/working-slot-template/update/:id', workingSlotTemplateController.update);
 router.post('/admin/working-slot-template/delete', workingSlotTemplateController.remove);
 
+
 // Lấy danh sách ảnh
 router.get('/admin/images/read', imageController.getImages);
 
 // Xóa ảnh
 router.delete('/admin/images/delete/:filename', imageController.removeImage);
+
+//
+router.get('/admin/holiday/paginate', holidayController.getPaginate);
+router.post('/admin/holiday/create', holidayController.create);
+router.put('/admin/holiday/update/:id', holidayController.update);
+router.post('/admin/holiday/delete', holidayController.delete);
 
 
 

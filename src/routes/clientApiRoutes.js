@@ -17,6 +17,7 @@ import newsCategoryController from "../controller/newsCategoryController.js";
 import pageTextcontentController from "../controller/pageTextcontentController.js";
 import uploadController from "../controller/uploadController.js";
 import upload from '../middleware/uploadMiddleware.js';
+import holidayController from '../controller/holidayController.js';
 
 const router = express.Router();
 
@@ -95,6 +96,9 @@ router.get('/doctor-schedule', doctorController.getAllDoctors);
 
 router.get('/page-text-content/topbar', pageTextcontentController.getTopBarContent);
 router.post("/upload", upload.single("file"), uploadController.handleImageUpload);
+
+// holiday
+router.get('/holiday/list', holidayController.getAll);
 
 
 export default router;

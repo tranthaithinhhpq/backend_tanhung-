@@ -1,6 +1,11 @@
 import db from "../models/index.js";
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const getAllSpecialties = async () => {
     try {
@@ -101,9 +106,19 @@ const deleteSpecialty = async (id) => {
 
         // ✅ Xóa ảnh nếu có
         if (specialty.image) {
-            const imgPath = path.join(__dirname, '..', 'public', specialty.image.startsWith('/') ? specialty.image.slice(1) : specialty.image);
-            if (fs.existsSync(imgPath)) {
-                fs.unlinkSync(imgPath); // xóa ảnh
+            const normalizedPath = specialty.image.startsWith('/')
+                ? specialty.image.slice(1)
+                : specialty.image;
+
+            const imgPath = path.join(__dirname, '..', 'public', normalizedPath);
+
+            try {
+                if (fs.existsSync(imgPath)) {
+                    fs.unlinkSync(imgPath); // xóa ảnh
+                    console.log("🗑 Đã xoá ảnh chuyên khoa:", imgPath);
+                }
+            } catch (err) {
+                console.error("⚠️ Lỗi khi xoá ảnh chuyên khoa:", err);
             }
         }
 

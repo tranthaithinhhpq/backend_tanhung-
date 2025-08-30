@@ -2,6 +2,8 @@ import db from "../models/index.js";
 import Sequelize from "sequelize";
 import { Op } from "sequelize";
 
+
+
 const buildImagePath = (filePath) => {
     if (!filePath) return '';
     return filePath.replace(/^.*?public[\\/]/, '/').replace(/\\/g, '/'); // chuẩn hóa dấu gạch chéo

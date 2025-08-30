@@ -2,6 +2,11 @@
 import db from '../models/index.js';
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 
 const create = async (data) => {
@@ -35,9 +40,19 @@ const updatePage = async (id, body, file) => {
         if (file) {
             // Xoá ảnh cũ nếu có
             if (page.image) {
-                const oldImagePath = path.join(__dirname, '../public', page.image.startsWith('/') ? page.image.slice(1) : page.image);
-                if (fs.existsSync(oldImagePath)) {
-                    fs.unlinkSync(oldImagePath);
+                const normalizedPath = page.image.startsWith('/')
+                    ? page.image.slice(1)
+                    : page.image;
+
+                const oldImagePath = path.join(__dirname, '../public', normalizedPath);
+
+                try {
+                    if (fs.existsSync(oldImagePath)) {
+                        fs.unlinkSync(oldImagePath);
+                        console.log("🗑 Đã xoá ảnh cũ:", oldImagePath);
+                    }
+                } catch (err) {
+                    console.error("⚠️ Lỗi khi xoá ảnh cũ:", err);
                 }
             }
 

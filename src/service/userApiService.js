@@ -2,9 +2,9 @@ import { Op, where } from "sequelize";
 import db from '../models/index.js';
 import loginRegisterService from './loginRegisterService.js';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 import path from 'path';
-import { dirname } from 'path';
-
+import { dirname } from 'path'; ``
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -155,7 +155,7 @@ const deleteUser = async (id) => {
         const user = await db.User.findByPk(id);
         if (!user) return { EC: 2, EM: 'User not exist', DT: [] };
 
-        // Nếu có ảnh đại diện → xoá file
+        // Nếu có ảnh đại diện thì xoá file
         if (user.image) {
             const normalizedPath = user.image.startsWith('/')
                 ? user.image.slice(1)

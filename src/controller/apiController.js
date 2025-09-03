@@ -7,6 +7,9 @@ const testApi = (req, res) => {
 
 }
 
+import db from '../models/index.js';
+import bcrypt from 'bcryptjs';
+
 const handleRegister = async (req, res) => {
     try {
         // check required
@@ -92,6 +95,104 @@ const handleLogout = (req, res) => {
         });
     }
 };
+
+// const changePassword = async (req, res) => {
+//     try {
+//         console.log("🔍 req.user:", req.user); // giờ sẽ thấy có id
+
+//         const { oldPassword, newPassword } = req.body;
+//         const userId = req.user.id;
+
+//         if (!userId) {
+//             return res.status(400).json({ EC: 1, EM: "Token không chứa id người dùng" });
+//         }
+
+//         const user = await db.User.findByPk(userId);
+//         if (!user) {
+//             return res.status(404).json({ EC: 1, EM: `Người dùng id=${userId} không tồn tại` });
+//         }
+
+//         const isMatch = await bcrypt.compare(oldPassword, user.password);
+//         if (!isMatch) {
+//             return res.status(400).json({ EC: 1, EM: "Mật khẩu hiện tại không đúng" });
+//         }
+
+//         const hashedPassword = await bcrypt.hash(newPassword, 10);
+//         await user.update({ password: hashedPassword });
+
+//         return res.status(200).json({ EC: 0, EM: "Đổi mật khẩu thành công" });
+//     } catch (err) {
+//         console.error("❌ changePassword error:", err);
+//         return res.status(500).json({ EC: -1, EM: "Lỗi server" });
+//     }
+// };
+
+
+const changePassword = async (req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(400).json({
+                EC: 1,
+                EM: "Token không chứa id người dùng",
+                DT: null
+            });
+        }
+
+        const user = await db.User.findByPk(userId);
+        if (!user) {
+            return res.status(404).json({
+                EC: 1,
+                EM: `Người dùng id=${userId} không tồn tại`,
+                DT: null
+            });
+        }
+
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) {
+            return res.status(400).json({
+                EC: 1,
+                EM: "Mật khẩu hiện tại không đúng",
+                DT: null
+            });
+        }
+
+        if (oldPassword === newPassword) {
+            return res.status(400).json({
+                EC: 1,
+                EM: "Mật khẩu mới không được trùng mật khẩu cũ",
+                DT: null
+            });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({
+                EC: 1,
+                EM: "Mật khẩu mới phải có ít nhất 6 ký tự",
+                DT: null
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await user.update({ password: hashedPassword });
+
+        return res.status(200).json({
+            EC: 0,
+            EM: "Đổi mật khẩu thành công",
+            DT: null
+        });
+    } catch (err) {
+        console.error("❌ changePassword error:", err);
+        return res.status(500).json({
+            EC: -1,
+            EM: err.message || "Lỗi server",
+            DT: null
+        });
+    }
+};
+
 export default {
-    testApi, handleRegister, handleLogin, handleLogout
+    testApi, handleRegister, handleLogin, handleLogout, changePassword
 }

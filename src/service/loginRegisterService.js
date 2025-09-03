@@ -103,9 +103,10 @@ const handleLogin = async (rawData) => {
                 let groupWithRoles = await getGroupWithRoles(user);
 
                 let payload = {
+                    id: user.id,             // 🔑 thêm id user
                     email: user.email,
-                    groupWithRoles,
                     username: user.username,
+                    groupWithRoles,
                     // expiresIn: process.env.JWT_EXPIRES_IN
                 };
 
@@ -117,9 +118,10 @@ const handleLogin = async (rawData) => {
                         access_token: token,
                         groupWithRoles,
                         email: user.email,
-                        username: user.username
+                        username: user.username,
+                        id: user.id   // ✅ có thể trả về cho FE dùng luôn
                     }
-                }
+                };
 
             }
         }

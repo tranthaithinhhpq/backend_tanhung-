@@ -46,6 +46,7 @@ const checkUserJWT = (req, res, next) => {
     if ((cookies && cookies.jwt) || tokenFromHeader) {
         const token = cookies?.jwt || tokenFromHeader;
         const decoded = verifyToken(token);
+        console.log("✅ Decoded JWT:", decoded);
 
         if (decoded) {
             req.user = decoded;

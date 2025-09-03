@@ -163,7 +163,7 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
     try {
-        const { id, imageDesktop, imageMobile } = req.body;
+        const { id, imageDesktop, imagePhone } = req.body;
 
         if (!id) {
             return res.status(400).json({ message: "Thiếu ID banner" });
@@ -192,7 +192,7 @@ const remove = async (req, res) => {
         };
 
         if (imageDesktop) deleteFile(imageDesktop);
-        if (imageMobile) deleteFile(imageMobile);
+        if (imagePhone) deleteFile(imagePhone);
 
         // Xoá record khỏi DB
         await db.Banner.destroy({ where: { id } });

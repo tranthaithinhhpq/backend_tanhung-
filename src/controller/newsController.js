@@ -65,21 +65,21 @@ const getDetail = async (req, res) => {
 const update = async (req, res) => {
     try {
         const imagePath = req.file?.path;
-        await newsService.updateArticle(req.params.id, req.body, imagePath);
-        res.json({ EC: 0, EM: "Cập nhật thành công" });
+        const result = await newsService.updateArticle(req.params.id, req.body, imagePath);
+        return res.status(200).json(result);
     } catch (err) {
-        console.error(err);
-        res.json({ EC: 1, EM: "Lỗi cập nhật" });
+        console.error("❌ update controller error:", err);
+        return res.status(500).json({ EC: -1, EM: "Lỗi server", DT: {} });
     }
 };
 
 const remove = async (req, res) => {
     try {
-        await newsService.deleteArticle(req.params.id);
-        res.json({ EC: 0, EM: "Xoá thành công" });
+        const result = await newsService.deleteArticle(req.params.id);
+        return res.status(200).json(result);
     } catch (err) {
-        console.error(err);
-        res.json({ EC: 1, EM: "Lỗi xoá" });
+        console.error("❌ remove error:", err);
+        return res.status(500).json({ EC: -1, EM: "Lỗi server", DT: {} });
     }
 };
 

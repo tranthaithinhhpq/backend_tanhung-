@@ -97,6 +97,35 @@ const getPageBySlug = async (req, res) => {
     }
 };
 
+const readPages = async (req, res) => {
+    try {
+        let { page, limit } = req.query;
+        page = +page || 1;
+        limit = +limit || 10;
+
+        const offset = (page - 1) * limit;
+
+        const { count, rows } = await db.PageClient.findAndCountAll({
+            offset,
+            limit,
+            order: [['createdAt', 'DESC']]
+        });
+
+        return res.status(200).json({
+            EC: 0,
+            DT: {
+                rows,
+                totalPages: Math.ceil(count / limit),
+                totalItems: count,
+                currentPage: page
+            }
+        });
+    } catch (err) {
+        console.error("❌ Lỗi readPages:", err);
+        return res.status(500).json({ EC: 1, EM: "Server error" });
+    }
+};
+
 
 export default {
     createPage,
@@ -105,5 +134,6 @@ export default {
     updatePage,
     deletePage,
     getPagesBySection,
-    getPageBySlug
+    getPageBySlug,
+    readPages
 };

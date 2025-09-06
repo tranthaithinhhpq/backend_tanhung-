@@ -170,7 +170,8 @@ router.delete('/admin/page-image-content/delete/:id', pageImageContentController
 
 // page
 router.post('/admin/page/create', upload.single('image'), pageController.createPage);
-router.get('/admin/page/read', pageController.getAllPages);
+// router.get('/admin/page/read', pageController.getAllPages);
+router.get('/admin/page/read', pageController.readPages);
 router.get('/admin/page/update/:id', pageController.getPageById);
 router.put('/admin/page/update/:id', upload.single('image'), pageController.updatePage);
 router.delete('/admin/page/delete/:id', pageController.deletePage);

@@ -12,14 +12,42 @@ const buildImagePath = (filePath) => {
     return filePath.replace(/^.*?public[\\/]/, '/');
 };
 
-const readDevices = async () => {
-    const data = await db.Device.findAll();
-    return {
-        EC: 0,
-        EM: 'Thành công',
-        DT: data,
-    };
+// const readDevices = async () => {
+//     const data = await db.Device.findAll();
+//     return {
+//         EC: 0,
+//         EM: 'Thành công',
+//         DT: data,
+//     };
+// };
+
+// service
+const readDevices = async (page, limit) => {
+    try {
+        const offset = (page - 1) * limit;
+
+        const { count, rows } = await db.Device.findAndCountAll({
+            offset,
+            limit,
+            order: [['createdAt', 'DESC']],
+        });
+
+        return {
+            EC: 0,
+            EM: 'Success',
+            DT: {
+                total: count,
+                totalPages: Math.ceil(count / limit),
+                currentPage: page,
+                data: rows
+            }
+        };
+    } catch (error) {
+        console.error("Error in readDevices service:", error);
+        return { EC: -1, EM: 'Service error', DT: [] };
+    }
 };
+
 
 const getDeviceDetail = async (id) => {
     const device = await db.Device.findOne({ where: { id } });

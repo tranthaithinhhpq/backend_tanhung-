@@ -1,11 +1,27 @@
 import deviceService from '../service/deviceService.js';
 import db from '../models/index.js';
 
+// const readDevices = async (req, res) => {
+//     try {
+//         const result = await deviceService.readDevices();
+//         return res.status(200).json(result);
+//     } catch {
+//         return res.status(500).json({ EC: -1, EM: 'Server error' });
+//     }
+// };
+
 const readDevices = async (req, res) => {
     try {
-        const result = await deviceService.readDevices();
+        // lấy page, limit từ query, nếu không có thì mặc định
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+
+        // gọi xuống service, truyền page, limit
+        const result = await deviceService.readDevices(page, limit);
+
         return res.status(200).json(result);
-    } catch {
+    } catch (error) {
+        console.error("Error in readDevices:", error);
         return res.status(500).json({ EC: -1, EM: 'Server error' });
     }
 };

@@ -24,7 +24,7 @@ import newsCategoryController from '../controller/newsCategoryController.js';
 import workingSlotTemplateController from '../controller/workingSlotTemplateController.js';
 import imageController from '../controller/imageController.js';
 import holidayController from '../controller/holidayController.js';
-
+import recruitmentController from '../controller/recruitmentController.js';
 
 
 import JWTAction from '../middleware/JWTAction.js';
@@ -237,8 +237,21 @@ router.put('/admin/holiday/update/:id', holidayController.update);
 router.post('/admin/holiday/delete', holidayController.delete);
 
 
+// Recruitment admin
+router.get('/admin/recruitment/read', recruitmentController.getRecruitmentPaginate);
 
+router.post(
+    '/admin/recruitment/create',
+    upload.single('image'),
+    recruitmentController.create
+);
 
+router.put(
+    '/admin/recruitment/update/:id',
+    upload.single('image'),
+    recruitmentController.update
+);
 
+router.post('/admin/recruitment/delete', recruitmentController.remove);
 
 export default router;

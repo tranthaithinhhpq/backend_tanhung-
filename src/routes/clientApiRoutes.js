@@ -19,7 +19,10 @@ import uploadController from "../controller/uploadController.js";
 import upload from '../middleware/uploadMiddleware.js';
 import holidayController from '../controller/holidayController.js';
 import JWTAction from "../middleware/JWTAction.js";
+import recruitmentController from '../controller/recruitmentController.js';
 const router = express.Router();
+
+
 
 // Auth
 router.post("/register", apiController.handleRegister);
@@ -28,6 +31,9 @@ router.post("/login", apiController.handleLogin);
 
 // Đổi mật khẩu
 router.post("/user/change-password", JWTAction.checkUserJWT, apiController.changePassword);
+
+// Client recruitment
+router.get('/client/recruitment', recruitmentController.getList);
 
 // Doctor (public)
 router.get("/doctor/list", doctorController.getDoctorList);

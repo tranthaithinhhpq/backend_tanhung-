@@ -122,4 +122,29 @@ const remove = async (req, res) => {
     }
 };
 
-export default { getApplicationPaginate, create, update, remove };
+const apply = async (req, res) => {
+    try {
+        const { recruitmentId, fullName, email, phone, coverLetter } = req.body;
+
+        let cvPath = "";
+        if (req.file) cvPath = '/images/' + req.file.filename;
+
+        const newApp = await db.Application.create({
+            recruitmentId,
+            fullName,
+            email,
+            phone,
+            coverLetter,
+            status: "PENDING",
+            cvFile: cvPath,
+        });
+
+        return res.status(200).json({ EC: 0, EM: "Ứng tuyển thành công", DT: newApp });
+    } catch (error) {
+        console.error("Apply error:", error);
+        return res.status(500).json({ EC: -1, EM: "Lỗi server" });
+    }
+};
+
+
+export default { getApplicationPaginate, create, update, remove, apply };

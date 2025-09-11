@@ -20,7 +20,10 @@ import upload from '../middleware/uploadMiddleware.js';
 import holidayController from '../controller/holidayController.js';
 import JWTAction from "../middleware/JWTAction.js";
 import recruitmentController from '../controller/recruitmentController.js';
+import applicationController from '../controller/applicationController.js';
 const router = express.Router();
+
+
 
 
 
@@ -34,6 +37,7 @@ router.post("/user/change-password", JWTAction.checkUserJWT, apiController.chang
 
 // Client recruitment
 router.get('/client/recruitment', recruitmentController.getList);
+router.get('/client/recruitment/:id', recruitmentController.getDetail);
 
 // Doctor (public)
 router.get("/doctor/list", doctorController.getDoctorList);
@@ -109,6 +113,13 @@ router.post("/upload", upload.single("file"), uploadController.handleImageUpload
 
 // holiday
 router.get('/holiday/list', holidayController.getAll);
+
+// application
+router.post(
+    '/client/application/apply',
+    upload.single('cvFile'),
+    applicationController.apply
+);
 
 
 export default router;

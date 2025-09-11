@@ -142,4 +142,23 @@ const getList = async (req, res) => {
     }
 };
 
-export default { getRecruitmentPaginate, create, update, remove, getList };
+const getDetail = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const recruitment = await db.Recruitment.findByPk(id, {
+            include: [{ model: db.Specialty, attributes: ["id", "name"] }]
+        });
+
+        if (!recruitment) {
+            return res.status(404).json({ EC: 1, EM: "Không tìm thấy tin tuyển dụng" });
+        }
+
+        return res.status(200).json({ EC: 0, DT: recruitment });
+    } catch (error) {
+        console.error("getDetail recruitment error:", error);
+        return res.status(500).json({ EC: -1, EM: "Lỗi server" });
+    }
+};
+
+
+export default { getRecruitmentPaginate, create, update, remove, getList, getDetail };

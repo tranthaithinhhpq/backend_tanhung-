@@ -25,6 +25,8 @@ import workingSlotTemplateController from '../controller/workingSlotTemplateCont
 import imageController from '../controller/imageController.js';
 import holidayController from '../controller/holidayController.js';
 import recruitmentController from '../controller/recruitmentController.js';
+import applicationController from '../controller/applicationController.js';
+
 
 
 import JWTAction from '../middleware/JWTAction.js';
@@ -253,5 +255,24 @@ router.put(
 );
 
 router.post('/admin/recruitment/delete', recruitmentController.remove);
+
+
+// Application admin
+router.get('/admin/application/read', applicationController.getApplicationPaginate);
+
+router.post(
+    '/admin/application/create',
+    upload.single('cvFile'),
+    applicationController.create
+);
+
+router.put(
+    '/admin/application/update/:id',
+    upload.single('cvFile'),
+    applicationController.update
+);
+
+router.post('/admin/application/delete', applicationController.remove);
+
 
 export default router;

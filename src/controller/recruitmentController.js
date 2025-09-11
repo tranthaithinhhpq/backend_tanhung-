@@ -120,33 +120,7 @@ const remove = async (req, res) => {
     }
 };
 
-// const getList = async (req, res) => {
-//     try {
-//         const { specialtyId } = req.query;
 
-//         const today = new Date().toISOString().split('T')[0];
-
-//         const where = {
-//             status: 'OPEN',
-//             [Op.or]: [
-//                 { deadline: null },
-//                 { deadline: { [Op.gte]: today } }
-//             ]
-//         };
-//         if (specialtyId) where.departmentId = specialtyId;
-
-//         const data = await db.Recruitment.findAll({
-//             where,
-//             include: [{ model: db.Specialty, attributes: ["id", "name"] }],
-//             order: [["createdAt", "DESC"]],
-//         });
-
-//         return res.status(200).json({ EC: 0, DT: data });
-//     } catch (err) {
-//         console.error("getList recruitment error:", err);
-//         return res.status(500).json({ EC: -1, EM: "Server error" });
-//     }
-// };
 
 const getList = async (req, res) => {
     try {

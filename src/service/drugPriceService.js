@@ -18,6 +18,9 @@ const readPaginate = async (page, limit, q) => {
     };
 };
 
+
+
+
 const create = async (data) => {
     const requiredFields = ['code', 'name', 'activeIngredient', 'concentration', 'unit', 'price', 'insurancePrice'];
     for (let field of requiredFields) {

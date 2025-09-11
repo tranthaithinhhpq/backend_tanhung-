@@ -11,6 +11,13 @@ const readPaginate = async (req, res) => {
     }
 };
 
+
+
+
+
+
+
+
 const createDrug = async (req, res) => {
     try {
         const result = await drugPriceService.create(req.body);

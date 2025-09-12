@@ -253,56 +253,6 @@ const deleteArticle = async (id) => {
 
 
 
-
-// const getNewsList = async (page, limit, categoryId, keyword, group) => {
-//     const offset = (page - 1) * limit;
-//     const Sequelize = db.Sequelize;
-//     const where = {};
-
-//     if (categoryId && !isNaN(Number(categoryId))) {
-//         where.categoryId = Number(categoryId);
-//     }
-
-//     if (keyword) {
-//         where[Sequelize.Op.or] = [
-//             { title: { [Sequelize.Op.like]: `%${keyword}%` } },
-//             { content: { [Sequelize.Op.like]: `%${keyword}%` } }
-//         ];
-//     }
-
-//     const includeCondition = {
-//         model: db.NewsCategory,
-//         as: 'category', // ❗ alias phải đúng như trong association
-//         attributes: ['id', 'name', 'group']
-//     };
-
-//     if (group) {
-//         includeCondition.where = { group }; // ❗ Lọc theo group tại include
-//     }
-
-//     const { rows, count } = await db.NewsArticle.findAndCountAll({
-//         where,
-//         include: [includeCondition],
-//         limit,
-//         offset,
-//         order: [['createdAt', 'DESC']]
-//     });
-
-//     return {
-//         EC: 0,
-//         EM: 'Lấy danh sách thành công',
-//         DT: {
-//             news: rows,
-//             pagination: {
-//                 total: count,
-//                 page,
-//                 limit
-//             }
-//         }
-//     };
-// };
-
-
 const getNewsList = async (page, limit, categoryId, keyword, group) => {
     const offset = (page - 1) * limit;
     const Sequelize = db.Sequelize;
@@ -334,7 +284,14 @@ const getNewsList = async (page, limit, categoryId, keyword, group) => {
 
     const { rows, count } = await db.NewsArticle.findAndCountAll({
         where,
-        include: [includeCondition],
+        include: [
+            includeCondition,
+            {
+                model: db.User,
+                as: 'author', // ✅ thêm include tác giả
+                attributes: ['id', 'username', 'image']
+            }
+        ],
         limit,
         offset,
         order: [
@@ -404,11 +361,18 @@ const getTopNews = async (group = 'news') => {
 
 const getNewsDetail = async (id) => {
     const news = await db.NewsArticle.findByPk(id, {
-        include: {
-            model: db.NewsCategory,
-            as: "category", // phải đúng alias!
-            attributes: ['id', 'name', 'group']
-        }
+        include: [
+            {
+                model: db.NewsCategory,
+                as: "category",
+                attributes: ['id', 'name', 'group']
+            },
+            {
+                model: db.User,
+                as: "author",   // ✅ alias đã định nghĩa trong NewsArticle.associate
+                attributes: ['id', 'username', 'image']
+            }
+        ]
     });
 
     if (!news) {
@@ -417,6 +381,7 @@ const getNewsDetail = async (id) => {
 
     return { EC: 0, EM: 'Lấy chi tiết thành công', DT: news };
 };
+
 
 const getNewsPaginate = async ({ limit, offset }) => {
     const { count, rows } = await db.NewsArticle.findAndCountAll({

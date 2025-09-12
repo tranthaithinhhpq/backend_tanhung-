@@ -212,6 +212,9 @@ const getAllDoctor = async () => {
 
 
 
+
+
+
 export default {
     getAllUser, createNewUser, updateUser, deleteUser, getUserWithPagination, getAllDoctor,
 }

@@ -21,10 +21,9 @@ import holidayController from '../controller/holidayController.js';
 import JWTAction from "../middleware/JWTAction.js";
 import recruitmentController from '../controller/recruitmentController.js';
 import applicationController from '../controller/applicationController.js';
+import userController from '../controller/userController.js';
+
 const router = express.Router();
-
-
-
 
 
 // Auth
@@ -32,8 +31,10 @@ router.post("/register", apiController.handleRegister);
 router.post("/login", apiController.handleLogin);
 
 
-// Đổi mật khẩu
+// User
 router.post("/user/change-password", JWTAction.checkUserJWT, apiController.changePassword);
+router.get("/client/users", userController.getAuthors);
+
 
 // Client recruitment
 router.get('/client/recruitment', recruitmentController.getList);

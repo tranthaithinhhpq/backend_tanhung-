@@ -12,10 +12,7 @@ const __dirname = dirname(__filename);
 
 
 
-// const buildImagePath = (filePath) => {
-//     if (!filePath) return '';
-//     return filePath.replace(/^.*?public[\\/]/, '/').replace(/\\/g, '/'); // chuẩn hóa dấu gạch chéo
-// };
+
 
 const buildImagePath = (filePath) => {
     if (!filePath) return '';
@@ -49,11 +46,14 @@ const createArticle = async (data, imagePath) => {
         content: data.content,
         image: cleanPath,
         categoryId: data.categoryId,
+        authorId: data.authorId, // ✅ thêm tác giả
         status: data.status || 'draft',
         type: data.type
-
     });
 };
+
+
+
 
 const getArticles = async (query) => {
     const { categoryId, search, page = 1, limit = 10 } = query;
@@ -113,6 +113,56 @@ const getAllCategoriesSearch = async (filters = {}) => {
 
 
 
+// const updateArticle = async (id, data, imagePath) => {
+//     try {
+//         const article = await db.NewsArticle.findByPk(id);
+//         if (!article) {
+//             return { EC: 1, EM: "Bài viết không tồn tại", DT: {} };
+//         }
+
+//         let newImagePath = article.image;
+
+//         // Nếu có ảnh mới
+//         if (imagePath) {
+//             // Nếu có ảnh cũ thì xóa
+//             if (article.image) {
+//                 const normalizedPath = article.image.startsWith('/')
+//                     ? article.image.slice(1)
+//                     : article.image;
+
+//                 const oldPath = path.join(process.cwd(), "src", "public", normalizedPath);
+//                 try {
+//                     if (fs.existsSync(oldPath)) {
+//                         fs.unlinkSync(oldPath);
+//                         console.log("🗑 Đã xóa ảnh cũ:", oldPath);
+//                     }
+//                 } catch (err) {
+//                     console.error("⚠️ Lỗi khi xóa ảnh cũ:", err);
+//                 }
+//             }
+
+//             // Gán ảnh mới
+//             newImagePath = buildImagePath(imagePath);
+//         }
+
+//         await article.update({
+//             title: data.title,
+//             content: data.content,
+//             categoryId: data.categoryId,
+//             status: data.status,
+//             group: data.group || "news",
+//             type: data.type,
+//             image: newImagePath
+//         });
+
+//         return { EC: 0, EM: "Cập nhật thành công", DT: {} };
+//     } catch (err) {
+//         console.error("❌ updateArticle error:", err);
+//         return { EC: 1, EM: "Lỗi cập nhật", DT: {} };
+//     }
+// };
+
+
 const updateArticle = async (id, data, imagePath) => {
     try {
         const article = await db.NewsArticle.findByPk(id);
@@ -124,9 +174,9 @@ const updateArticle = async (id, data, imagePath) => {
 
         // Nếu có ảnh mới
         if (imagePath) {
-            // Nếu có ảnh cũ thì xóa
+            // Xóa ảnh cũ nếu tồn tại
             if (article.image) {
-                const normalizedPath = article.image.startsWith('/')
+                const normalizedPath = article.image.startsWith("/")
                     ? article.image.slice(1)
                     : article.image;
 
@@ -145,14 +195,16 @@ const updateArticle = async (id, data, imagePath) => {
             newImagePath = buildImagePath(imagePath);
         }
 
+        // ✅ Cập nhật bài viết
         await article.update({
             title: data.title,
             content: data.content,
             categoryId: data.categoryId,
+            authorId: data.authorId,   // 👉 thêm tác giả
             status: data.status,
             group: data.group || "news",
             type: data.type,
-            image: newImagePath
+            image: newImagePath,
         });
 
         return { EC: 0, EM: "Cập nhật thành công", DT: {} };

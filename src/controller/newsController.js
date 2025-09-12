@@ -28,6 +28,7 @@ const create = async (req, res) => {
     }
 };
 
+
 const getList = async (req, res) => {
     try {
         const { rows, count } = await newsService.getArticles(req.query);
@@ -42,11 +43,18 @@ const getList = async (req, res) => {
 const getDetail = async (req, res) => {
     try {
         const article = await db.NewsArticle.findByPk(req.params.id, {
-            include: {
-                model: db.NewsCategory,
-                as: 'category', // SỬA CHỖ NÀY: thêm alias đúng
-                attributes: ['id', 'name', 'group']
-            }
+            include: [
+                {
+                    model: db.NewsCategory,
+                    as: "category",
+                    attributes: ["id", "name", "group"],
+                },
+                {
+                    model: db.User,
+                    as: "author", // ✅ lấy tác giả
+                    attributes: ["id", "username", "image"], // chỉ lấy trường cần
+                },
+            ],
         });
 
         if (!article) {
@@ -55,7 +63,7 @@ const getDetail = async (req, res) => {
 
         return res.json({ EC: 0, DT: article });
     } catch (err) {
-        console.error(err);
+        console.error("❌ getDetail error:", err);
         return res.status(500).json({ EC: 1, EM: "Lỗi server" });
     }
 };
@@ -207,6 +215,8 @@ const listNewsCategories = async (req, res) => {
 
 
 
+
+
 export default {
     getCategories,
     create,
@@ -218,6 +228,7 @@ export default {
     getNewsDetail,
     getNewsSlider,
     getNewsPaginate,
-    listNewsCategories
+    listNewsCategories,
+
 
 };

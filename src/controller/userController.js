@@ -216,5 +216,20 @@ const getDoctorInfoWithAllData = async (req, res) => {
     }
 };
 
+const getAuthors = async (req, res) => {
+    try {
+        const users = await db.User.findAll({
+            attributes: ['id', 'username', 'image']
+        });
+        res.json({ EC: 0, DT: users });
+    } catch (err) {
+        console.error(err);
+        res.json({ EC: 1, EM: "Lỗi lấy danh sách tác giả" });
+    }
+};
 
-export default { read, create, update, remove, getUserAccount, readDoctor, getDoctorInfoByUserId, getDoctorInfoWithAllData }
+
+
+
+
+export default { read, create, update, remove, getUserAccount, readDoctor, getDoctorInfoByUserId, getDoctorInfoWithAllData, getAuthors }

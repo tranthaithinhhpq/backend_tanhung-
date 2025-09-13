@@ -88,11 +88,27 @@ const getDevicesPaginate = async (req, res) => {
     }
 };
 
+const getDeviceById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const device = await db.Device.findByPk(id);
+        if (!device) {
+            return res.status(404).json({ EC: 1, EM: "Không tìm thấy thiết bị", DT: {} });
+        }
+        return res.status(200).json({ EC: 0, EM: "Lấy thiết bị thành công", DT: device });
+    } catch (err) {
+        console.error("getDeviceById error:", err);
+        return res.status(500).json({ EC: -1, EM: "Lỗi server", DT: {} });
+    }
+};
+
+
 export default {
     readDevices,
     getDeviceDetail,
     createDevice,
     updateDevice,
     deleteDevice,
-    getDevicesPaginate
+    getDevicesPaginate,
+    getDeviceById
 };

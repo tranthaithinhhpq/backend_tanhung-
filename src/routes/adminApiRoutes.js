@@ -95,7 +95,7 @@ router.get("admin/specialty-filter/read", specialtyController.readSpecialties);
 router.get("/admin/specialty/update", specialtyController.readSpecialties);
 
 // Device admin
-router.get('/admin/device/update', deviceController.readDevices);
+router.get('/admin/device/update/:id', deviceController.getDeviceById);
 router.post('/admin/device/create', upload.single('image'), deviceController.createDevice);
 router.put('/admin/device/update/:id', upload.single('image'), deviceController.updateDevice);
 router.delete('/admin/device/delete/:id', deviceController.deleteDevice);
